@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+    script:
+        build: .
+        image: sanarisan/ts-boilerplate-v2:1
+        restart: always
+        command: >
+            sh -c "yarn wipe-cli &&
+                yarn launch-prod"

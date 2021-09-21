@@ -1,0 +1,3 @@
+interface ISample {}
+
+export { ISample };
