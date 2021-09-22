@@ -41,10 +41,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.9.1.tgz#0611b37db4246c937feef529ddcc018cf8e35708"
   integrity sha512-QpLcX9ZSsq3YYUUnD3nFDY8H7wctAhQj/TFKL8Ya8v5fMm3CFXxo8zStsLAl780ltoYoo1WvKUVGBQK+1ifr7g==
 
-"@types/node@^16.4.10":
-  version "16.4.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.4.10.tgz#e57e2a54fc6da58da94b3571b1cb456d39f88597"
-  integrity sha512-TmVHsm43br64js9BqHWqiDZA+xMtbUpI1MBIA0EyiBmoV9pcEYFOSdj5fr6enZNfh4fChh+AGOLIzGwJnkshyQ==
+"@types/node@^16.9.4":
+  version "16.9.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.9.6.tgz#040a64d7faf9e5d9e940357125f0963012e66f04"
+  integrity sha512-YHUZhBOMTM3mjFkXVcK+WwAcYmyhe1wL4lfqNtzI0b3qAy7yuSetnM7QJazgE5PFmgVTNGiLOgRFfJMqW7XpSQ==
 
 "@types/through@*":
   version "0.0.30"
@@ -78,6 +78,23 @@
   dependencies:
     "@typescript-eslint/types" "4.29.0"
     eslint-visitor-keys "^2.0.0"
+
+"@xtcry/blessed@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@xtcry/blessed/-/blessed-2.0.4.tgz#bfad09e51bb1761b94050af32d9e0cbf07af77c3"
+  integrity sha512-agom779zhyLZmO5bI0ZU+tu4B35GMYb5Z101waWCptSY/t4kP7rRrCPU8ysJNI4Mgv9VEl2idjo8ieYY87FCww==
+  dependencies:
+    "@xtcry/pty.js" "^0.3.2"
+    term.js "^0.0.7"
+
+"@xtcry/pty.js@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@xtcry/pty.js/-/pty.js-0.3.2.tgz#5cfdded63931b51290447f9c2ea44411b9163db4"
+  integrity sha512-blaqWCgXS96U/gf/BQNa0h+LT3eQS3JwoelVy19vMXN4MdO+nHbyw8zuiWxADPO4u9sb7zVBoAlLzibVFNQ+XQ==
+  dependencies:
+    b64-loader "^1.0.1"
+    extend "~1.2.1"
+    nan "2.2.1"
 
 abbrev@1:
   version "1.1.1"
@@ -146,6 +163,11 @@ axios@^0.21.1:
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   dependencies:
     follow-redirects "^1.10.0"
+
+b64-loader@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/b64-loader/-/b64-loader-1.0.1.tgz#655bd629fb00348f6d9d6d2f30676921ba85d352"
+  integrity sha512-63q/NN8jP4veCzCG8EdLQcqfYFAOx6z6atM0LpWTojtnXoEBpgjnaciZkGDLIT/NNfdcerkZyesY/2an6wub/g==
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -564,6 +586,11 @@ event-stream@~0.9.8:
   integrity sha1-XanPPHkAl1mJ21powo5bPJjr4Do=
   dependencies:
     optimist "0.2"
+
+extend@~1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/extend/-/extend-1.2.1.tgz#a0f5fd6cfc83a5fe49ef698d60ec8a624dd4576c"
+  integrity sha1-oPX9bPyDpf5J72mNYOyKYk3UV2w=
 
 external-editor@^3.0.3:
   version "3.1.0"
@@ -1027,6 +1054,11 @@ mute-stream@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
+
+nan@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.2.1.tgz#d68693f6b34bb41d66bc68b3a4f9defc79d7149b"
+  integrity sha1-1oaT9rNLtB1mvGizpPne/HnXFJs=
 
 nanoid@^3.1.23:
   version "3.1.23"
@@ -1498,6 +1530,11 @@ term-canvas@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/term-canvas/-/term-canvas-0.0.5.tgz#597afac2fa6369a6f17860bce9c5f66d6ea0ca96"
   integrity sha1-WXr6wvpjaabxeGC86cX2bW6gypY=
+
+term.js@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/term.js/-/term.js-0.0.7.tgz#526f24cfc0f2ef6f80f517c9e27dae947bc87315"
+  integrity sha1-Um8kz8Dy72+A9RfJ4n2ulHvIcxU=
 
 through@^2.3.6:
   version "2.3.8"
