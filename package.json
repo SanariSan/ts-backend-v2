@@ -24,9 +24,8 @@
 		"prettier": "prettier -w --config ./.prettierrc.json ."
 	},
 	"dependencies": {
-		"@xtcry/blessed": "^2.0.4",
 		"axios": "^0.21.1",
-		"blessed-contrib": "^4.10.1",
+		"blessed": "^0.1.81",
 		"cross-env": "^7.0.3",
 		"dotenv": "^10.0.0",
 		"inquirer": "^8.1.2",
