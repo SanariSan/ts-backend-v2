@@ -9,7 +9,23 @@ class CliError extends InternalError {
 	}
 }
 
-class CliNoEntryError extends CliError {
+class CliPromptError extends CliError {
+	constructor(ERROR_TYPE, ERROR_DESCRIPTION = "") {
+		ERROR_DESCRIPTION = `Prompt error\n${ERROR_DESCRIPTION}`;
+
+		super(ERROR_TYPE, ERROR_DESCRIPTION);
+	}
+}
+
+class CliDashboardError extends CliError {
+	constructor(ERROR_TYPE, ERROR_DESCRIPTION = "") {
+		ERROR_DESCRIPTION = `Dashboard error\n${ERROR_DESCRIPTION}`;
+
+		super(ERROR_TYPE, ERROR_DESCRIPTION);
+	}
+}
+
+class CliPromptNoEntryError extends CliError {
 	protected ERROR_MESAGE: string;
 	constructor(ERROR_MESAGE, ERROR_DESCRIPTION = "") {
 		ERROR_DESCRIPTION = `No entry found by key provided\n${ERROR_DESCRIPTION}`;
@@ -19,4 +35,4 @@ class CliNoEntryError extends CliError {
 	}
 }
 
-export { CliError, CliNoEntryError };
+export { CliError, CliPromptError, CliPromptNoEntryError };

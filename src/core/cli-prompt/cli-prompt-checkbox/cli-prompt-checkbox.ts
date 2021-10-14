@@ -1,7 +1,7 @@
-import { CliBase } from "../cli-prompt-base";
-import { ICheckboxPrompt } from "./cli-prompt-checkbox.type";
+import { CliPromptBase } from "../cli-prompt-base";
+import { IPromptCheckbox } from "./cli-prompt-checkbox.type";
 
-class CliCheckbox extends CliBase {
+class CliPromptCheckbox extends CliPromptBase {
 	constructor() {
 		super("checkbox");
 	}
@@ -11,7 +11,7 @@ class CliCheckbox extends CliBase {
 		return true;
 	}
 
-	public prompt({ key, question, choices, validate, ...rest }: ICheckboxPrompt): Promise<any> {
+	public prompt({ key, question, choices, validate, ...rest }: IPromptCheckbox): Promise<any> {
 		return super.prompt({
 			key,
 			question,
@@ -22,4 +22,4 @@ class CliCheckbox extends CliBase {
 	}
 }
 
-export { CliCheckbox };
+export { CliPromptCheckbox };

@@ -1,8 +1,8 @@
 import inquirer, { QuestionTypeName } from "inquirer";
-import { CliNoEntryError } from "../../errors";
-import { IPrompt } from "./cli-prompt-base.type";
+import { CliPromptNoEntryError } from "../../errors";
+import { IPromptBase } from "./cli-prompt-base.type";
 
-class CliBase {
+class CliPromptBase {
 	protected value: Map<string, any> = new Map();
 	protected questionType: QuestionTypeName;
 
@@ -12,7 +12,7 @@ class CliBase {
 
 	public getValue(key: string) {
 		if (!this.value.has(key))
-			throw new CliNoEntryError(
+			throw new CliPromptNoEntryError(
 				`Values storage in {${this.constructor.name}} doesn't have {${key}} in it.`,
 			);
 
@@ -30,7 +30,7 @@ class CliBase {
 		choices,
 		validate,
 		...rest
-	}: IPrompt): Promise<any> {
+	}: IPromptBase): Promise<any> {
 		return inquirer
 			.prompt({
 				type: this.questionType,
@@ -49,4 +49,4 @@ class CliBase {
 	}
 }
 
-export { CliBase };
+export { CliPromptBase };

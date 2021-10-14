@@ -1,7 +1,7 @@
 import Separator from "inquirer/lib/objects/separator";
 import { ObjectAny } from "../../../general.type";
 
-interface IPrompt {
+interface IPromptBase {
 	key: string;
 	question: string;
 	defaultAnswer?: number | string;
@@ -18,4 +18,4 @@ interface IPrompt {
 	rest?: ObjectAny;
 }
 
-export { IPrompt };
+export { IPromptBase };

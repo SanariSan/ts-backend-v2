@@ -1,7 +1,7 @@
-import { CliBase } from "../cli-prompt-base";
-import { INumPrompt } from "./cli-prompt-num.type";
+import { CliPromptBase } from "../cli-prompt-base";
+import { IPromptNum } from "./cli-prompt-num.type";
 
-class CliNum extends CliBase {
+class CliPromptNum extends CliPromptBase {
 	constructor() {
 		super("number");
 	}
@@ -12,7 +12,7 @@ class CliNum extends CliBase {
 		return true;
 	}
 
-	public prompt({ key, question, defaultAnswer, validate, ...rest }: INumPrompt): Promise<any> {
+	public prompt({ key, question, defaultAnswer, validate, ...rest }: IPromptNum): Promise<any> {
 		return super.prompt({
 			key,
 			question,
@@ -23,4 +23,4 @@ class CliNum extends CliBase {
 	}
 }
 
-export { CliNum };
+export { CliPromptNum };

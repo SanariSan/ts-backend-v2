@@ -1,5 +1,5 @@
-import { IPrompt } from "../cli-prompt-base";
+import { IPromptBase } from "../cli-prompt-base";
 
-type ICheckboxPrompt = Pick<IPrompt, "key" | "question" | "choices" | "validate" | "rest">;
+type IPromptCheckbox = Pick<IPromptBase, "key" | "question" | "choices" | "validate" | "rest">;
 
-export { ICheckboxPrompt };
+export { IPromptCheckbox };

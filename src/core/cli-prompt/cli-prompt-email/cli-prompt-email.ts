@@ -1,7 +1,7 @@
-import { CliBase } from "../cli-prompt-base";
-import { IEmailPrompt } from "./cli-prompt-email.type";
+import { CliPromptBase } from "../cli-prompt-base";
+import { IPromptEmail } from "./cli-prompt-email.type";
 
-class CliEmail extends CliBase {
+class CliPromptEmail extends CliPromptBase {
 	constructor() {
 		super("input");
 	}
@@ -15,7 +15,7 @@ class CliEmail extends CliBase {
 		return true;
 	}
 
-	public prompt({ key, question, defaultAnswer, validate, ...rest }: IEmailPrompt): Promise<any> {
+	public prompt({ key, question, defaultAnswer, validate, ...rest }: IPromptEmail): Promise<any> {
 		return super.prompt({
 			key,
 			question,
@@ -26,4 +26,4 @@ class CliEmail extends CliBase {
 	}
 }
 
-export { CliEmail };
+export { CliPromptEmail };

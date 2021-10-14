@@ -1,5 +1,5 @@
-import { IPrompt } from "../cli-prompt-base";
+import { IPromptBase } from "../cli-prompt-base";
 
-type INumPrompt = Pick<IPrompt, "key" | "question" | "defaultAnswer" | "validate" | "rest">;
+type IPromptNum = Pick<IPromptBase, "key" | "question" | "defaultAnswer" | "validate" | "rest">;
 
-export { INumPrompt };
+export { IPromptNum };

@@ -1,13 +1,14 @@
-import { CliBase, IPrompt } from "../cli-prompt-base";
+import { CliPromptBase } from "../cli-prompt-base";
+import { IPromptText } from "./cli-prompt-text.type";
 
-class CliText extends CliBase {
+class CliPromptText extends CliPromptBase {
 	constructor() {
 		super("input");
 	}
 
-	public prompt({ key, question, defaultAnswer, validate, ...rest }: IPrompt): Promise<any> {
+	public prompt({ key, question, defaultAnswer, validate, ...rest }: IPromptText): Promise<any> {
 		return super.prompt({ key, question, defaultAnswer, validate: validate, ...rest });
 	}
 }
 
-export { CliText };
+export { CliPromptText };

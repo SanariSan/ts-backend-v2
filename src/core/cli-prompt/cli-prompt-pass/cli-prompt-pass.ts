@@ -1,6 +1,7 @@
-import { CliBase, IPrompt } from "../cli-prompt-base";
+import { CliPromptBase } from "../cli-prompt-base";
+import { IPromptPass } from "./cli-prompt-pass.type";
 
-class CliPass extends CliBase {
+class CliPromptPass extends CliPromptBase {
 	constructor() {
 		super("password");
 	}
@@ -11,7 +12,7 @@ class CliPass extends CliBase {
 		return true;
 	}
 
-	public prompt({ key, question, defaultAnswer, validate, ...rest }: IPrompt): Promise<any> {
+	public prompt({ key, question, defaultAnswer, validate, ...rest }: IPromptPass): Promise<any> {
 		return super.prompt({
 			key,
 			question,
@@ -22,4 +23,4 @@ class CliPass extends CliBase {
 	}
 }
 
-export { CliPass };
+export { CliPromptPass };

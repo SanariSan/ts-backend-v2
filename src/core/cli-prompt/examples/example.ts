@@ -1,14 +1,22 @@
 import { Separator } from "inquirer";
-import { CliCheckbox, CliConfirm, CliEmail, CliList, CliNum, CliPass, CliText } from "../";
+import {
+	CliPromptCheckbox,
+	CliPromptConfirm,
+	CliPromptEmail,
+	CliPromptList,
+	CliPromptNum,
+	CliPromptPass,
+	CliPromptText,
+} from "../";
 
 async function examplePromptCLI() {
-	let cliText = new CliText();
-	let cliConfirm = new CliConfirm();
-	let cliNum = new CliNum();
-	let cliPass = new CliPass();
-	let cliEmail = new CliEmail();
-	let cliList = new CliList();
-	let cliCheckbox = new CliCheckbox();
+	let cliText = new CliPromptText();
+	let cliConfirm = new CliPromptConfirm();
+	let cliNum = new CliPromptNum();
+	let cliPass = new CliPromptPass();
+	let cliEmail = new CliPromptEmail();
+	let cliList = new CliPromptList();
+	let cliCheckbox = new CliPromptCheckbox();
 
 	await cliText.prompt({ key: "text", question: "Text prompt" });
 	await cliConfirm.prompt({ key: "confirm", question: "Confirm prompt" });

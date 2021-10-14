@@ -1,15 +1,15 @@
-import { CliBase } from "../cli-prompt-base";
-import { IConfirmPrompt } from "./cli-prompt-confirm.type";
+import { CliPromptBase } from "../cli-prompt-base";
+import { IPromptConfirm } from "./cli-prompt-confirm.type";
 
-class CliConfirm extends CliBase {
+class CliPromptConfirm extends CliPromptBase {
 	constructor() {
 		super("confirm");
 	}
 
 	//result value either true or false
-	public prompt({ key, question, ...rest }: IConfirmPrompt): Promise<any> {
+	public prompt({ key, question, ...rest }: IPromptConfirm): Promise<any> {
 		return super.prompt({ key, question, ...rest });
 	}
 }
 
-export { CliConfirm };
+export { CliPromptConfirm };

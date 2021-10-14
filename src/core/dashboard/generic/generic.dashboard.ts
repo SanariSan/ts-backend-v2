@@ -1,113 +1,37 @@
 import blessed from "blessed";
 
-let Dashboard: any = {};
+class Dashboard {
+	protected screen: blessed.Widgets.Screen;
+	constructor() {
+		this.screen = blessed.screen({
+			smartCSR: true,
+			fullUnicode: true,
+		});
+	}
+}
 
-let DEFAULT_PADDING = {
-	top: 0,
-	left: 1,
-	right: 1,
-};
-
-let WIDTH_LEFT_PANEL = 30;
-
-Dashboard.init = function () {
+//init
+function initialuze() {
 	// Init Screen
-	this.screen = blessed.screen({
-		smartCSR: true,
-		fullUnicode: true,
-	});
-	this.screen.title = "Dashboard";
-
-	this.logLinesStorage = {};
-
-	this.menuBox = blessed.list({
-		top: "0",
-		left: "0",
-		width: WIDTH_LEFT_PANEL + "%",
-		height: "70%",
-		padding: 0,
-		scrollbar: {
-			ch: " ",
-			inverse: false,
-		},
-		border: {
-			type: "line",
-		},
-		keys: true,
-		autoCommandKeys: true,
-		tags: true,
-		style: {
-			selected: {
-				bg: "blue",
-				fg: "white",
-			},
-			scrollbar: {
-				bg: "blue",
-				fg: "black",
-			},
-			fg: "white",
-			border: {
-				fg: "blue",
-			},
-			header: {
-				fg: "blue",
-			},
-		},
-	});
 
 	this.menuBox.on("select item", (item, i) => {
 		this.logBox.clearItems();
 	});
 
-	this.logBox = blessed.list({
-		label: " Logs ",
-		top: "0",
-		left: WIDTH_LEFT_PANEL + "%",
-		width: 100 - WIDTH_LEFT_PANEL + "%",
-		height: "70%",
-		padding: DEFAULT_PADDING,
-		scrollable: true,
-		scrollbar: {
-			ch: " ",
-			inverse: false,
-		},
-		keys: true,
-		autoCommandKeys: true,
-		tags: true,
-		border: {
-			type: "line",
-		},
-		style: {
-			fg: "white",
-			border: {
-				fg: "white",
-			},
-			scrollbar: {
-				bg: "blue",
-				fg: "black",
-			},
-		},
-	});
+	// this.questionsBox = blessed.text({
+	// 	content: " Use Ctrl+u to switch to questions control screen ",
+	// 	left: "0%",
+	// 	top: "76%",
+	// 	width: "100%",
+	// 	height: "24%",
+	// 	valign: "middle",
+	// 	tags: true,
+	// 	style: {
+	// 		fg: "white",
+	// 	},
+	// });
 
-	this.infoBox = blessed.text({
-		content:
-			" left/right: switch boards | up/down/mouse: scroll | Ctrl-C: exit{|} {cyan-fg}{bold}This WORKS!!!{/}  ",
-		left: "0%",
-		top: "95%",
-		width: "100%",
-		height: "6%",
-		valign: "middle",
-		tags: true,
-		style: {
-			fg: "white",
-		},
-	});
-
-	this.menuBox.focus();
-
-	this.screen.append(this.menuBox);
-	this.screen.append(this.logBox);
-	this.screen.append(this.infoBox);
+	// this.screen.append(this.questionsBox);
 
 	this.menuBox.setLabel(" Menu ");
 
@@ -137,15 +61,19 @@ Dashboard.init = function () {
 		process.exit(0);
 	});
 
+	this.screen.key(["C-u"], function (ch, key) {
+		this.screen.destroy();
+	});
+
 	// async refresh of the ui
 	setInterval(function () {
 		that.screen.render();
 	}, 300);
 
 	return this;
-};
+}
 
-Dashboard.refresh = function (menuOptions) {
+function refresh(menuOptions) {
 	if (!menuOptions) {
 		this.menuBox.setItem(0, "No options available");
 		return;
@@ -183,16 +111,20 @@ Dashboard.refresh = function (menuOptions) {
 	this.screen.render();
 
 	return this;
-};
+}
 
-Dashboard.log = function (data) {
+function log(data) {
 	// clear and initialize logs box as empty array if nothing was logged before
 	if (this.logLinesStorage[data.id] === undefined) {
 		this.logLinesStorage[data.id] = [];
 	}
 
+	let string = `{${gradient(Math.random() * 100, [255, 0, 0], [0, 255, 0])}-fg} > ${
+		data.string
+	}{/}`;
+
 	// push log line to object containing logs per id
-	this.logLinesStorage[data.id].push(data.id + "{/} > " + data.string);
+	this.logLinesStorage[data.id].push(string);
 
 	// shift oldest log line if limit exceeded
 	let maxCount = 200;
@@ -201,6 +133,21 @@ Dashboard.log = function (data) {
 	}
 
 	return this;
-};
+}
 
 export { Dashboard };
+
+function gradient(p: number, rgb_beginning: number[], rgb_end: number[]) {
+	let w = (p / 100) * 2 - 1;
+
+	let w1 = (w + 1) / 2.0;
+	let w2 = 1 - w1;
+
+	let rgb = [
+		Math.floor(rgb_beginning[0] * w1 + rgb_end[0] * w2),
+		Math.floor(rgb_beginning[1] * w1 + rgb_end[1] * w2),
+		Math.floor(rgb_beginning[2] * w1 + rgb_end[2] * w2),
+	];
+
+	return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
+}

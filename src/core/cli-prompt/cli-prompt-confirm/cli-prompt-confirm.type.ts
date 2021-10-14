@@ -1,5 +1,5 @@
-import { IPrompt } from "../cli-prompt-base";
+import { IPromptBase } from "../cli-prompt-base";
 
-type IConfirmPrompt = Pick<IPrompt, "key" | "question" | "rest">;
+type IPromptConfirm = Pick<IPromptBase, "key" | "question" | "rest">;
 
-export { IConfirmPrompt };
+export { IPromptConfirm };
