@@ -34,7 +34,7 @@
 	"devDependencies": {
 		"@types/blessed": "^0.1.19",
 		"@types/inquirer": "^8.1.1",
-		"@types/node": "^16.9.4",
+		"@types/node": "^16.11.0",
 		"madge": "^5.0.1",
 		"prettier": "^2.3.2"
 	}

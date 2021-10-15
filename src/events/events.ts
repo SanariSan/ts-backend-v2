@@ -1,67 +1,88 @@
 import { EventEmitter } from "stream";
+import { randomHex } from "../helpers/util";
 
-class CustomEventEmitter extends EventEmitter {}
+type TCb = (...args: any[]) => void;
+type TEventName = string;
+type TCbKey = string;
+type TMapKeyCb = Map<TCbKey, TCb>;
+type TMapEventNameKeyCb = Map<TEventName, TMapKeyCb>;
 
-class PubSubStatic {
-	// { PubSub instance : Set of channels names client subscribed to }
-	public static clients = new Map<PubSub, Set<string>>();
-}
-
-class PubSub extends CustomEventEmitter {
-	// util for getting Set of channels from client
-	private getChannelsSet() {
-		const set = PubSubStatic.clients.get(this);
-		if (!set) throw new Error("weird");
-
-		return set;
+class EventEmitterStatic {
+	public static eventEmittersMap = new Map<CustomEventEmitter, TMapEventNameKeyCb>();
+	public static setCurrentClassInstance(currentClassInstance) {
+		this.eventEmittersMap.set(currentClassInstance, new Map());
+	}
+	public static getEventNamesKeyCbMap(currentEmitterInstance) {
+		// Map<eName->Map<Key->cb>>
+		return <TMapEventNameKeyCb>this.eventEmittersMap.get(currentEmitterInstance);
 	}
 
-	// initializes new client
-	public createClient() {
-		PubSubStatic.clients.set(this, new Set());
+	public static getKeyCbMap(eventName, eventNamesKeyCbMap: TMapEventNameKeyCb): TMapKeyCb {
+		if (!eventNamesKeyCbMap.has(eventName)) {
+			eventNamesKeyCbMap.set(eventName, new Map());
+		}
 
-		return this;
+		return <TMapKeyCb>eventNamesKeyCbMap.get(eventName);
 	}
 
-	// sends message to all clients who has channel in their Sets
-	public publish(channel, ...args) {
-		for (let [client, channels] of PubSubStatic.clients) {
-			if (channels.has(channel)) {
-				client.emit("message", channel, ...args);
+	// loop through all emitters instances, return all Maps with matching eventName
+	public static getEmitterKeyCbMaps(eventName): Map<CustomEventEmitter, TMapKeyCb> {
+		const eventNamesKeyCbMaps = new Map<CustomEventEmitter, TMapKeyCb>();
+
+		for (let [emitterInstance, eventNameKeyCbMap] of this.eventEmittersMap) {
+			if (eventNameKeyCbMap.has(eventName)) {
+				eventNamesKeyCbMaps.set(
+					emitterInstance,
+					<TMapKeyCb>eventNameKeyCbMap.get(eventName),
+				);
 			}
 		}
 
-		return this;
+		return eventNamesKeyCbMaps;
 	}
 
-	// adds channel to client
-	public subscribe(channel) {
-		this.getChannelsSet().add(channel);
+	//only for caller class instance
+	public static getEmitterAndListenerByKey(eventName, key) {
+		const eventNamesKeyCbMaps = this.getEmitterKeyCbMaps(eventName);
 
-		return this;
-	}
+		// at the point we couldn't find map for specified eventName, so create one
+		for (let [emitterInstance, keyCbMap] of eventNamesKeyCbMaps) {
+			const listener = keyCbMap.get(key);
 
-	// removes channel from client
-	public unsubscribe(channel) {
-		this.getChannelsSet().delete(channel);
+			if (listener !== undefined) {
+				return { emitterInstance, keyCbMap, listener };
+			}
+		}
 
-		return this;
-	}
-
-	// removes message listeners
-	public clearListeners() {
-		this.removeAllListeners("message");
-
-		return this;
-	}
-
-	// removes client AND message listeners
-	public quit() {
-		PubSubStatic.clients.delete(this);
-		this.clearListeners();
-
-		return this;
+		throw new Error("todo: Probably unsubbed earlier using this key or NO key like this");
 	}
 }
 
-export { PubSub };
+class CustomEventEmitter extends EventEmitter {
+	constructor() {
+		super();
+
+		EventEmitterStatic.setCurrentClassInstance(this);
+	}
+
+	public onByKey(eventName: TEventName, listener: TCb, key: TCbKey = randomHex()): TCbKey {
+		const eventNamesKeyCbMap = EventEmitterStatic.getEventNamesKeyCbMap(this); //eName-><Key->cb>
+		const keyCbMap = EventEmitterStatic.getKeyCbMap(eventName, eventNamesKeyCbMap);
+
+		keyCbMap.set(key, listener);
+		super.on(eventName, listener);
+
+		return key;
+	}
+
+	public offByKey(eventName: TEventName, key: TCbKey) {
+		// can throw
+		const { emitterInstance, keyCbMap, listener } =
+			EventEmitterStatic.getEmitterAndListenerByKey(eventName, key);
+
+		keyCbMap.delete(key);
+		emitterInstance.off(eventName, listener);
+	}
+}
+
+export { CustomEventEmitter };

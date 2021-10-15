@@ -1,3 +1,3 @@
 // export * from "./pub";
 // export * from "./sub";
-export * from "./events";
+export * from "./pub-sub";

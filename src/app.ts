@@ -3,31 +3,24 @@ import { PubSub } from "./events";
 import { test } from "./test";
 
 const pubSub = new PubSub();
-const pubSub1 = new PubSub();
 pubSub.createClient();
-pubSub1.createClient();
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function init() {
-	pubSub.on("message", (channel, ...args) => {
-		console.log(`Message ch: ${channel} | args: ${args}`);
-	});
-	pubSub1.on("message", (channel, ...args) => {
-		console.log(`Message-1 ch: ${channel} | args: ${args}`);
-	});
+	// keypubSub === 12345
+	const keypubSub = pubSub.onByKey(
+		"message",
+		(channel, ...args) => {
+			console.log(`Message-app.ts ch: ${channel} | args: ${args}`);
+		},
+		"12345",
+	);
 
-	pubSub.subscribe("testChannel");
-	pubSub.subscribe("2nd");
-
-	pubSub1.subscribe("2nd");
+	pubSub.subscribe("t");
 
 	test();
 }
-
-setTimeout(() => {
-	pubSub.quit();
-}, 3000);
 
 init();
 
