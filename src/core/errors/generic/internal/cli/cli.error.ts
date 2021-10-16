@@ -1,5 +1,5 @@
+import { ERROR } from "../../../error.type";
 import { InternalError } from "../internal.error";
-import { ERROR_TYPE } from "../../../error.const";
 
 class CliError extends InternalError {
 	constructor(ERROR_TYPE, ERROR_DESCRIPTION = "") {
@@ -25,14 +25,14 @@ class CliDashboardError extends CliError {
 	}
 }
 
-class CliPromptNoEntryError extends CliError {
-	protected ERROR_MESAGE: string;
-	constructor(ERROR_MESAGE, ERROR_DESCRIPTION = "") {
+class CliNoEntryError extends CliPromptError {
+	public ERROR_MESAGE: string;
+	constructor(ERROR_MESAGE = "", ERROR_DESCRIPTION = "") {
 		ERROR_DESCRIPTION = `No entry found by key provided\n${ERROR_DESCRIPTION}`;
 
-		super(ERROR_TYPE.CLI_NO_ENTRY, ERROR_DESCRIPTION);
+		super(ERROR.INTERNAL.CLI.PROMPT.NO_ENTRY.NAME, ERROR_DESCRIPTION);
 		this.ERROR_MESAGE = ERROR_MESAGE;
 	}
 }
 
-export { CliError, CliPromptError, CliPromptNoEntryError };
+export { CliError, CliPromptError, CliDashboardError, CliNoEntryError };

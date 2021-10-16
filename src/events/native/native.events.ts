@@ -1,11 +1,6 @@
 import { EventEmitter } from "stream";
-import { randomHex } from "../helpers/util";
-
-type TCb = (...args: any[]) => void;
-type TEventName = string;
-type TCbKey = string;
-type TMapKeyCb = Map<TCbKey, TCb>;
-type TMapEventNameKeyCb = Map<TEventName, TMapKeyCb>;
+import { randomHex } from "../../helpers/util";
+import { TCb, TCbKey, TEventName, TMapEventNameKeyCb, TMapKeyCb } from "./native.events.type";
 
 class EventEmitterStatic {
 	public static eventEmittersMap = new Map<CustomEventEmitter, TMapEventNameKeyCb>();

@@ -1,51 +1,40 @@
-// import { DashboardMain } from "./core/dashboard";
+import { handleError } from "./core/errors";
 import { PubSub } from "./events";
-import { test } from "./test";
+import { pubSubTest, test } from "./test";
 
-const pubSub = new PubSub();
-pubSub.createClient();
+const pubSubClient = new PubSub();
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-async function init() {
-	// keypubSub === 12345
-	const keypubSub = pubSub.onByKey(
-		"message",
-		(channel, ...args) => {
-			console.log(`Message-app.ts ch: ${channel} | args: ${args}`);
-		},
-		"12345",
-	);
-
-	pubSub.subscribe("t");
-
-	test();
+function init() {
+	try {
+		test();
+	} catch (e: any) {
+		handleError(e);
+	}
 }
 
-init();
+function pubSubTestInit() {
+	// keypubSub === app-init-key
+	const keypubSub = pubSubClient.onByKey(
+		"message",
+		(channel, ...args) => {
+			console.log(`Message-app.ts channel: ${channel} | args: ${JSON.stringify(args)}`);
+		},
+		"app-init-key",
+	);
+	pubSubClient.subscribe("channel-test");
 
-// async function dashboardInit(logListener) {
-// 	const dashboardMain = new DashboardMain();
-// 	dashboardMain.init();
+	pubSubTest();
 
-// 	logListener.on("log", function (type, data) {
-// 		Dashboard.log(type, data);
-// 	});
+	setTimeout(() => {
+		pubSubClient.offByKey("message", "app-init-key");
+		pubSubClient.unsubscribe("channel-test");
 
-// 	let arr = [{ id: `123` }, { id: `456` }, { id: `789` }];
+		// to destroy pubSubClient with all subbed channels
+		// so need to new PubSub() and subscribe again to use
+		// listeners are still UP! Remove manually with
+		// pubSubClient.removeAllListeners("message") or pubSubClient.offByKey("message", key);
+		// pubSubClient.quit();
+	}, 7000);
+}
 
-// 	setInterval(() => {
-// 		Dashboard.refresh(arr);
-// 	}, 250);
-// }
-
-// async function init() {
-// dashboardInit(logListener);
-// setInterval(() => {
-// 	let id = ~~(Math.random() * 3);
-// 	logListener.emit("log", {
-// 		id: id === 0 ? 123 : id === 1 ? 456 : 789,
-// 		string: `Some random char ${String.fromCharCode(~~(Math.random() * 100))}`,
-// 	});
-// }, 300);
-// }
+pubSubTestInit();

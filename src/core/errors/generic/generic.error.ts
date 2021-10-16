@@ -1,9 +1,11 @@
-import { ERROR_TYPE } from "../error.const";
+import { ERROR_ORIGIN, ERROR_TYPE } from "../error.type";
 
 class GenericError extends Error {
-	protected ERROR_DESCRIPTION: string;
-	protected ERROR_TIMESTAMP: number;
-	protected ERROR_TIMESTAMP_HR: Date;
+	public ERROR_DESCRIPTION: string;
+	public ERROR_TIMESTAMP: number;
+	public ERROR_TIMESTAMP_HR: Date;
+	public ERROR_MESAGE?: string;
+	public ERROR_ORIGIN?: ERROR_ORIGIN;
 
 	constructor(ERROR_TYPE: ERROR_TYPE, ERROR_DESCRIPTION) {
 		super(ERROR_TYPE);

@@ -1,5 +1,5 @@
 import inquirer, { QuestionTypeName } from "inquirer";
-import { CliPromptNoEntryError } from "../../errors";
+import { CliNoEntryError } from "../../errors";
 import { IPromptBase } from "./cli-prompt-base.type";
 
 class CliPromptBase {
@@ -12,7 +12,7 @@ class CliPromptBase {
 
 	public getValue(key: string) {
 		if (!this.value.has(key))
-			throw new CliPromptNoEntryError(
+			throw new CliNoEntryError(
 				`Values storage in {${this.constructor.name}} doesn't have {${key}} in it.`,
 			);
 

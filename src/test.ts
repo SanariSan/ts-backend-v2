@@ -1,17 +1,21 @@
-import { PubSub } from "./events";
-import { CustomEventEmitter } from "./events/events";
+import { CliNoEntryError } from "./core/errors";
+import { CustomEventEmitter, PubSub } from "./events";
 
 const pubSub = new PubSub();
 
-function test() {
+function pubSubTest() {
 	setInterval(() => {
-		pubSub.publish("t", "some text");
+		pubSub.publish("channel-test", "some text", { a: true });
 	}, 500);
 
-	setTimeout(() => {
-		const e = new CustomEventEmitter();
-		e.offByKey("message", "12345"); // or if we have keypubSub just pass it
-	}, 5000);
+	// setTimeout(() => {
+	// 	const e = new CustomEventEmitter();
+	// 	e.offByKey("message", "app-init"); // or if we have keypubSub just pass it
+	// }, 5000);
 }
 
-export { test };
+function test() {
+	throw new CliNoEntryError("Custom Error Message Placeholer");
+}
+
+export { test, pubSubTest };

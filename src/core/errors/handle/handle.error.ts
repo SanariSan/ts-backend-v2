@@ -1,38 +1,47 @@
-import fs from "fs";
-import { ERROR_TYPE } from "../../errors";
+import { GenericError, ERROR } from "..";
 
-async function handleError(e: Error) {
+function handleError(e: GenericError) {
+	console.log("##############################");
 	console.log(`Error type: ${e.message}`);
-	console.log(JSON.stringify(e, null, 2));
-	// fs.appendFileSync("./log.txt", JSON.stringify(e) + "\n");
+	logMultiline("Error type", "->");
+	logMultiline(e.message, " |-");
 
+	for (let [key, val] of Object.entries(JSON.parse(JSON.stringify(e)))) {
+		logMultiline(key, "->");
+		logMultiline(val, " |-");
+	}
+
+	doSomething(e);
+	console.log("##############################");
+	// fs.appendFileSync("./log.txt", JSON.stringify(e) + "\n");
+}
+
+function logMultiline(param, d) {
+	`${param}`
+		.split("\n")
+		.filter((el) => el.length)
+		.forEach((el) => console.log(`${d}${el}`));
+}
+
+function doSomething(e) {
 	switch (e.message) {
-		case ERROR_TYPE.NO_DATA: {
-			console.log("1");
+		case ERROR.INTERNAL.RESPONSE.NO_DATA.NAME: {
 			return;
 		}
-		case ERROR_TYPE.BAD_STATUS: {
-			console.log("2");
+		case ERROR.INTERNAL.RESPONSE.BAD_STATUS.NAME: {
 			return;
 		}
-		case ERROR_TYPE.NO_RESPONSE: {
-			console.log("3");
+		case ERROR.INTERNAL.RESPONSE.NO_RESPONSE.NAME: {
 			return;
 		}
-		case ERROR_TYPE.NO_RESULT: {
-			console.log("4");
+		case ERROR.INTERNAL.RESPONSE.NO_RESULT.NAME: {
 			return;
 		}
-		case ERROR_TYPE.NO_SUCCESS: {
-			console.log("5");
-			return;
-		}
-		case ERROR_TYPE.CLI_NO_ENTRY: {
-			console.log("6");
+		case ERROR.INTERNAL.CLI.PROMPT.NO_ENTRY.NAME: {
 			return;
 		}
 		default: {
-			console.log("unexpected");
+			console.log("Error unexpected");
 			return;
 		}
 	}
