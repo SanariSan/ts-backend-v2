@@ -1,4 +1,4 @@
-import { NoClientError } from "../../core/errors";
+import { NoClassInstanceError } from "../../core/errors";
 import { CustomEventEmitter } from "../native";
 import { TChannels } from "./pubsub.events.type";
 
@@ -11,7 +11,7 @@ class PubSubStatic {
 		const set: Set<TChannels> | undefined = this.clients.get(emitterInstance);
 
 		if (set === undefined)
-			throw new NoClientError("Could not find client emitter instance in list");
+			throw new NoClassInstanceError("Could not find client emitter instance in list");
 
 		return set;
 	}

@@ -25,19 +25,19 @@ function logMultiline(param, d) {
 
 function doSomething(e) {
 	switch (e.message) {
-		case ERROR.INTERNAL.RESPONSE.NO_DATA.NAME: {
+		case ERROR.INTERNAL.RESPONSE.NO_DATA.VALUE: {
 			return;
 		}
-		case ERROR.INTERNAL.RESPONSE.BAD_STATUS.NAME: {
+		case ERROR.INTERNAL.RESPONSE.BAD_STATUS.VALUE: {
 			return;
 		}
-		case ERROR.INTERNAL.RESPONSE.NO_RESPONSE.NAME: {
+		case ERROR.INTERNAL.RESPONSE.NO_RESPONSE.VALUE: {
 			return;
 		}
-		case ERROR.INTERNAL.RESPONSE.NO_RESULT.NAME: {
+		case ERROR.INTERNAL.RESPONSE.NO_RESULT.VALUE: {
 			return;
 		}
-		case ERROR.INTERNAL.CLI.PROMPT.NO_ENTRY.NAME: {
+		case ERROR.INTERNAL.CLI.PROMPT.NO_ENTRY.VALUE: {
 			return;
 		}
 		default: {

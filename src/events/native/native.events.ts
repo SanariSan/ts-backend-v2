@@ -1,55 +1,54 @@
 import { EventEmitter } from "stream";
+import { NoEventOrKeyError } from "../../core/errors";
 import { randomHex } from "../../helpers/util";
-import { TCb, TCbKey, TEventName, TMapEventNameKeyCb, TMapKeyCb } from "./native.events.type";
+import {
+	TCb,
+	TKey,
+	TEName,
+	TENameKeyCb,
+	TKeyCb,
+	TGetEmitterKeyCbMapsListener,
+} from "./native.events.type";
 
 class EventEmitterStatic {
-	public static eventEmittersMap = new Map<CustomEventEmitter, TMapEventNameKeyCb>();
+	private static emitters = new Map<CustomEventEmitter, TENameKeyCb>();
+
 	public static setCurrentClassInstance(currentClassInstance) {
-		this.eventEmittersMap.set(currentClassInstance, new Map());
-	}
-	public static getEventNamesKeyCbMap(currentEmitterInstance) {
-		// Map<eName->Map<Key->cb>>
-		return <TMapEventNameKeyCb>this.eventEmittersMap.get(currentEmitterInstance);
+		this.emitters.set(currentClassInstance, new Map());
 	}
 
-	public static getKeyCbMap(eventName, eventNamesKeyCbMap: TMapEventNameKeyCb): TMapKeyCb {
-		if (!eventNamesKeyCbMap.has(eventName)) {
-			eventNamesKeyCbMap.set(eventName, new Map());
-		}
-
-		return <TMapKeyCb>eventNamesKeyCbMap.get(eventName);
+	public static removeCurrentClassInstance(currentClassInstance) {
+		this.emitters.delete(currentClassInstance);
 	}
 
-	// loop through all emitters instances, return all Maps with matching eventName
-	public static getEmitterKeyCbMaps(eventName): Map<CustomEventEmitter, TMapKeyCb> {
-		const eventNamesKeyCbMaps = new Map<CustomEventEmitter, TMapKeyCb>();
+	public static getENamesMaps(currentClassInstance): TENameKeyCb | never {
+		const result = this.emitters.get(currentClassInstance);
 
-		for (let [emitterInstance, eventNameKeyCbMap] of this.eventEmittersMap) {
-			if (eventNameKeyCbMap.has(eventName)) {
-				eventNamesKeyCbMaps.set(
-					emitterInstance,
-					<TMapKeyCb>eventNameKeyCbMap.get(eventName),
-				);
+		return <TENameKeyCb>result;
+	}
+
+	public static getEmitterKeyCbMapsListener(
+		eventName: TEName,
+		key: TKey,
+	): TGetEmitterKeyCbMapsListener {
+		// loop through all emitter instances
+		for (let [emitter, eNamesMaps] of this.emitters) {
+			// loop through all eventNames maps
+			for (let [eventNameStored, keyCbMaps] of eNamesMaps) {
+				if (eventNameStored !== eventName) continue;
+				if (!keyCbMaps.has(key)) continue;
+
+				const listener = <TCb>keyCbMaps.get(key);
+
+				return {
+					emitter,
+					keyCbMaps,
+					listener,
+				};
 			}
 		}
 
-		return eventNamesKeyCbMaps;
-	}
-
-	//only for caller class instance
-	public static getEmitterAndListenerByKey(eventName, key) {
-		const eventNamesKeyCbMaps = this.getEmitterKeyCbMaps(eventName);
-
-		// at the point we couldn't find map for specified eventName, so create one
-		for (let [emitterInstance, keyCbMap] of eventNamesKeyCbMaps) {
-			const listener = keyCbMap.get(key);
-
-			if (listener !== undefined) {
-				return { emitterInstance, keyCbMap, listener };
-			}
-		}
-
-		throw new Error("todo: Probably unsubbed earlier using this key or NO key like this");
+		throw new NoEventOrKeyError(`Event: ${eventName}, Key: ${key}`);
 	}
 }
 
@@ -60,23 +59,33 @@ class CustomEventEmitter extends EventEmitter {
 		EventEmitterStatic.setCurrentClassInstance(this);
 	}
 
-	public onByKey(eventName: TEventName, listener: TCb, key: TCbKey = randomHex()): TCbKey {
-		const eventNamesKeyCbMap = EventEmitterStatic.getEventNamesKeyCbMap(this); //eName-><Key->cb>
-		const keyCbMap = EventEmitterStatic.getKeyCbMap(eventName, eventNamesKeyCbMap);
+	public onByKey(eventName: TEName, listener: TCb, key: TKey = randomHex()): TKey | never {
+		const eNamesMaps = EventEmitterStatic.getENamesMaps(this);
+		if (!eNamesMaps.has(eventName)) {
+			eNamesMaps.set(eventName, new Map());
+		}
 
-		keyCbMap.set(key, listener);
+		const keyCbMaps = <TKeyCb>eNamesMaps.get(eventName);
+
+		keyCbMaps.set(key, listener);
 		super.on(eventName, listener);
 
 		return key;
 	}
 
-	public offByKey(eventName: TEventName, key: TCbKey) {
-		// can throw
-		const { emitterInstance, keyCbMap, listener } =
-			EventEmitterStatic.getEmitterAndListenerByKey(eventName, key);
+	// can throw if no Event Or Key found
+	public offByKey(eventName: TEName, key): void | never {
+		const result = EventEmitterStatic.getEmitterKeyCbMapsListener(eventName, key);
+		const { emitter, keyCbMaps, listener } = result;
 
-		keyCbMap.delete(key);
-		emitterInstance.off(eventName, listener);
+		keyCbMaps.delete(key);
+		emitter.off(eventName, listener);
+	}
+
+	public clearAll(): void {
+		EventEmitterStatic.removeCurrentClassInstance(this);
+		EventEmitterStatic.setCurrentClassInstance(this);
+		this.removeAllListeners();
 	}
 }
 

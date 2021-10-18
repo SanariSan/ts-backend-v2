@@ -1,21 +1,19 @@
-import { CliNoEntryError } from "./core/errors";
-import { CustomEventEmitter, PubSub } from "./events";
+import { PubSub } from "./events";
+import { sleep } from "./helpers/util";
 
-const pubSub = new PubSub();
+async function pubSubTest() {
+	const pubSubClient = new PubSub();
 
-function pubSubTest() {
 	setInterval(() => {
-		pubSub.publish("channel-test", "some text", { a: true });
+		pubSubClient.publish("channel-test", "some text", { a: true });
 	}, 500);
 
-	// setTimeout(() => {
-	// 	const e = new CustomEventEmitter();
-	// 	e.offByKey("message", "app-init"); // or if we have keypubSub just pass it
-	// }, 5000);
+	await sleep(6000);
+	try {
+		pubSubClient.offByKey("message", "app-init-key");
+	} catch (e) {
+		pubSubClient.publish("error", e);
+	}
 }
 
-function test() {
-	throw new CliNoEntryError("Custom Error Message Placeholer");
-}
-
-export { test, pubSubTest };
+export { pubSubTest };

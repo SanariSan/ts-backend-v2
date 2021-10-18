@@ -9,14 +9,14 @@ class PubSubError extends EventsError {
 	}
 }
 
-class NoClientError extends PubSubError {
+class NoClassInstanceError extends PubSubError {
 	public ERROR_MESAGE: string;
 	constructor(ERROR_MESAGE, ERROR_DESCRIPTION = "") {
 		ERROR_DESCRIPTION = `Quit operation was probably executed before\n${ERROR_DESCRIPTION}`;
 
-		super(ERROR.INTERNAL.EVENTS.PUBSUB.NO_CLIENT.NAME, ERROR_DESCRIPTION);
+		super(ERROR.INTERNAL.EVENTS.PUBSUB.NO_CLIENT.VALUE, ERROR_DESCRIPTION);
 		this.ERROR_MESAGE = ERROR_MESAGE;
 	}
 }
 
-export { NoClientError, PubSubError };
+export { NoClassInstanceError, PubSubError };

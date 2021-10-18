@@ -8,7 +8,7 @@ class InternalError extends GenericError {
 		ERROR_DESCRIPTION = `Error happened on server side, no user input took part\n${ERROR_DESCRIPTION}`;
 
 		super(ERROR_TYPE, ERROR_DESCRIPTION);
-		this.ERROR_ORIGIN = ERROR.ERROR_ORIGIN.INTERNAL.NAME;
+		this.ERROR_ORIGIN = ERROR.ERROR_ORIGIN.INTERNAL.VALUE;
 	}
 }
 

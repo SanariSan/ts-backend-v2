@@ -1,7 +1,16 @@
-type TCb = (...args: any[]) => void;
-type TEventName = string;
-type TCbKey = string;
-type TMapKeyCb = Map<TCbKey, TCb>;
-type TMapEventNameKeyCb = Map<TEventName, TMapKeyCb>;
+import { CustomEventEmitter } from ".";
 
-export { TCb, TEventName, TCbKey, TMapKeyCb, TMapEventNameKeyCb };
+type TCb = (...args: any[]) => void;
+type TKey = string;
+type TEName = string;
+type TKeyCb = Map<TKey, TCb>;
+type TENameKeyCb = Map<TEName, TKeyCb>;
+type TGetEmitterKeyCbMapsListener =
+	| {
+			emitter: CustomEventEmitter;
+			keyCbMaps: TKeyCb;
+			listener: TCb;
+	  }
+	| never;
+
+export { TCb, TEName, TKey, TKeyCb, TENameKeyCb, TGetEmitterKeyCbMapsListener };

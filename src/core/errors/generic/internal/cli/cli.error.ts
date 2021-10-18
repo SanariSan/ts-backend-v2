@@ -30,7 +30,7 @@ class CliNoEntryError extends CliPromptError {
 	constructor(ERROR_MESAGE = "", ERROR_DESCRIPTION = "") {
 		ERROR_DESCRIPTION = `No entry found by key provided\n${ERROR_DESCRIPTION}`;
 
-		super(ERROR.INTERNAL.CLI.PROMPT.NO_ENTRY.NAME, ERROR_DESCRIPTION);
+		super(ERROR.INTERNAL.CLI.PROMPT.NO_ENTRY.VALUE, ERROR_DESCRIPTION);
 		this.ERROR_MESAGE = ERROR_MESAGE;
 	}
 }

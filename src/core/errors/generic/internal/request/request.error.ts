@@ -6,7 +6,7 @@ class RequestError extends InternalError {
 	constructor(ERROR_MESAGE, ERROR_DESCRIPTION = "") {
 		ERROR_DESCRIPTION = `Request error, failed before or during sending\n${ERROR_DESCRIPTION}`;
 
-		super(ERROR.INTERNAL.REQUEST.NAME, ERROR_DESCRIPTION);
+		super(ERROR.INTERNAL.REQUEST.VALUE, ERROR_DESCRIPTION);
 		this.ERROR_MESAGE = ERROR_MESAGE;
 	}
 }
