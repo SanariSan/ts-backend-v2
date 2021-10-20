@@ -7,14 +7,14 @@ function setupErrorHandle() {
 	pubSubClient.on("message", (channel, e) => {
 		handleError(e);
 	});
+	pubSubClient.subscribe("error");
+
 	process.on("uncaughtException", (e: Error) => {
 		pubSubClient.publish("error", e);
 	});
 	process.on("unhandledRejection", (e: Error) => {
 		pubSubClient.publish("error", e);
 	});
-
-	pubSubClient.subscribe("error");
 }
 
 export { setupErrorHandle };

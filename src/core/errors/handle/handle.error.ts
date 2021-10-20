@@ -1,26 +1,33 @@
 import { GenericError, ERROR } from "..";
+import { PubSub } from "../../../events";
 
 function handleError(e: GenericError) {
-	console.log("##############################");
-	console.log(`Error type: ${e.message}`);
-	logMultiline("Error type", "->");
-	logMultiline(e.message, " |-");
+	let errorLog = ``;
+	errorLog += "##############################\n";
+	errorLog += `Error type: ${e.message}\n`;
+
+	errorLog += formatMultiline("Error type", "->");
+	errorLog += formatMultiline(e.message, " |-");
 
 	for (let [key, val] of Object.entries(JSON.parse(JSON.stringify(e)))) {
-		logMultiline(key, "->");
-		logMultiline(val, " |-");
+		errorLog += formatMultiline(key, "->");
+		errorLog += formatMultiline(val, " |-");
 	}
 
-	doSomething(e);
-	console.log("##############################");
-	// fs.appendFileSync("./log.txt", JSON.stringify(e) + "\n");
+	// doSomething(e);
+	errorLog += "##############################\n";
+
+	console.log(errorLog);
+
+	const pubSubClient = new PubSub();
+	pubSubClient.publish("error", errorLog);
 }
 
-function logMultiline(param, d) {
+function formatMultiline(param, d) {
 	`${param}`
 		.split("\n")
 		.filter((el) => el.length)
-		.forEach((el) => console.log(`${d}${el}`));
+		.reduce((acc, el) => (acc += `${d}${el}\n`), "");
 }
 
 function doSomething(e) {
@@ -42,6 +49,7 @@ function doSomething(e) {
 		}
 		default: {
 			console.log("Error unexpected");
+			console.log(e.stack);
 			return;
 		}
 	}
