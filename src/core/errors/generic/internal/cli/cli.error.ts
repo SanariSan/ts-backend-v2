@@ -35,4 +35,14 @@ class CliNoEntryError extends CliPromptError {
 	}
 }
 
-export { CliError, CliPromptError, CliDashboardError, CliNoEntryError };
+class CliInternalModuleError extends CliPromptError {
+	public ERROR_MESAGE: string;
+	constructor(ERROR_MESAGE = "", ERROR_DESCRIPTION = "") {
+		ERROR_DESCRIPTION = `Internal inquirer error\n${ERROR_DESCRIPTION}`;
+
+		super(ERROR.INTERNAL.CLI.PROMPT.INTERNAL_MODULE.VALUE, ERROR_DESCRIPTION);
+		this.ERROR_MESAGE = ERROR_MESAGE;
+	}
+}
+
+export { CliError, CliPromptError, CliDashboardError, CliNoEntryError, CliInternalModuleError };

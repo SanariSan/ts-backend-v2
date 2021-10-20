@@ -2,7 +2,7 @@ import Separator from "inquirer/lib/objects/separator";
 import { ObjectAny } from "../../../general.type";
 
 interface IPromptBase {
-	key: string;
+	key?: string;
 	question: string;
 	defaultAnswer?: number | string;
 	choices?: Array<

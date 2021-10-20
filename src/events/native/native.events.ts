@@ -82,10 +82,20 @@ class CustomEventEmitter extends EventEmitter {
 		emitter.off(eventName, listener);
 	}
 
-	public clearAll(): void {
+	// TODO: add caching map after checking key to not loop every time, maybe do caching every X seconds
+	public hasKey(eventName: TEName, key): boolean {
+		try {
+			EventEmitterStatic.getEmitterKeyCbMapsListener(eventName, key);
+			return true;
+		} catch (e) {
+			return false;
+		}
+	}
+
+	public clearAllListeners(): void {
+		this.removeAllListeners();
 		EventEmitterStatic.removeCurrentClassInstance(this);
 		EventEmitterStatic.setCurrentClassInstance(this);
-		this.removeAllListeners();
 	}
 }
 

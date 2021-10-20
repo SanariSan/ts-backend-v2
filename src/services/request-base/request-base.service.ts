@@ -10,6 +10,11 @@ const axiosApiBase: AxiosInstance = axios.create({
 	timeout: 5000,
 });
 
+const axiosTestBase: AxiosInstance = axios.create({
+	baseURL: "https://postman-echo.com/",
+	timeout: 5000,
+});
+
 const handleRequest =
 	(
 		req,
@@ -25,4 +30,4 @@ const handleRequest =
 				handleSuccessResponse(res, { getFull, getData, getHeaders }),
 			)
 			.catch(handleErrorResponse);
-export { handleRequest, axiosApiBase };
+export { handleRequest, axiosApiBase, axiosTestBase };

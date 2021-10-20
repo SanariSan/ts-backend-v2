@@ -1,7 +1,7 @@
 import { PubSub } from "./events";
 import { sleep } from "./helpers/util";
 
-async function pubSubTest() {
+async function test() {
 	const pubSubClient = new PubSub();
 
 	setInterval(() => {
@@ -16,4 +16,4 @@ async function pubSubTest() {
 	}
 }
 
-export { pubSubTest };
+export { test };

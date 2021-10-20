@@ -14,9 +14,14 @@ const sendForm = async () => {
 	let a: ISample = {};
 
 	if (resp.fullResponse && resp.data && resp.headers) {
-		return { status: true };
+		return {
+			status: true,
+			fullResponse: resp.fullResponse,
+			headers: resp.headers,
+			data: resp.data,
+		};
 	} else {
-		return Promise.reject(new NoDataError("No data in createAppointment"));
+		return Promise.reject(new NoDataError("No data in sendForm response"));
 	}
 };
 

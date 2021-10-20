@@ -36,6 +36,7 @@
 		"@types/inquirer": "^8.1.1",
 		"@types/node": "^16.11.0",
 		"madge": "^5.0.1",
-		"prettier": "^2.3.2"
+		"prettier": "^2.3.2",
+		"ts-node": "^10.3.0"
 	}
 }

@@ -1,5 +1,6 @@
 import inquirer, { QuestionTypeName } from "inquirer";
-import { CliNoEntryError } from "../../errors";
+import { randomHex } from "../../../helpers/util";
+import { CliInternalModuleError, CliNoEntryError } from "../../errors";
 import { IPromptBase } from "./cli-prompt-base.type";
 
 class CliPromptBase {
@@ -24,7 +25,7 @@ class CliPromptBase {
 	}
 
 	protected prompt({
-		key,
+		key: key = randomHex(),
 		question: question = "",
 		defaultAnswer: defaultAnswer = "",
 		choices,
@@ -42,9 +43,9 @@ class CliPromptBase {
 				...rest,
 			})
 			.then((answer) => this.setValue(key, answer[key]))
+			.then(() => key)
 			.catch((e) => {
-				console.log("ERROR");
-				console.log(e);
+				throw new CliInternalModuleError(e);
 			});
 	}
 }
