@@ -1,6 +1,6 @@
 import { BadStatusError, CliNoEntryError, NoDataError } from "../core/errors";
 import { PubSub } from "../events";
-import { setupErrorHandle } from "../setupErrorHandle";
+import { setupErrorHandle } from "../setup-error-handle";
 
 const pubSubClient = new PubSub();
 async function errors() {

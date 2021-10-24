@@ -1,6 +1,6 @@
-import blessed from "blessed";
+import blessed, { Widgets } from "blessed";
 
-function makeMenuBox() {
+function makeMenuBox(): Widgets.ListElement {
 	return blessed.list({
 		top: "0",
 		left: "0",

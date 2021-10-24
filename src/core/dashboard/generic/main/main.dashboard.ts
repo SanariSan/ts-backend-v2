@@ -1,35 +1,56 @@
-import blessed from "blessed";
+import blessed, { Widgets } from "blessed";
 import { ObjectAny } from "../../../../general.type";
 import { sleep } from "../../../../helpers/util";
 import { Dashboard } from "../generic.dashboard";
 import { makeControlsInfoBox, makeLogBox, makeMenuBox } from "./box";
+import { IDashboardMain, ILogEntity, IMenuOptions } from "./main.dashboard.type";
 
 class DashboardMain extends Dashboard {
-	private menuBox: blessed.Widgets.ListElement;
-	private logBox: blessed.Widgets.ListElement;
-	private controlsInfoBox: blessed.Widgets.TextElement;
-	private menuOptions: Array<string> = ["test1", "test2", "test3"];
+	private screen: Widgets.Screen;
+	private menuBox: Widgets.ListElement;
+	private logBox: Widgets.ListElement;
+	private controlsInfoBox: Widgets.TextElement;
+	private boxes;
+	private menuOptions: IMenuOptions;
 	private logLinesStorage: ObjectAny;
 	private logLinesMaxCount: number = 100;
 	private refreshRate: number = 1000 / 30; // 1000/fps
 
 	constructor() {
 		super();
-		this.screen.title = "Dashboard-Main";
+
+		this.menuOptions = ["Logs", "Logs-Alt", "Errors", "Errors-Unexpected"];
 
 		this.logLinesStorage = {};
 
 		this.menuBox = makeMenuBox();
 		this.logBox = makeLogBox();
 		this.controlsInfoBox = makeControlsInfoBox();
+		this.boxes = [this.menuBox, this.logBox, this.controlsInfoBox];
+
+		// subscribe to logs + errors HERE!
 	}
 
 	public init() {
+		this.screen = blessed.screen({
+			smartCSR: true,
+			fullUnicode: true,
+		});
+		this.screen.title = "Dashboard-Main";
+
+		super.persistInstance(<IDashboardMain>(<unknown>this));
+		super.appendGlobalHotkeys(<IDashboardMain>(<unknown>this));
+
 		this.setupBoxes();
 		this.setupBoxesFocusSwap(this);
 		this.setupScreenControls();
 		this.appendBoxes();
 		this.refreshScreen();
+	}
+
+	public destroy() {
+		// any actions to do when destroying screen before swapping
+		this.screen.destroy();
 	}
 
 	private setupBoxes() {
@@ -63,12 +84,6 @@ class DashboardMain extends Dashboard {
 		// ctrl+u = destroy screen
 		this.screen.key(["C-u"], function (ch, key) {
 			this.screen.destroy();
-		});
-
-		// ctrl+c / q / esc = destroy screen + exit
-		this.screen.key(["escape", "q", "C-c"], function (ch, key) {
-			this.screen.destroy();
-			process.exit(0);
 		});
 	}
 
@@ -119,16 +134,18 @@ class DashboardMain extends Dashboard {
 		this.refreshScreen();
 	}
 
-	public log(entity) {
+	public log(entity: ILogEntity) {
 		// clear and initialize logs box as empty array if nothing was logged before
 		this.logLinesStorage[entity.optionName] ??= [];
 
-		let logLine = `{${gradient(Math.random() * 100, [255, 0, 0], [0, 255, 0])}-fg} > ${
-			entity.message
-		}{/}`;
+		let logLines = entity.message
+			.split("\n")
+			.filter((el) => el.length)
+			.map((el) => `| ${el}`);
+		// .map((el) => `{${gradient(0, [255, 0, 0], [0, 255, 0])}-fg} | ${el}{/}`);
 
 		// push log line to object containing logs per id
-		this.logLinesStorage[entity.optionName].push(logLine);
+		this.logLinesStorage[entity.optionName].push(...logLines);
 
 		// shift oldest log line if limit exceeded
 		for (let optionName in this.logLinesStorage) {

@@ -28,6 +28,16 @@
 4. Add express and split to another boilerplate
 5. Database (postgres?) integration 
 
+
+// blessed key annotations from source code 
+```
+var name = (key.ctrl ? 'C-' : '')
++ (key.meta ? 'M-' : '')
++ (key.shift && key.name ? 'S-' : '')
++ (key.name || ch);
+```
+// C-S-r = ctrl + shift + r
+
 ## Usage <a name = "usage"></a>
 
 Dev

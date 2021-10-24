@@ -1,33 +1,48 @@
-import { GenericError, ERROR } from "..";
+import { ERROR, GenericError } from "..";
 import { PubSub } from "../../../events";
 
-function handleError(e: GenericError) {
+function handleExpectedError(e: GenericError) {
 	let errorLog = ``;
-	errorLog += "##############################\n";
-	errorLog += `Error type: ${e.message}\n`;
 
-	errorLog += formatMultiline("Error type", "->");
-	errorLog += formatMultiline(e.message, " |-");
+	errorLog += "##############################\n";
+	errorLog += addPrefix("Error type", "->");
+	errorLog += addPrefix(e.message, " |-");
 
 	for (let [key, val] of Object.entries(JSON.parse(JSON.stringify(e)))) {
-		errorLog += formatMultiline(key, "->");
-		errorLog += formatMultiline(val, " |-");
+		errorLog += addPrefix(key, "->");
+		errorLog += addPrefix(val, " |-");
 	}
 
-	// doSomething(e);
 	errorLog += "##############################\n";
 
-	console.log(errorLog);
-
 	const pubSubClient = new PubSub();
-	pubSubClient.publish("error", errorLog);
+	pubSubClient.publish("dash-error", errorLog);
+	// console.log(errorLog);
+
+	// doSomething(e);
 }
 
-function formatMultiline(param, d) {
-	`${param}`
+function handleUnexpectedError(e: GenericError) {
+	let errorLog = ``;
+
+	errorLog += "##############################\n";
+	errorLog += addPrefix("Error type", "->");
+	errorLog += addPrefix(e.message, " |-");
+	errorLog += e.stack;
+	errorLog += "##############################\n";
+
+	const pubSubClient = new PubSub();
+	pubSubClient.publish("dash-error", errorLog);
+	// console.log(errorLog);
+
+	// doSomething(e);
+}
+
+function addPrefix(value, prefix) {
+	return `${value}`
 		.split("\n")
 		.filter((el) => el.length)
-		.reduce((acc, el) => (acc += `${d}${el}\n`), "");
+		.reduce((acc, el) => (acc += `${prefix}${el}\n`), "");
 }
 
 function doSomething(e) {
@@ -55,4 +70,4 @@ function doSomething(e) {
 	}
 }
 
-export { handleError };
+export { handleExpectedError, handleUnexpectedError };
