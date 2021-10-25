@@ -1,4 +1,4 @@
-import { ERROR } from "../../error.type";
+import { ERROR } from "../..";
 import { GenericError } from "../generic.error";
 
 class InternalError extends GenericError {

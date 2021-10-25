@@ -6,15 +6,20 @@ import { makeControlsInfoBox, makeLogBox, makeMenuBox } from "./box";
 import { IDashboardMain, ILogEntity, IMenuOptions } from "./main.dashboard.type";
 
 class DashboardMain extends Dashboard {
+	private logLinesMaxCount: number = 100;
+	private refreshRate: number = 1000 / 30; // 1000/fps
+	private currentIdx: number = 0;
 	private screen: Widgets.Screen;
 	private menuBox: Widgets.ListElement;
 	private logBox: Widgets.ListElement;
 	private controlsInfoBox: Widgets.TextElement;
-	private boxes;
+	private boxes: [
+		DashboardMain["menuBox"],
+		DashboardMain["logBox"],
+		DashboardMain["controlsInfoBox"],
+	];
 	private menuOptions: IMenuOptions;
 	private logLinesStorage: ObjectAny;
-	private logLinesMaxCount: number = 100;
-	private refreshRate: number = 1000 / 30; // 1000/fps
 
 	constructor() {
 		super();
@@ -41,9 +46,9 @@ class DashboardMain extends Dashboard {
 		super.persistInstance(<IDashboardMain>(<unknown>this));
 		super.appendGlobalHotkeys(<IDashboardMain>(<unknown>this));
 
-		this.setupBoxes();
+		this.setupBoxes(this);
 		this.setupBoxesFocusSwap(this);
-		this.setupScreenControls();
+		this.setupScreenControls(this);
 		this.appendBoxes();
 		this.refreshScreen();
 	}
@@ -53,37 +58,36 @@ class DashboardMain extends Dashboard {
 		this.screen.destroy();
 	}
 
-	private setupBoxes() {
+	private setupBoxes(_this: this) {
 		this.menuBox.setLabel(" Menu ");
 		this.menuBox.focus();
 		this.menuBox.on("select item", (item, i) => {
-			this.logBox.clearItems();
+			_this.logBox.clearItems();
 		});
 	}
 
-	private setupBoxesFocusSwap(_this) {
-		let i = 0;
-		let boards = ["menuBox", "logBox"];
+	private setupBoxesFocusSwap(_this: this) {
 		this.screen.key(["left", "right"], function (ch, key) {
-			key.name === "left" ? i-- : i++;
-			if (i == 2) i = 0;
-			if (i == -1) i = 1;
-			_this[boards[i]].focus();
-			_this[boards[i]].style.border.fg = "blue";
+			// remove accent from current box
+			_this.boxes[_this.currentIdx].style.border.fg = "white";
+
+			// carousel box idx change
 			if (key.name === "left") {
-				if (i == 1) _this[boards[0]].style.border.fg = "white";
-				else _this[boards[i + 1]].style.border.fg = "white";
-			} else {
-				if (i == 0) _this[boards[1]].style.border.fg = "white";
-				else _this[boards[i - 1]].style.border.fg = "white";
+				if (--_this.currentIdx < 0) _this.currentIdx = _this.boxes.length;
+			} else if (key.name === "right") {
+				if (++_this.currentIdx >= _this.boxes.length) _this.currentIdx = 0;
 			}
+
+			// accent new current box
+			_this.boxes[_this.currentIdx].focus();
+			_this.boxes[_this.currentIdx].style.border.fg = "blue";
 		});
 	}
 
-	private setupScreenControls() {
+	private setupScreenControls(_this: this) {
 		// ctrl+u = destroy screen
 		this.screen.key(["C-u"], function (ch, key) {
-			this.screen.destroy();
+			_this.screen.destroy();
 		});
 	}
 
@@ -154,21 +158,6 @@ class DashboardMain extends Dashboard {
 			}
 		}
 	}
-}
-
-function gradient(p: number, rgb_beginning: number[], rgb_end: number[]) {
-	let w = (p / 100) * 2 - 1;
-
-	let w1 = (w + 1) / 2.0;
-	let w2 = 1 - w1;
-
-	let rgb = [
-		Math.floor(rgb_beginning[0] * w1 + rgb_end[0] * w2),
-		Math.floor(rgb_beginning[1] * w1 + rgb_end[1] * w2),
-		Math.floor(rgb_beginning[2] * w1 + rgb_end[2] * w2),
-	];
-
-	return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
 }
 
 export { DashboardMain };

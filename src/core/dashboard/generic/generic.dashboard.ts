@@ -23,9 +23,9 @@ class Dashboard {
 
 			// carousel idx change
 			if (key.name === "C-S-left") {
-				if (--sRef.currentIdx < 0) sRef.currentIdx = sRef.length;
+				if (--sRef.currentIdx < 0) sRef.currentIdx = sRef.childInstances.length;
 			} else if (key.name === "C-S-right") {
-				if (++sRef.currentIdx >= sRef.length) sRef.currentIdx = 0;
+				if (++sRef.currentIdx >= sRef.childInstances.length) sRef.currentIdx = 0;
 			}
 
 			sRef.childInstances[sRef.currentIdx].init();

@@ -1,25 +1,12 @@
-import { handleExpectedError, handleUnexpectedError } from "./core/errors";
-import { PubSub } from "./events";
+import { LOG_LEVEL } from "./general.type";
+import { logErrorUnexpected } from "./helpers/dashboard";
 
 function setupErrorHandle() {
-	const pubSubClientExpected = new PubSub();
-	const pubSubClientUnExpected = new PubSub();
-
-	pubSubClientExpected.on("message", (channel, e) => {
-		handleExpectedError(e);
-	});
-	pubSubClientExpected.subscribe("error");
-
-	pubSubClientUnExpected.on("message", (channel, e) => {
-		handleUnexpectedError(e);
-	});
-	pubSubClientUnExpected.subscribe("error");
-
 	process.on("uncaughtException", (e: Error) => {
-		// publishUnexpectedError
+		logErrorUnexpected(LOG_LEVEL.ERROR, e);
 	});
 	process.on("unhandledRejection", (e: Error) => {
-		// publishUnexpectedError
+		logErrorUnexpected(LOG_LEVEL.ERROR, e);
 	});
 }
 

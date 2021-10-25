@@ -1,1 +1,1 @@
-export * from "./sample-query-params";
+export * from "./sample-query-params.service";
