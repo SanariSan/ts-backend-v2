@@ -1,7 +1,9 @@
-import { ERROR, GenericError } from "..";
-import { PubSub } from "../../../events";
+import { GenericError } from "../generic";
+import { ERROR } from "../error.type";
 
-function handleExpectedError(e: GenericError) {
+function handleErrorExpected(e: GenericError) {
+	if (!e) return "Error is undefined";
+
 	let errorLog = ``;
 
 	errorLog += "##############################\n";
@@ -15,25 +17,23 @@ function handleExpectedError(e: GenericError) {
 
 	errorLog += "##############################\n";
 
-	const pubSubClient = new PubSub();
-	pubSubClient.publish("dash-error", errorLog);
-	// console.log(errorLog);
+	return errorLog;
 
 	// doSomething(e);
 }
 
-function handleUnexpectedError(e: GenericError) {
+function handleErrorUnexpected(e: Error) {
+	if (!e) return "Error is undefined";
+
 	let errorLog = ``;
 
 	errorLog += "##############################\n";
 	errorLog += addPrefix("Error type", "->");
 	errorLog += addPrefix(e.message, " |-");
 	errorLog += e.stack;
-	errorLog += "##############################\n";
+	errorLog += "\n##############################\n";
 
-	const pubSubClient = new PubSub();
-	pubSubClient.publish("dash-error", errorLog);
-	// console.log(errorLog);
+	return errorLog;
 
 	// doSomething(e);
 }
@@ -70,4 +70,4 @@ function doSomething(e) {
 	}
 }
 
-export { handleExpectedError, handleUnexpectedError };
+export { handleErrorExpected, handleErrorUnexpected };

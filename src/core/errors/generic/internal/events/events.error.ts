@@ -1,4 +1,4 @@
-import { InternalError } from "..";
+import { InternalError } from "../internal.error";
 
 class EventsError extends InternalError {
 	constructor(ERROR_TYPE, ERROR_DESCRIPTION = "") {

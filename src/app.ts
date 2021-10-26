@@ -1,14 +1,11 @@
-import { DashboardMain } from "./core/dashboard";
-import { NoDataError } from "./core/errors";
+import { NoDataError } from "./core/errors/generic";
 import { LOG_LEVEL } from "./general.type";
-import { log, logError } from "./helpers/dashboard";
-import { getIntInRange, duplicateNTimes, randomHex, sleep } from "./helpers/util";
+import { log, logError } from "./helpers/pubsub";
+import { duplicateNTimes, getIntInRange, randomHex, sleep } from "./helpers/util";
+import { setupDashboard } from "./setup-dashboard";
 import { setupErrorHandle } from "./setup-error-handle";
 
 async function main() {
-	const dashboardMain = new DashboardMain();
-	dashboardMain.init();
-
 	async function pubLogs() {
 		await sleep(500);
 		pubLogs();
@@ -19,14 +16,15 @@ async function main() {
 	async function generateError() {
 		await sleep(10000);
 		generateError();
-		logError(LOG_LEVEL.ERROR, new NoDataError("Some error handled"), LOG_LEVEL.WARN);
-		throw new NoDataError("Some error unhandled");
+		logError(LOG_LEVEL.WARN, new NoDataError("Some error handled"));
+		throw new Error("Some unexpected error thrown by itself");
 	}
 	generateError();
 }
 
 function init() {
 	setupErrorHandle();
+	setupDashboard();
 	main();
 }
 

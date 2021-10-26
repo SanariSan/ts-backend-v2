@@ -1,4 +1,4 @@
-import { NoClassInstanceError } from "../../core/errors";
+import { NoClassInstanceError } from "../../core/errors/generic";
 import { CustomEventEmitter } from "../native";
 import { TChannels } from "./pubsub.events.type";
 

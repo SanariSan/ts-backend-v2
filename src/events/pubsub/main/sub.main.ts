@@ -1,8 +1,8 @@
-import { PubSub } from "../pubsub.events";
 import { SubGeneric } from "../generic";
+import { PubSub } from "../pubsub.events";
 import { TChannels } from "../pubsub.events.type";
 
-class SubDashboard extends SubGeneric {
+class SubMain extends SubGeneric {
 	constructor() {
 		super(new PubSub());
 	}
@@ -15,28 +15,19 @@ class SubDashboard extends SubGeneric {
 	public subscribe(channel: TChannels) {
 		super.subscribe(channel);
 	}
-	// unsubscribe method not used for now since not removing listeners
-	// even when screens of Dashboard changed
 	public unsubscribe(channel: TChannels) {
 		super.unsubscribe(channel);
 	}
 
 	public subscribeLog() {
-		super.subscribe("dash-log");
-		super.subscribeLog();
-	}
-	public subscribeLogAlt() {
-		super.subscribe("dash-log-alt");
 		super.subscribeLog();
 	}
 	public subscribeErrorExpected() {
-		super.subscribe("dash-error-expected");
 		super.subscribeErrorExpected();
 	}
 	public subscribeErrorUnexpected() {
-		super.subscribe("dash-error-unexpected");
-		super.subscribeErrorExpected();
+		super.subscribeErrorUnexpected();
 	}
 }
 
-export { SubDashboard };
+export { SubMain };

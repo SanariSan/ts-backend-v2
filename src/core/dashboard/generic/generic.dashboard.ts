@@ -1,3 +1,5 @@
+import { LOG_LEVEL } from "../../../general.type";
+import { logAlt } from "../../../helpers/pubsub";
 import { TChildInstance } from "./generic.dashboard.type";
 
 class DashboardStorageStatic {
@@ -6,29 +8,46 @@ class DashboardStorageStatic {
 }
 
 class Dashboard {
-	protected persistInstance(childInstance: TChildInstance) {
-		DashboardStorageStatic.childInstances.push(childInstance);
+	protected init(childInstance: TChildInstance) {
+		this.persistInstance(childInstance);
+		this.appendGlobalHotkeys(childInstance);
 	}
 
-	protected appendGlobalHotkeys(childInstance: TChildInstance) {
-		this.appendScreenSwapKeys(childInstance);
-		this.appendExitKeys(childInstance);
+	private persistInstance(chI: TChildInstance) {
+		DashboardStorageStatic.childInstances.push(chI);
 	}
 
-	// ctrl+shift+arrows = switch screens
+	private appendGlobalHotkeys(chI: TChildInstance) {
+		this.appendScreenSwapKeys(chI);
+		this.appendExitKeys(chI);
+	}
+
 	private appendScreenSwapKeys(chI: TChildInstance) {
-		chI.screen.key(["C-S-left", "C-S-right"], (ch, key) => {
+		/*
+            ORDER : C M S
+		    WORK : C-key (ctrl) || M-key (alt) || S-key (shift) || C-S-key (ctrl+shift) || M-S-key (alt+shift)
+		    DOESN'T WORK :  C-M-key (ctrl + alt) || C-M-S-key (ctrl+alt+shift)
+		    VSCODE : C-key || M-key || S-key (but even these might not work if local shortcut enabled on those keys)
+            
+            recommended C-key || S-key
+		*/
+
+		// shift+left || shift + right for dashboads swap
+		chI.screen.key(["S-left", "S-right"], (ch, key) => {
+			logAlt(LOG_LEVEL.INFO, `${ch}`);
+			logAlt(LOG_LEVEL.INFO, `${JSON.stringify(key)}`);
+
 			const sRef = DashboardStorageStatic;
-			sRef.childInstances[sRef.currentIdx].destroy();
+			sRef.childInstances[sRef.currentIdx].changeCurrent(false);
 
 			// carousel idx change
-			if (key.name === "C-S-left") {
-				if (--sRef.currentIdx < 0) sRef.currentIdx = sRef.childInstances.length;
-			} else if (key.name === "C-S-right") {
+			if (key.full === "S-left") {
+				if (--sRef.currentIdx < 0) sRef.currentIdx = sRef.childInstances.length - 1;
+			} else if (key.full === "S-right") {
 				if (++sRef.currentIdx >= sRef.childInstances.length) sRef.currentIdx = 0;
 			}
 
-			sRef.childInstances[sRef.currentIdx].init();
+			sRef.childInstances[sRef.currentIdx].changeCurrent(true);
 		});
 	}
 

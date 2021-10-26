@@ -1,4 +1,4 @@
-import { ERROR } from "../../../..";
+import { ERROR } from "../../../../error.type";
 import { EventsError } from "../events.error";
 
 class PubSubError extends EventsError {

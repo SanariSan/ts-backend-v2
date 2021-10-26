@@ -1,5 +1,5 @@
 import { Widgets } from "blessed";
-import { ObjectAny } from "../../../../general.type";
+import { ObjectAny } from "../../../general.type";
 
 type IMenuOption = "Logs" | "Logs-Alt" | "Errors" | "Errors-Unexpected";
 type IMenuOptions = Array<Required<IMenuOption>>;
@@ -20,7 +20,7 @@ interface IDashboardMain {
 	refreshRate: number;
 
 	init: () => void;
-	destroy: () => void;
+	changeCurrent: (status: boolean) => void;
 	setupBoxes: () => void;
 	setupBoxesFocusSwap: (_this: IDashboardMain) => void;
 	setupScreenControls: () => void;

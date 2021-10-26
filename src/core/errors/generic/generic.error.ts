@@ -1,4 +1,4 @@
-import { ERROR_ORIGIN, ERROR_TYPE } from "..";
+import { ERROR_ORIGIN, ERROR_TYPE } from "../error.type";
 
 class GenericError extends Error {
 	public ERROR_DESCRIPTION: string;

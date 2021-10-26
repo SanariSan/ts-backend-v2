@@ -1,19 +1,20 @@
 import { sendForm, sendLinkParams, sendQueryParams } from "../api-wrappers";
-import { handleError } from "../core/errors";
+import { LOG_LEVEL } from "../general.type";
+import { logErrorUnexpected } from "../helpers/pubsub";
 
 async function requests() {
 	const respForm = await sendForm().catch((e) => {
-		handleError(e);
+		logErrorUnexpected(LOG_LEVEL.WARN, e);
 	});
 	const { status: sForm, headers: hForm, fullResponse: frForm, data: dForm } = respForm || {};
 
 	const respParams = await sendLinkParams().catch((e) => {
-		handleError(e);
+		logErrorUnexpected(LOG_LEVEL.WARN, e);
 	});
 	const { status: sPrm, headers: hPrm, fullResponse: frPrm, data: dPrm } = respParams || {};
 
 	const respQuery = await sendQueryParams().catch((e) => {
-		handleError(e);
+		logErrorUnexpected(LOG_LEVEL.WARN, e);
 	});
 	const { status: sQry, headers: hQry, fullResponse: frQry, data: dQry } = respQuery || {};
 

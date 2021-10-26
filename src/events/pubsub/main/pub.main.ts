@@ -3,7 +3,8 @@ import { LOG_LEVEL } from "../../../general.type";
 import { PubGeneric } from "../generic";
 import { TChannels } from "../pubsub.events.type";
 
-class PubDashboard extends PubGeneric {
+// in case neither dashboard nor logger used, so you can publish simple errors
+class PubMain extends PubGeneric {
 	constructor() {
 		super();
 	}
@@ -13,23 +14,15 @@ class PubDashboard extends PubGeneric {
 		super.publish(channel, logLevel, message);
 	}
 
-	public publishLog(logLevel: LOG_LEVEL, message: string) {
-		// custom channel for dashboard only + base log event if someone listening for it
-		super.publish("dash-log", logLevel, message);
-		super.publishLog(logLevel, message);
-	}
-	public publishLogAlt(logLevel: LOG_LEVEL, message: string) {
-		super.publish("dash-log-alt", logLevel, message);
+	public publishLog(logLevel: LOG_LEVEL, message: any) {
 		super.publishLog(logLevel, message);
 	}
 	public publishErrorExpected(logLevel: LOG_LEVEL, e: GenericError) {
-		super.publish("dash-error-expected", logLevel, e);
 		super.publishErrorExpected(logLevel, e);
 	}
 	public publishErrorUnexpected(logLevel: LOG_LEVEL, e: Error) {
-		super.publish("dash-error-unexpected", logLevel, e);
 		super.publishErrorUnexpected(logLevel, e);
 	}
 }
 
-export { PubDashboard };
+export { PubMain };

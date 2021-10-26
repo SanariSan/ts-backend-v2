@@ -1,6 +1,8 @@
-import { BadStatusError, CliNoEntryError, NoDataError } from "../core/errors";
+import { BadStatusError, CliNoEntryError, NoDataError } from "../core/errors/generic";
 import { PubSub } from "../events";
 import { setupErrorHandle } from "../setup-error-handle";
+
+// todo: rework for new version
 
 const pubSubClient = new PubSub();
 async function errors() {

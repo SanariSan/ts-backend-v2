@@ -1,7 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { ObjectAny } from "../../general.type";
 import { ISuccessResponseReturnOptions } from "../../services/request-base";
-import { ISuccessResponse, ISuccessResponseData } from "./response.helper.type";
+import { ISuccessResponse } from "./response.service.type";
 
 const handleSuccessResponse = (
 	response: AxiosResponse,

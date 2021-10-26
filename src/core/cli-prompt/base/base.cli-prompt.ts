@@ -1,6 +1,6 @@
 import inquirer, { QuestionTypeName } from "inquirer";
 import { randomHex } from "../../../helpers/util";
-import { CliInternalModuleError, CliNoEntryError } from "../../errors";
+import { CliInternalModuleError, CliNoEntryError } from "../../errors/generic";
 import { IPromptBase } from "./base.cli-prompt.type";
 
 class CliPromptBase {

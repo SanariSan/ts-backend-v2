@@ -1,4 +1,4 @@
-import { ERROR } from "../../..";
+import { ERROR } from "../../../error.type";
 import { InternalError } from "../internal.error";
 
 class RequestError extends InternalError {

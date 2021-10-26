@@ -1,5 +1,5 @@
 import { EventEmitter } from "stream";
-import { NoEventOrKeyError } from "../../core/errors";
+import { NoEventOrKeyError } from "../../core/errors/generic";
 import { randomHex } from "../../helpers/util";
 import {
 	TCb,

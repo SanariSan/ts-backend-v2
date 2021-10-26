@@ -21,7 +21,9 @@
 		"wipe-cli": "printf '\\033c\\033[3J'",
 		"scroll-wipe-cli": "printf '\\033[H\\033[2J'",
 		"---additional": "---------------------------------------------------------------",
-		"prettier": "prettier -w --config ./.prettierrc.json ."
+		"prettier": "prettier -w --config ./.prettierrc.json .",
+		"madge-json": "node ./node_modules/madge/bin/cli.js -c -j --ts-config ./tsconfig.json ./dist/",
+		"madge-pic": "node ./node_modules/madge/bin/cli.js -c -j -i ./dep.svg --ts-config ./tsconfig.json ./dist/"
 	},
 	"dependencies": {
 		"axios": "^0.21.1",

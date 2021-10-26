@@ -7,7 +7,7 @@ import {
 	CliPromptNum,
 	CliPromptPass,
 	CliPromptText,
-} from "../";
+} from "../core/cli-prompt";
 
 async function examplePromptCLI() {
 	const cliText = new CliPromptText();
