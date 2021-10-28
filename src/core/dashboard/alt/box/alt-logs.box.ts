@@ -1,14 +1,15 @@
 import blessed from "blessed";
+import { SCREEN_DEFAULT_PADDINGS } from "../../dashboard.const";
 
-function makeMenuBox() {
+function makeLogBox() {
 	return blessed.list({
-		label: " Menu ",
+		label: " Logs ",
 
-		top: "0",
-		left: "0",
-		width: 30 + "%",
-		height: "70%",
-		padding: 0,
+		top: 0,
+		left: 0,
+		width: 100 + "%",
+		height: 100 + "%",
+		padding: SCREEN_DEFAULT_PADDINGS,
 
 		scrollable: true,
 		scrollbar: {
@@ -17,14 +18,14 @@ function makeMenuBox() {
 		},
 		keys: true,
 		tags: true, // {bold}{/bold}
-		autoCommandKeys: true, // 0-9 for switching options
+		autoCommandKeys: true,
 		border: {
 			type: "line",
 		},
 		style: {
 			fg: "white",
 			border: {
-				fg: "blue",
+				fg: "white",
 			},
 			scrollbar: {
 				bg: "blue",
@@ -33,9 +34,5 @@ function makeMenuBox() {
 		},
 	});
 }
-export { makeMenuBox };
 
-// focus: {
-// 	bg: "blue",
-// 	fg: "white",
-// },
+export { makeLogBox };

@@ -12,7 +12,6 @@ async function main() {
 		log(LOG_LEVEL.INFO, `${duplicateNTimes(getIntInRange(1, 3), randomHex())}`);
 	}
 	pubLogs();
-
 	async function generateError() {
 		await sleep(10000);
 		generateError();

@@ -1,5 +1,5 @@
-import { IDashboardMain } from "../main";
+import { IDashboardAlt, IDashboardMain } from "..";
 
-type TChildInstance = IDashboardMain; // | IDashboardAlt | etc
+type TChildInstance = IDashboardMain | IDashboardAlt; // | etc
 
 export { TChildInstance };

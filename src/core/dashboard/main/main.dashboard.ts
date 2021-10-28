@@ -1,54 +1,75 @@
-import blessed from "blessed";
 import { SubDashboard } from "../../../events";
 import { ObjectAny } from "../../../general.type";
-import { sleep } from "../../../helpers/util";
 import { GenericError } from "../../errors/generic";
 import { handleErrorExpected, handleErrorUnexpected } from "../../errors/handle";
 import { Dashboard } from "../generic";
 import { makeControlsInfoBox, makeLogBox, makeMenuBox } from "./box";
-import { IDashboardMain, ILogEntity, IMenuOptions } from "./main.dashboard.type";
+import { IDashboardMain, IMainLogEntity, IMenuOptions } from "./main.dashboard.type";
 
 class DashboardMain extends Dashboard {
+	public dashboardTitle: string;
+
+	private subPoint: null | SubDashboard = null;
+	private logLinesStorage: ObjectAny = {};
 	private logLinesMaxCount: number = 100;
-	private refreshRate: number = 1000 / 15; // 1000/fps
-	private currentIdx: number = 0;
-	private subPoint: SubDashboard;
-	private logLinesStorage: ObjectAny;
-	private isScreenCurrent: boolean = false; // screen is not yet initialized
-	private screen: any;
+
 	private menuBox: any;
 	private menuOptions: IMenuOptions;
 	private logBox: any;
 	private controlsInfoBox: any;
-	private boxes: any[] = [];
 
-	private hint: string;
+	private boxesSwitch: any[] = [];
+	private currentBoxIdx: number = 0;
 
-	constructor(hint) {
+	constructor() {
 		super();
 
-		// menu option explicitly defined here, but later can add way to pass new (todo)
-		this.menuOptions = ["Logs", "Logs-Alt", "Errors", "Errors-Unexpected", hint];
-		this.hint = hint;
-		this.logLinesStorage = {};
+		this.dashboardTitle = "Dashboard-Main";
 
-		// subscribe to logs + errors
+		// basic menu option explicitly defined here, but later can add way to add new (todo)
+		this.menuOptions = ["Logs", "Logs-Alt", "Errors", "Errors-Unexpected"];
+
+		this.init();
+	}
+
+	// init configuration section
+	// *
+
+	protected init() {
+		// init screen if none was before + configure global hotkeys
+		super.init(<IDashboardMain>(<unknown>this));
+
+		// initialize subscriber instance
 		this.subPoint = new SubDashboard();
+
+		// subscribe to logs, errors, etc
+		this.setupSubscribers();
+
+		// setup pubsub messages listener
+		this.setupMessagesListener();
+
+		this.initializeBoxes();
+		this.configureBoxes(this);
+		this.configureBoxesFocusSwap(this);
+	}
+
+	private setupSubscribers() {
+		if (!this.subPoint) return;
+
 		this.subPoint.subscribeLog();
 		this.subPoint.subscribeLogAlt();
 		this.subPoint.subscribeErrorExpected();
 		this.subPoint.subscribeErrorUnexpected();
-
-		// setup pubsub messages listener i.e. class methods entry point
-		this.setupMessagesListener();
 	}
 
 	private setupMessagesListener() {
+		if (!this.subPoint) return;
+
 		this.subPoint.sub.onByKey("message", (channel, logLevel, message) => {
 			if (channel === "dash-log") {
 				this.log({
 					optionName: "Logs",
-					message: `${this.hint} ${message}`,
+					message: `${message}`,
 				});
 			} else if (channel === "dash-log-alt") {
 				this.log({
@@ -69,84 +90,68 @@ class DashboardMain extends Dashboard {
 		});
 	}
 
-	public init() {
-		this.screen = blessed.screen({
-			smartCSR: true,
-			fullUnicode: true,
-		});
-		this.screen.title = "Dashboard-Main";
-
-		// make global setup based on this instance, must be called after screen assigned
-		super.init(<IDashboardMain>(<unknown>this));
-
-		this.createBoxes();
-		this.configureBoxes(this);
-		this.configureBoxesFocusSwap(this);
-		this.configureScreenControls(this);
-		this.appendBoxes();
-
-		// store components like this to switch between them
-		this.boxes = [this.menuBox, this.logBox];
-
-		// screen is ready to be rerendered
-		this.isScreenCurrent = true;
-		this.refreshScreen();
-	}
-
-	public changeCurrent(status: boolean) {
-		this.isScreenCurrent = status;
-		if (this.isScreenCurrent) this.refreshScreen();
-	}
-
-	// public destroy() {
-	// 	// any actions to do when destroying screen before swapping
-	// 	this.isScreenCurrent = false;
-	// 	this.screen.destroy();
-	// }
-
-	private createBoxes() {
-		// create predefined screen components
+	private initializeBoxes() {
+		// create predefined screen components = boxes
 		this.menuBox = makeMenuBox();
 		this.logBox = makeLogBox();
 		this.controlsInfoBox = makeControlsInfoBox();
+
+		// store switchable boxes
+		this.boxesSwitch = [this.menuBox, this.logBox];
 	}
 
-	private configureBoxes(_this: this) {
+	private allBoxesAssigned(): boolean {
+		if (this.menuBox && this.logBox && this.controlsInfoBox) return true;
+		return false;
+	}
+
+	private configureBoxes(self: this) {
 		this.menuBox.focus();
 		this.menuBox.on("select item", (item, i) => {
-			_this.logBox.clearItems();
+			self.logBox.clearItems();
 		});
 	}
 
-	private configureBoxesFocusSwap(_this: this) {
-		this.screen.key(["left", "right"], function (ch, key) {
+	// maybe make super.screen.unkey(name, listener) later if problems appear (todo?)
+	private configureBoxesFocusSwap(self: this) {
+		super.screen.key(["left", "right"], function (ch, key) {
 			// remove accent from current box
-			_this.boxes[_this.currentIdx].style.border.fg = "white";
+			self.boxesSwitch[self.currentBoxIdx].style.border.fg = "white";
 
 			// carousel box idx change
 			if (key.name === "left") {
-				if (--_this.currentIdx < 0) _this.currentIdx = _this.boxes.length - 1;
+				if (--self.currentBoxIdx < 0) self.currentBoxIdx = self.boxesSwitch.length - 1;
 			} else if (key.name === "right") {
-				if (++_this.currentIdx >= _this.boxes.length) _this.currentIdx = 0;
+				if (++self.currentBoxIdx >= self.boxesSwitch.length) self.currentBoxIdx = 0;
 			}
 
 			// accent new current box
-			_this.boxes[_this.currentIdx].focus();
-			_this.boxes[_this.currentIdx].style.border.fg = "blue";
+			self.boxesSwitch[self.currentBoxIdx].focus();
+			self.boxesSwitch[self.currentBoxIdx].style.border.fg = "blue";
 		});
 	}
 
-	private configureScreenControls(_this: this) {
-		// ctrl+u = destroy screen
-		// this.screen.key(["C-u"], function (ch, key) {
-		// 	_this.screen.destroy();
-		// });
+	// *
+	// init configuration section
+	// -
+	// runtime section
+	// *
+
+	public show() {
+		super.show(this);
 	}
 
-	private appendBoxes() {
-		this.screen.append(this.menuBox);
-		this.screen.append(this.logBox);
-		this.screen.append(this.controlsInfoBox);
+	public appendBoxes(screen) {
+		screen.append(this.menuBox);
+		screen.append(this.logBox);
+		screen.append(this.controlsInfoBox);
+	}
+
+	public updateContent() {
+		if (!this.allBoxesAssigned()) return;
+
+		this.updateMenuBoxContent();
+		this.updateLogsBoxContent();
 	}
 
 	private updateMenuBoxContent() {
@@ -178,21 +183,8 @@ class DashboardMain extends Dashboard {
 		this.logBox.setLabel(`  ${selectedMenuOption} Logs  `);
 	}
 
-	private async refreshScreen() {
-		if (!this.isScreenCurrent) {
-			return;
-		}
-
-		this.updateMenuBoxContent();
-		this.updateLogsBoxContent();
-		this.screen.render();
-
-		await sleep(this.refreshRate);
-		this.refreshScreen();
-	}
-
 	// todo fix string to fit into box (with \n or smth)
-	private log(entity: ILogEntity) {
+	private log(entity: IMainLogEntity) {
 		// clear and initialize logs box as empty array if nothing was logged before
 		if (this.logLinesStorage[entity.optionName] === undefined)
 			this.logLinesStorage[entity.optionName] = [];
@@ -213,6 +205,9 @@ class DashboardMain extends Dashboard {
 			}
 		}
 	}
+
+	// *
+	// runtime section
 }
 
 export { DashboardMain };
