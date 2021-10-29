@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { BadStatusError, NoDataError } from "../core/errors/generic";
-import { SampleQueryParamsRequest } from "../services";
+import { SampleQueryParamsRequest } from "../core/services";
 import { ISample } from "./api-wrappers.type";
 
 const sendQueryParams = async () => {

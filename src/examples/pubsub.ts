@@ -1,7 +1,7 @@
-import { PubSub } from "../events";
+import { PubSub } from "../core/events";
 import { sleep } from "../helpers/util";
 
-async function pubsub() {
+async function examplePubsub() {
 	const pubSubClient = new PubSub();
 
 	// key = "test-key";
@@ -35,4 +35,4 @@ async function pubsub() {
 	console.log(`Listeners for current pubsub instance: ${pubSubClient.listenerCount("message")}`);
 }
 
-pubsub();
+export { examplePubsub };

@@ -26,7 +26,6 @@ function makeControlsInfoBox() {
 		content:
 			"{cyan-fg}{bold}Shift + Left/Right: switch dashboards{/}\n" +
 			"{blue-fg}{bold}S: toggle auto scroll{/}\n" +
-			"{magenta-fg}{bold}Left/Right: switch boxes{/}\n" +
 			"{yellow-fg}{bold}Up/Down/Mouse: scroll{/}\n" +
 			"{red-fg}{bold}Ctrl + C / Q / Esc: exit {/}",
 	});

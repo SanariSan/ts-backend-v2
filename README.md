@@ -28,6 +28,47 @@
 4. Add express and split to another boilerplate
 5. Database (postgres?) integration 
 
+---
+
+**All examples could be found in**
+```./src/examples/``` 
+**And should be inported to**
+```./src/app.ts```
+**Then execute from here**
+
+---
+
+**1. Errors**
+
+```
+##############################
+->Error type
+ |-NO_DATA
+->ERROR_DESCRIPTION
+ |-General error level
+ |-Error happened on server side, no user input took part
+ |-Response error, resource returned bad status or message
+ |-No (body) in response
+->ERROR_TIMESTAMP_HR
+ |-2021-10-29T13:56:53.540Z
+->ERROR_TIMESTAMP
+ |-1635515813540
+->ERROR_ORIGIN
+ |-INTERNAL
+->ERROR_MESAGE
+ |-Some error message passed in
+##############################
+```
+
+**2. Prompts preview**
+
+![Pic-1](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/prompt-1.png?raw=true)
+![Pic-2](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/prompt-2.png?raw=true)
+
+**3. Dashboard preview**
+
+![Page-1](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/cli-1.png?raw=true)
+![Page-2](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/cli-2.png?raw=true)
 
 ```
 // blessed key annotations from source code 
@@ -38,7 +79,6 @@ var name = (key.ctrl ? 'C-' : '')
 + (key.name || ch);
 
 // tested and got this
-
 /*
     ORDER : C M S
 	WORK : C-key (ctrl) || M-key (alt) || S-key (shift) || C-S-key (ctrl+shift) || M-S-key (alt+shift)

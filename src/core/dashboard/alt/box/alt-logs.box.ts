@@ -5,10 +5,10 @@ function makeLogBox() {
 	return blessed.list({
 		label: " Logs ",
 
-		top: 0,
-		left: 0,
+		top: 0 + "%",
+		left: 0 + "%",
 		width: 100 + "%",
-		height: 100 + "%",
+		height: 80 + "%",
 		padding: SCREEN_DEFAULT_PADDINGS,
 
 		scrollable: true,

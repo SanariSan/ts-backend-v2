@@ -2,7 +2,7 @@ import { sendForm, sendLinkParams, sendQueryParams } from "../api-wrappers";
 import { LOG_LEVEL } from "../general.type";
 import { logErrorUnexpected } from "../helpers/pubsub";
 
-async function requests() {
+async function exampleRequests() {
 	const respForm = await sendForm().catch((e) => {
 		logErrorUnexpected(LOG_LEVEL.WARN, e);
 	});
@@ -23,4 +23,4 @@ async function requests() {
 	console.dir({ sQry, dQry }, { depth: 10, colors: true });
 }
 
-requests();
+export { exampleRequests };

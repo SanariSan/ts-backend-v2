@@ -1,6 +1,6 @@
+import { LOG_LEVEL } from "../../../../general.type";
+import { GenericError } from "../../../errors/generic";
 import { PubSub } from "../pubsub.events";
-import { GenericError } from "../../../core/errors/generic";
-import { LOG_LEVEL } from "../../../general.type";
 import { TChannels } from "../pubsub.events.type";
 
 class PubStatic {

@@ -3,7 +3,7 @@ import {
 	handleErrorResponse,
 	handleSuccessResponse,
 	ISuccessResponse,
-} from "../../helpers/services";
+} from "../../../helpers/services";
 import { DEFAULT_HEADERS } from "./request-base.service.const";
 import { IRequest, ISuccessResponseReturnOptions } from "./request-base.service.type";
 

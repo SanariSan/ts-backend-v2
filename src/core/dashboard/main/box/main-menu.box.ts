@@ -4,10 +4,10 @@ function makeMenuBox() {
 	return blessed.list({
 		label: " Menu ",
 
-		top: "0",
-		left: "0",
+		top: 0 + "%",
+		left: 0 + "%",
 		width: 30 + "%",
-		height: "70%",
+		height: 80 + "%",
 		padding: 0,
 
 		scrollable: true,

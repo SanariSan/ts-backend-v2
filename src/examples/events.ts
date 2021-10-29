@@ -1,6 +1,6 @@
-import { CustomEventEmitter } from "../events";
+import { CustomEventEmitter } from "../core/events";
 
-async function events() {
+async function exampleEvents() {
 	const emitter = new CustomEventEmitter();
 
 	// if not passing key as 3-rd arg, random will be created and returned
@@ -16,4 +16,4 @@ async function events() {
 	console.log(`Listeners for current emitter instance: ${emitter.listenerCount("test-event")}`);
 }
 
-events();
+export { exampleEvents };

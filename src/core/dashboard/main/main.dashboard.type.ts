@@ -1,4 +1,4 @@
-type IMenuOption = "Logs" | "Logs-Alt" | "Errors" | "Errors-Unexpected";
+type IMenuOption = "Logs-Main" | "Logs-Alt" | "Errors" | "Errors-Unexpected";
 type IMenuOptions = Array<Required<IMenuOption>>;
 
 interface IMainLogEntity {

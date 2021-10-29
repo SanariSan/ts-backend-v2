@@ -1,5 +1,5 @@
-import { ObjectAny } from "../../general.type";
-import { ISuccessResponse } from "../../helpers/services";
+import { ObjectAny } from "../../../general.type";
+import { ISuccessResponse } from "../../../helpers/services";
 import { axiosTestBase, handleRequest, ISuccessResponseReturnOptions } from "./../request-base";
 
 const SampleQueryParamsRequest = (

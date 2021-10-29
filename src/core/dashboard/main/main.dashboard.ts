@@ -1,7 +1,8 @@
-import { SubDashboard } from "../../../events";
 import { ObjectAny } from "../../../general.type";
+import { formatStr } from "../../../helpers/dashboard";
 import { GenericError } from "../../errors/generic";
 import { handleErrorExpected, handleErrorUnexpected } from "../../errors/handle";
+import { SubDashboard } from "../../events";
 import { Dashboard } from "../generic";
 import { makeControlsInfoBox, makeLogBox, makeMenuBox } from "./box";
 import { IDashboardMain, IMainLogEntity, IMenuOptions } from "./main.dashboard.type";
@@ -17,6 +18,7 @@ class DashboardMain extends Dashboard {
 	private menuOptions: IMenuOptions;
 	private logBox: any;
 	private controlsInfoBox: any;
+	private autoScrollLogs: boolean = true;
 
 	private boxesSwitch: any[] = [];
 	private currentBoxIdx: number = 0;
@@ -27,7 +29,7 @@ class DashboardMain extends Dashboard {
 		this.dashboardTitle = "Dashboard-Main";
 
 		// basic menu option explicitly defined here, but later can add way to add new (todo)
-		this.menuOptions = ["Logs", "Logs-Alt", "Errors", "Errors-Unexpected"];
+		this.menuOptions = ["Logs-Main", "Logs-Alt", "Errors", "Errors-Unexpected"];
 
 		this.init();
 	}
@@ -68,7 +70,7 @@ class DashboardMain extends Dashboard {
 		this.subPoint.sub.onByKey("message", (channel, logLevel, message) => {
 			if (channel === "dash-log") {
 				this.log({
-					optionName: "Logs",
+					optionName: "Logs-Main",
 					message: `${message}`,
 				});
 			} else if (channel === "dash-log-alt") {
@@ -110,9 +112,14 @@ class DashboardMain extends Dashboard {
 		this.menuBox.on("select item", (item, i) => {
 			self.logBox.clearItems();
 		});
+
+		this.logBox.key("s", (ch, key) => {
+			self.autoScrollLogs = !self.autoScrollLogs;
+		});
 	}
 
 	// maybe make super.screen.unkey(name, listener) later if problems appear (todo?)
+	// they probably will since we binding event every time and not unbinding
 	private configureBoxesFocusSwap(self: this) {
 		super.screen.key(["left", "right"], function (ch, key) {
 			// remove accent from current box
@@ -174,8 +181,7 @@ class DashboardMain extends Dashboard {
 		if (logs !== undefined) {
 			this.logBox.setItems(logs);
 
-			// if box not focused - auto-scroll to the bottom
-			if (!this.logBox.focused) {
+			if (this.autoScrollLogs) {
 				this.logBox.setScrollPerc(100);
 			}
 		}
@@ -189,11 +195,7 @@ class DashboardMain extends Dashboard {
 		if (this.logLinesStorage[entity.optionName] === undefined)
 			this.logLinesStorage[entity.optionName] = [];
 
-		let logLines = entity.message
-			.split("\n")
-			.filter((el) => el.length)
-			.map((el) => `| ${el}`);
-		// .map((el) => `{${gradient(0, [255, 0, 0], [0, 255, 0])}-fg} | ${el}{/}`);
+		let logLines = formatStr(entity.message, 87);
 
 		// push log line to object containing logs per id
 		this.logLinesStorage[entity.optionName].push(...logLines);

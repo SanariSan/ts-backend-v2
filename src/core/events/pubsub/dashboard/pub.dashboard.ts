@@ -1,5 +1,5 @@
-import { GenericError } from "../../../core/errors/generic";
-import { LOG_LEVEL } from "../../../general.type";
+import { LOG_LEVEL } from "../../../../general.type";
+import { GenericError } from "../../../errors/generic";
 import { PubGeneric } from "../generic";
 import { TChannels } from "../pubsub.events.type";
 

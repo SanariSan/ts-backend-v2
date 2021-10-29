@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { BadStatusError, NoDataError } from "../core/errors/generic";
-import { SampleLinkParamsRequest } from "../services";
+import { SampleLinkParamsRequest } from "../core/services";
 import { ISample } from "./api-wrappers.type";
 
 const sendLinkParams = async () => {
