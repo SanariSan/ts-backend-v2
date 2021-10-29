@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { BadStatusError, NoDataError } from "../core/errors/generic";
-import { SampleFormRequest } from "../services";
+import { SampleFormRequest } from "../core/services";
 import { ISample } from "./api-wrappers.type";
 
 const sendForm = async () => {

@@ -2,10 +2,19 @@ import { NoDataError } from "./core/errors/generic";
 import { LOG_LEVEL } from "./general.type";
 import { log, logError } from "./helpers/pubsub";
 import { duplicateNTimes, getIntInRange, randomHex, sleep } from "./helpers/util";
-import { setupDashboard } from "./setup-dashboard";
-import { setupErrorHandle } from "./setup-error-handle";
+import { setupDashboard, setupErrorHandle } from "./setup";
 
 async function main() {
+	async function test() {
+		await sleep(2000);
+		test();
+		log(
+			LOG_LEVEL.INFO,
+			`123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789`,
+		);
+	}
+	test();
+
 	async function pubLogs() {
 		await sleep(500);
 		pubLogs();
@@ -25,6 +34,13 @@ function init() {
 	setupErrorHandle();
 	setupDashboard();
 	main();
+
+	// import from ./examples/
+	// examplePromptCLI();
+	// exampleErrors();
+	// exampleEvents();
+	// examplePubsub();
+	// exampleRequests();s
 }
 
 init();

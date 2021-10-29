@@ -49,6 +49,7 @@ class Dashboard {
 				fullUnicode: true,
 			});
 			this.configureGlobalHotkeys();
+			this.screen.title = childInstance.dashboardTitle;
 
 			DashboardStatic.refreshScreen();
 		}
@@ -83,7 +84,6 @@ class Dashboard {
 	private configureScreenSwapKeys(self: this) {
 		this.screen.key(["S-left", "S-right"], (ch, key) => {
 			// temp
-			logAlt(LOG_LEVEL.INFO, `${ch}`);
 			logAlt(LOG_LEVEL.INFO, `${JSON.stringify(key)}`);
 
 			self.detachBoxes();

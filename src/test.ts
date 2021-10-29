@@ -1,4 +1,4 @@
-import { PubSub } from "./events";
+import { PubSub } from "./core/events";
 import { sleep } from "./helpers/util";
 
 async function test() {

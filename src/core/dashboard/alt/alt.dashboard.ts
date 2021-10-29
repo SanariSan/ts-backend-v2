@@ -1,9 +1,10 @@
-import { SubDashboard } from "../../../events";
+import { formatStr } from "../../../helpers/dashboard";
 import { GenericError } from "../../errors/generic";
 import { handleErrorExpected, handleErrorUnexpected } from "../../errors/handle";
+import { SubDashboard } from "../../events";
 import { Dashboard } from "../generic";
-import { makeLogBox } from "./box";
-import { IDashboardAlt, IAltLogEntity } from "./alt.dashboard.type";
+import { IAltLogEntity, IDashboardAlt } from "./alt.dashboard.type";
+import { makeControlsInfoBox, makeLogBox } from "./box";
 
 class DashboardAlt extends Dashboard {
 	public dashboardTitle: string;
@@ -11,8 +12,10 @@ class DashboardAlt extends Dashboard {
 	private subPoint: null | SubDashboard = null;
 	private logLinesStorage: Array<string> = [];
 	private logLinesMaxCount: number = 500;
+	private autoScrollLogs: boolean = true;
 
 	private logBox: any;
+	private controlsInfoBox: any;
 
 	constructor() {
 		super();
@@ -39,6 +42,7 @@ class DashboardAlt extends Dashboard {
 		this.setupMessagesListener();
 
 		this.initializeBoxes();
+		this.configureBoxes(this);
 	}
 
 	private setupSubscribers() {
@@ -77,6 +81,13 @@ class DashboardAlt extends Dashboard {
 	private initializeBoxes() {
 		// create predefined screen components = boxes
 		this.logBox = makeLogBox();
+		this.controlsInfoBox = makeControlsInfoBox();
+	}
+
+	private configureBoxes(self: this) {
+		this.logBox.key("s", (ch, key) => {
+			self.autoScrollLogs = !self.autoScrollLogs;
+		});
 	}
 
 	private allBoxesAssigned(): boolean {
@@ -96,6 +107,7 @@ class DashboardAlt extends Dashboard {
 
 	public appendBoxes(screen) {
 		screen.append(this.logBox);
+		screen.append(this.controlsInfoBox);
 	}
 
 	public updateContent() {
@@ -107,21 +119,13 @@ class DashboardAlt extends Dashboard {
 	private updateLogsBoxContent() {
 		this.logBox.setItems(this.logLinesStorage);
 
-		// if box not focused - auto-scroll to the bottom
-		// if (!this.logBox.focused) {
-		this.logBox.setScrollPerc(100);
-		// }
+		if (this.autoScrollLogs) this.logBox.setScrollPerc(100);
 
 		this.logBox.setLabel(`  All Logs  `);
 	}
 
-	// todo fix string to fit into box (with \n or smth)
 	private log(entity: IAltLogEntity) {
-		let logLines = entity.message
-			.split("\n")
-			.filter((el) => el.length)
-			.map((el) => `| ${el}`);
-		// .map((el) => `{${gradient(0, [255, 0, 0], [0, 255, 0])}-fg} | ${el}{/}`);
+		let logLines = formatStr(entity.message, 128);
 
 		// push log line to object containing logs per id
 		this.logLinesStorage.push(...logLines);

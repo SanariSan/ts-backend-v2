@@ -1,5 +1,5 @@
 import { GenericError } from "../../core/errors/generic";
-import { PubDashboard } from "../../events";
+import { PubDashboard } from "../../core/events";
 import { LOG_LEVEL } from "../../general.type";
 
 const pubDashboard = new PubDashboard();

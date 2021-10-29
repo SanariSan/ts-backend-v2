@@ -1,10 +1,10 @@
-import { BadStatusError, CliNoEntryError, NoDataError } from "../core/errors/generic";
+import { CliNoEntryError, NoDataError } from "../core/errors/generic";
+import { handleErrorExpected, handleErrorUnexpected } from "../core/errors/handle";
+import { SubMain } from "../core/events";
 import { LOG_LEVEL } from "../general.type";
 import { logError, logErrorUnexpected } from "../helpers/pubsub";
-import { handleErrorExpected, handleErrorUnexpected } from "../core/errors/handle";
-import { SubMain } from "../events";
 
-async function errors() {
+async function _exampleErrors() {
 	console.log("Error #1\n");
 	try {
 		throw new NoDataError("Some info");
@@ -52,9 +52,9 @@ function setupErrorHandle() {
 	});
 }
 
-function errorsTest() {
+function exampleErrors() {
 	setupErrorHandle();
-	errors();
+	_exampleErrors();
 }
 
-export { errorsTest };
+export { exampleErrors };

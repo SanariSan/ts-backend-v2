@@ -1,13 +1,13 @@
 import { EventEmitter } from "stream";
-import { NoEventOrKeyError } from "../../core/errors/generic";
-import { randomHex } from "../../helpers/util";
+import { randomHex } from "../../../helpers/util";
+import { NoEventOrKeyError } from "../../errors/generic";
 import {
 	TCb,
-	TKey,
 	TEName,
 	TENameKeyCb,
-	TKeyCb,
 	TGetEmitterKeyCbMapsListener,
+	TKey,
+	TKeyCb,
 } from "./native.events.type";
 
 class EventEmitterStatic {
