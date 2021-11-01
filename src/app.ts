@@ -1,3 +1,4 @@
+import { sendJson, sendMultipart, sendQs } from "./api-wrappers/sample";
 import { NoDataError } from "./core/errors/generic";
 import { LOG_LEVEL } from "./general.type";
 import { log, logError } from "./helpers/pubsub";
@@ -30,10 +31,14 @@ async function main() {
 	generateError();
 }
 
-function init() {
-	setupErrorHandle();
-	setupDashboard();
-	main();
+async function init() {
+	sendJson();
+	sendQs();
+	sendMultipart();
+
+	// setupErrorHandle();
+	//setupDashboard();
+	// main();
 
 	// import from ./examples/
 	// examplePromptCLI();

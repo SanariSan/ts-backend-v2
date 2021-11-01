@@ -16,7 +16,7 @@ const logAlt = (logLevel: LOG_LEVEL, message: any) => {
 const logError = (logLevel: LOG_LEVEL, e: GenericError) => {
 	pubDashboard.publishErrorExpected(logLevel, e);
 };
-const logErrorUnexpected = (logLevel: LOG_LEVEL, e: Error) => {
+const logErrorUnexpected = (logLevel: LOG_LEVEL, e: any) => {
 	pubDashboard.publishErrorUnexpected(logLevel, e);
 };
 

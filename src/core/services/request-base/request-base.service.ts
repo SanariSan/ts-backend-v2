@@ -1,38 +1,46 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios";
-import {
-	handleErrorResponse,
-	handleSuccessResponse,
-	ISuccessResponse,
-} from "../../../helpers/services";
-import { DEFAULT_HEADERS } from "./request-base.service.const";
-import { IRequest, ISuccessResponseReturnOptions } from "./request-base.service.type";
+import axios, { AxiosError } from "axios";
+import { IGenericRequest } from ".";
+import { DEFAULT_HEADERS, LIB_SPECIFIC_OPTIONS } from "./request-base.service.const";
+import { RequestBuilder } from "./request-builder.service";
 
-const axiosApiBase: AxiosInstance = axios.create({
-	baseURL: process.env.BASE_URL,
-	headers: DEFAULT_HEADERS,
-	timeout: 5000,
+const requestGeneric = ({ method, host, path, data, headers, ...args }: IGenericRequest) => {
+	const options = new RequestBuilder()
+		.setUrl({ url: `${host}${path}` })
+		.makeMethod({ method })
+		.makeHeaders({ headers: { ...DEFAULT_HEADERS, ...headers } })
+		.makeBody({ data })
+		.addLibSpecificOptions<any>({
+			...LIB_SPECIFIC_OPTIONS,
+			...args,
+		})
+		.getRequest();
+
+	return axios(options);
+};
+
+const request = {
+	get: ({ host, path, data, headers, ...args }: Omit<IGenericRequest, "method">) =>
+		requestGeneric({ method: "GET", host, path, data, headers, ...args }),
+	post: ({ host, path, data, headers, ...args }: Omit<IGenericRequest, "method">) =>
+		requestGeneric({ method: "POST", host, path, data, headers, ...args }),
+	put: ({ host, path, data, headers, ...args }: Omit<IGenericRequest, "method">) =>
+		requestGeneric({ method: "PUT", host, path, data, headers, ...args }),
+	delete: ({ host, path, data, headers, ...args }: Omit<IGenericRequest, "method">) =>
+		requestGeneric({ method: "DELETE", host, path, data, headers, ...args }),
+};
+
+const bindedHostRequest = ({ host }: Pick<IGenericRequest, "host">) => ({
+	get: ({ path, data, headers, ...args }: Omit<IGenericRequest, "method" | "host">) =>
+		request.get({ host, path, data, headers, ...args }),
+	post: ({ path, data, headers, ...args }: Omit<IGenericRequest, "method" | "host">) =>
+		request.post({ host, path, data, headers, ...args }),
+	put: ({ path, data, headers, ...args }: Omit<IGenericRequest, "method" | "host">) =>
+		request.put({ host, path, data, headers, ...args }),
+	delete: ({ path, data, headers, ...args }: Omit<IGenericRequest, "method" | "host">) =>
+		request.delete({ host, path, data, headers, ...args }),
 });
 
-const axiosTestBase: AxiosInstance = axios.create({
-	baseURL: "https://postman-echo.com/",
-	timeout: 5000,
-});
+// handleRequest(bindedHostRequest.get({1,2,3}))
+// const handleRequest = (req) => req.catch((res: AxiosError) => handleErrorResponse(res));
 
-const handleRequest =
-	(
-		req,
-		{
-			getFull: getFull = false,
-			getData: getData = false,
-			getHeaders: getHeaders = false,
-		}: ISuccessResponseReturnOptions,
-	) =>
-	// todo: figure out better way? hard to read
-	({ path, headers, data, extra }: IRequest): Promise<ISuccessResponse> =>
-		req(path, data ? data : { ...extra, headers }, { ...extra, headers })
-			.then((res: AxiosResponse) =>
-				handleSuccessResponse(res, { getFull, getData, getHeaders }),
-			)
-			.catch(handleErrorResponse);
-
-export { handleRequest, axiosApiBase, axiosTestBase };
+export { request, bindedHostRequest };

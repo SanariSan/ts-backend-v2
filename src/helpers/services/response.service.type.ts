@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import { ObjectAny } from "../../general.type";
 
 interface ISuccessResponseData {
@@ -10,10 +9,4 @@ interface ISuccessResponseData {
 	stackTrace: string | null;
 }
 
-interface ISuccessResponse {
-	fullResponse?: AxiosResponse;
-	data?: ISuccessResponseData;
-	headers?: any;
-}
-
-export { ISuccessResponse, ISuccessResponseData };
+export { ISuccessResponseData };

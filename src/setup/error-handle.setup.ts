@@ -1,10 +1,12 @@
+import { appendFileSync } from "fs";
+import { handleErrorExpected, handleErrorUnexpected } from "../core/errors/handle";
+import { SubMain } from "../core/events";
 import { LOG_LEVEL } from "../general.type";
 import { logErrorUnexpected } from "../helpers/pubsub";
 
 function setupErrorHandle() {
 	// this can be placed here if not using dashboard or logger
 	// just catching all errors here and console.logging them
-
 	/*
 	const sub = new SubMain();
 	sub.subscribeErrorExpected();
