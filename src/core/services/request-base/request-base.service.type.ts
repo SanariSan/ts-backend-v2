@@ -1,14 +1,21 @@
+import { AxiosRequestConfig } from "axios";
+import { ObjectAny } from "../../../general.type";
+
+type TRequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 interface IRequest {
-	path?: string;
-	headers?: {};
-	data?: {};
-	extra?: {};
+	url?: string;
+	method?: TRequestMethod;
+	headers?: HeadersInit;
+	data?: any;
 }
 
-interface ISuccessResponseReturnOptions {
-	getFull?: boolean;
-	getData?: boolean;
-	getHeaders?: boolean;
+interface IGenericRequest {
+	method: TRequestMethod;
+	host: string;
+	path: string;
+	data?: any;
+	headers?: ObjectAny;
+	args?: AxiosRequestConfig; //temp
 }
 
-export type { IRequest, ISuccessResponseReturnOptions };
+export { IRequest, TRequestMethod, IGenericRequest };

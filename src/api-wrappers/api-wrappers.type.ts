@@ -1,3 +1,0 @@
-interface ISample {}
-
-export { ISample };
