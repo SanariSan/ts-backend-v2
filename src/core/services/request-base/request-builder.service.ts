@@ -1,4 +1,5 @@
-import { IRequest, TRequestMethod } from ".";
+import { AxiosRequestConfig } from "axios";
+import { IGenericRequest, IRequest, TRequestMethod } from ".";
 
 class RequestBuilder {
 	private request: IRequest;
@@ -12,22 +13,32 @@ class RequestBuilder {
 		return this;
 	}
 
-	makeMethod({ method }: { method: TRequestMethod }) {
+	setMethod({ method }: { method: TRequestMethod }) {
 		this.request.method = method;
 		return this;
 	}
 
-	makeHeaders({ headers }: { headers: HeadersInit }) {
+	setHeaders({ headers }: { headers: HeadersInit }) {
 		this.request.headers = headers;
 		return this;
 	}
 
-	makeBody({ data }: { data?: any }) {
+	setBody({ data }: { data?: any }) {
 		this.request.data = data;
 		return this;
 	}
 
-	addLibSpecificOptions<T>({ ...args }: { args?: { [key: string]: T } }) {
+	setProxy({ proxy, ...args }: any) {
+		if (args.httpProxy) {
+			this.request.proxy = proxy;
+		} else if (args.socksProxy) {
+			// todo...
+		}
+		return this;
+	}
+
+	// later fix type here, same as type file, todo(?)
+	setLibSpecificOptions({ ...args }: Pick<IGenericRequest, "args">) {
 		this.request = { ...this.request, ...args };
 		return this;
 	}

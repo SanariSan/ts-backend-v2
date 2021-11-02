@@ -1,12 +1,19 @@
-import { AxiosRequestConfig } from "axios";
+import { AxiosProxyConfig, AxiosRequestConfig } from "axios";
 import { ObjectAny } from "../../../general.type";
 
 type TRequestMethod = "GET" | "POST" | "PUT" | "DELETE";
+
 interface IRequest {
-	url?: string;
 	method?: TRequestMethod;
+	url?: string;
 	headers?: HeadersInit;
 	data?: any;
+	proxy?: AxiosProxyConfig;
+}
+
+interface ICustomConfig {
+	httpProxy: boolean;
+	socksProxy: boolean;
 }
 
 interface IGenericRequest {
@@ -15,7 +22,8 @@ interface IGenericRequest {
 	path: string;
 	data?: any;
 	headers?: ObjectAny;
-	args?: AxiosRequestConfig; //temp
+	proxy?: AxiosProxyConfig;
+	args?: AxiosRequestConfig | ICustomConfig;
 }
 
-export { IRequest, TRequestMethod, IGenericRequest };
+export { IRequest, TRequestMethod, IGenericRequest, ICustomConfig };
