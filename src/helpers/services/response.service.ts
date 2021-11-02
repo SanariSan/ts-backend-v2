@@ -1,6 +1,19 @@
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { LOG_LEVEL } from "../../general.type";
 import { logErrorUnexpected } from "../pubsub";
+
+const parseResponse = ({ response }: { response: AxiosResponse }) => ({
+	request: {
+		request: response.request,
+		data: response.request.data,
+		headers: response.request.headers,
+	},
+	response: {
+		response,
+		data: response.data,
+		headers: response.headers,
+	},
+});
 
 const handleErrorResponse = async (response: AxiosError): Promise<any> => {
 	// temp, actually need to parse response and define what error is this
@@ -11,4 +24,4 @@ const handleErrorResponse = async (response: AxiosError): Promise<any> => {
 	return Promise.reject(response.response);
 };
 
-export { handleErrorResponse };
+export { handleErrorResponse, parseResponse };

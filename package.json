@@ -1,12 +1,13 @@
 {
-	"name": "ts-boilerplate",
+	"name": "ts-boilerplate-v2",
 	"version": "1.0.0",
-	"main": "index.js",
+	"main": "dist/index.js",
 	"author": "SanariSan <SanariSan@users.noreply.github.com>",
 	"license": "MIT",
 	"scripts": {
 		"---start variations": "---------------------------------------------------------------",
-		"start": "yarn build-linux && yarn copy-deps && yarn wipe-cli && yarn launch-dev",
+		"start": "yarn build-linux && yarn copy-deps && yarn wipe-cli && yarn launch-prod",
+		"start-bare": "yarn wipe-cli && node ./node_modules/ts-node/dist/bin.js ./src/app.ts",
 		"start-prod-linux": "yarn build-linux && yarn launch-prod",
 		"---build related": "---------------------------------------------------------------",
 		"build-linux": "yarn drop-build-linux && tsc",
@@ -32,13 +33,14 @@
 		"dotenv": "^10.0.0",
 		"form-data": "^4.0.0",
 		"inquirer": "^8.1.2",
-		"typescript": "^4.3.5"
+		"socks-proxy-agent": "^6.1.0"
 	},
 	"devDependencies": {
 		"@types/inquirer": "^8.1.1",
 		"@types/node": "^16.11.0",
 		"madge": "^5.0.1",
 		"prettier": "^2.3.2",
-		"ts-node": "^10.3.0"
+		"ts-node": "^10.3.0",
+		"typescript": "^4.4.4"
 	}
 }

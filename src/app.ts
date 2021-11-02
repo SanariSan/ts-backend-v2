@@ -1,5 +1,6 @@
 import { sendJson, sendMultipart, sendQs } from "./api-wrappers/sample";
 import { NoDataError } from "./core/errors/generic";
+import { exampleRequests } from "./examples/requests";
 import { LOG_LEVEL } from "./general.type";
 import { log, logError } from "./helpers/pubsub";
 import { duplicateNTimes, getIntInRange, randomHex, sleep } from "./helpers/util";
@@ -32,9 +33,7 @@ async function main() {
 }
 
 async function init() {
-	sendJson();
-	sendQs();
-	sendMultipart();
+	exampleRequests();
 
 	// setupErrorHandle();
 	//setupDashboard();
@@ -45,7 +44,6 @@ async function init() {
 	// exampleErrors();
 	// exampleEvents();
 	// examplePubsub();
-	// exampleRequests();s
 }
 
 init();
