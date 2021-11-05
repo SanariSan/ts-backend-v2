@@ -1,2 +1,2 @@
-export * from "./pub.generic";
-export * from "./sub.generic";
+export * from './pub.generic';
+export * from './sub.generic';

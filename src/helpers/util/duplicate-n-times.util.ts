@@ -1,11 +1,11 @@
 function duplicateNTimes(n, str) {
-	let output = ``;
+  let output = ``;
 
-	for (let i = 0; i < n; i++) {
-		output += str;
-	}
+  for (let i = 0; i < n; i++) {
+    output += str;
+  }
 
-	return output;
+  return output;
 }
 
 export { duplicateNTimes };

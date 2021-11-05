@@ -1,13 +1,13 @@
 interface IAltLogEntity {
-	message: string;
+  message: string;
 }
 
 interface IDashboardAlt {
-	dashboardTitle: string;
+  dashboardTitle: string;
 
-	appendBoxes: (screen) => void;
-	updateContent: () => void;
-	show: () => void;
+  appendBoxes: (screen) => void;
+  updateContent: () => void;
+  show: () => void;
 }
 
 export { IDashboardAlt, IAltLogEntity };

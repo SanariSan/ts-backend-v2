@@ -1,215 +1,234 @@
-import { ObjectAny } from "../../../general.type";
-import { formatStr } from "../../../helpers/dashboard";
-import { GenericError } from "../../errors/generic";
-import { handleErrorExpected, handleErrorUnexpected } from "../../errors/handle";
-import { SubDashboard } from "../../events";
-import { Dashboard } from "../generic";
-import { makeControlsInfoBox, makeLogBox, makeMenuBox } from "./box";
-import { IDashboardMain, IMainLogEntity, IMenuOptions } from "./main.dashboard.type";
+import { ObjectAny } from '../../../general.type';
+import { formatStr } from '../../../helpers/dashboard';
+import { GenericError } from '../../errors/generic';
+import { handleErrorExpected, handleErrorUnexpected } from '../../errors/handle';
+import { SubDashboard } from '../../events';
+import { Dashboard } from '../generic';
+import { makeControlsInfoBox, makeLogBox, makeMenuBox } from './box';
+import { IDashboardMain, IMainLogEntity, IMenuOptions } from './main.dashboard.type';
 
 class DashboardMain extends Dashboard {
-	public dashboardTitle: string;
+  public dashboardTitle: string;
 
-	private subPoint: null | SubDashboard = null;
-	private logLinesStorage: ObjectAny = {};
-	private logLinesMaxCount: number = 100;
+  private subPoint: null | SubDashboard = null;
 
-	private menuBox: any;
-	private menuOptions: IMenuOptions;
-	private logBox: any;
-	private controlsInfoBox: any;
-	private autoScrollLogs: boolean = true;
+  private logLinesStorage: ObjectAny = {};
 
-	private boxesSwitch: any[] = [];
-	private currentBoxIdx: number = 0;
+  private logLinesMaxCount = 100;
 
-	constructor() {
-		super();
+  private menuBox: any;
 
-		this.dashboardTitle = "Dashboard-Main";
+  private menuOptions: IMenuOptions;
 
-		// basic menu option explicitly defined here, but later can add way to add new (todo)
-		this.menuOptions = ["Logs-Main", "Logs-Alt", "Errors", "Errors-Unexpected"];
+  private logBox: any;
 
-		this.init();
-	}
+  private controlsInfoBox: any;
 
-	// init configuration section
-	// *
+  private autoScrollLogs = true;
 
-	protected init() {
-		// init screen if none was before + configure global hotkeys
-		super.init(<IDashboardMain>(<unknown>this));
+  private boxesSwitch: any[] = [];
 
-		// initialize subscriber instance
-		this.subPoint = new SubDashboard();
+  private currentBoxIdx = 0;
 
-		// subscribe to logs, errors, etc
-		this.setupSubscribers();
+  constructor() {
+    super();
 
-		// setup pubsub messages listener
-		this.setupMessagesListener();
+    this.dashboardTitle = 'Dashboard-Main';
 
-		this.initializeBoxes();
-		this.configureBoxes(this);
-		this.configureBoxesFocusSwap(this);
-	}
+    // TODO: basic menu option explicitly defined here, but later can add way to add new
+    this.menuOptions = ['Logs-Main', 'Logs-Alt', 'Errors', 'Errors-Unexpected'];
 
-	private setupSubscribers() {
-		if (!this.subPoint) return;
+    this.init();
+  }
 
-		this.subPoint.subscribeLog();
-		this.subPoint.subscribeLogAlt();
-		this.subPoint.subscribeErrorExpected();
-		this.subPoint.subscribeErrorUnexpected();
-	}
+  // init configuration section
+  // *
 
-	private setupMessagesListener() {
-		if (!this.subPoint) return;
+  protected init() {
+    // init screen if none was before + configure global hotkeys
+    super.init(<IDashboardMain>(<unknown>this));
 
-		this.subPoint.sub.onByKey("message", (channel, logLevel, message) => {
-			if (channel === "dash-log") {
-				this.log({
-					optionName: "Logs-Main",
-					message: `${message}`,
-				});
-			} else if (channel === "dash-log-alt") {
-				this.log({
-					optionName: "Logs-Alt",
-					message,
-				});
-			} else if (channel === "dash-error-expected") {
-				this.log({
-					optionName: "Errors",
-					message: handleErrorExpected(<GenericError>message),
-				});
-			} else if (channel === "dash-error-unexpected") {
-				this.log({
-					optionName: "Errors-Unexpected",
-					message: handleErrorUnexpected(<Error>message),
-				});
-			}
-		});
-	}
+    // initialize subscriber instance
+    this.subPoint = new SubDashboard();
 
-	private initializeBoxes() {
-		// create predefined screen components = boxes
-		this.menuBox = makeMenuBox();
-		this.logBox = makeLogBox();
-		this.controlsInfoBox = makeControlsInfoBox();
+    // subscribe to logs, errors, etc
+    this.setupSubscribers();
 
-		// store switchable boxes
-		this.boxesSwitch = [this.menuBox, this.logBox];
-	}
+    // setup pubsub messages listener
+    this.setupMessagesListener();
 
-	private allBoxesAssigned(): boolean {
-		if (this.menuBox && this.logBox && this.controlsInfoBox) return true;
-		return false;
-	}
+    this.initializeBoxes();
+    this.configureBoxes(this);
+    this.configureBoxesFocusSwap(this);
+  }
 
-	private configureBoxes(self: this) {
-		this.menuBox.focus();
-		this.menuBox.on("select item", (item, i) => {
-			self.logBox.clearItems();
-		});
+  private setupSubscribers() {
+    if (!this.subPoint) return;
 
-		this.logBox.key("s", (ch, key) => {
-			self.autoScrollLogs = !self.autoScrollLogs;
-		});
-	}
+    this.subPoint.subscribeLog();
+    this.subPoint.subscribeLogAlt();
+    this.subPoint.subscribeErrorExpected();
+    this.subPoint.subscribeErrorUnexpected();
+  }
 
-	// maybe make super.screen.unkey(name, listener) later if problems appear (todo?)
-	// they probably will since we binding event every time and not unbinding
-	private configureBoxesFocusSwap(self: this) {
-		super.screen.key(["left", "right"], function (ch, key) {
-			// remove accent from current box
-			self.boxesSwitch[self.currentBoxIdx].style.border.fg = "white";
+  private setupMessagesListener() {
+    if (!this.subPoint) return;
 
-			// carousel box idx change
-			if (key.name === "left") {
-				if (--self.currentBoxIdx < 0) self.currentBoxIdx = self.boxesSwitch.length - 1;
-			} else if (key.name === "right") {
-				if (++self.currentBoxIdx >= self.boxesSwitch.length) self.currentBoxIdx = 0;
-			}
+    this.subPoint.sub.onByKey('message', (channel, logLevel, message) => {
+      switch (channel) {
+        case 'dash-log': {
+          this.log({
+            optionName: 'Logs-Main',
+            message: `${message}`,
+          });
 
-			// accent new current box
-			self.boxesSwitch[self.currentBoxIdx].focus();
-			self.boxesSwitch[self.currentBoxIdx].style.border.fg = "blue";
-		});
-	}
+          break;
+        }
+        case 'dash-log-alt': {
+          this.log({
+            optionName: 'Logs-Alt',
+            message,
+          });
 
-	// *
-	// init configuration section
-	// -
-	// runtime section
-	// *
+          break;
+        }
+        case 'dash-error-expected': {
+          this.log({
+            optionName: 'Errors',
+            message: handleErrorExpected(<GenericError>message),
+          });
 
-	public show() {
-		super.show(this);
-	}
+          break;
+        }
+        case 'dash-error-unexpected': {
+          this.log({
+            optionName: 'Errors-Unexpected',
+            message: handleErrorUnexpected(<Error>message),
+          });
 
-	public appendBoxes(screen) {
-		screen.append(this.menuBox);
-		screen.append(this.logBox);
-		screen.append(this.controlsInfoBox);
-	}
+          break;
+        }
+        // No default
+      }
+    });
+  }
 
-	public updateContent() {
-		if (!this.allBoxesAssigned()) return;
+  private initializeBoxes() {
+    // create predefined screen components = boxes
+    this.menuBox = makeMenuBox();
+    this.logBox = makeLogBox();
+    this.controlsInfoBox = makeControlsInfoBox();
 
-		this.updateMenuBoxContent();
-		this.updateLogsBoxContent();
-	}
+    // store switchable boxes
+    this.boxesSwitch = [this.menuBox, this.logBox];
+  }
 
-	private updateMenuBoxContent() {
-		if (!this.menuOptions.length) {
-			this.menuBox.setItem(0, "No options available");
-			return;
-		}
+  private allBoxesAssigned(): boolean {
+    if (this.menuBox && this.logBox && this.controlsInfoBox) return true;
+    return false;
+  }
 
-		// if there's different amount of options came - clear old ones
-		if (this.menuOptions.length != this.menuBox.items.length) {
-			this.menuBox.clearItems();
-			this.menuBox.setItems(this.menuOptions);
-		}
-	}
+  private configureBoxes(self: this) {
+    this.menuBox.focus();
+    this.menuBox.on('select item', (item, i) => {
+      self.logBox.clearItems();
+    });
 
-	private updateLogsBoxContent() {
-		let selectedMenuOption = this.menuOptions[this.menuBox.selected];
-		let logs = this.logLinesStorage[selectedMenuOption];
+    this.logBox.key('s', (ch, key) => {
+      self.autoScrollLogs = !self.autoScrollLogs;
+    });
+  }
 
-		if (logs !== undefined) {
-			this.logBox.setItems(logs);
+  // FIXME: maybe make super.screen.unkey(name, listener) later if problems appear
+  // they probably will since we binding event every time and not unbinding
+  private configureBoxesFocusSwap(self: this) {
+    super.screen.key(['left', 'right'], (ch, key) => {
+      // remove accent from current box
+      self.boxesSwitch[self.currentBoxIdx].style.border.fg = 'white';
 
-			if (this.autoScrollLogs) {
-				this.logBox.setScrollPerc(100);
-			}
-		}
+      // carousel box idx change
+      if (key.name === 'left') {
+        if (--self.currentBoxIdx < 0) self.currentBoxIdx = self.boxesSwitch.length - 1;
+      } else if (key.name === 'right' && ++self.currentBoxIdx >= self.boxesSwitch.length)
+        self.currentBoxIdx = 0;
 
-		this.logBox.setLabel(`  ${selectedMenuOption} Logs  `);
-	}
+      // accent new current box
+      self.boxesSwitch[self.currentBoxIdx].focus();
+      self.boxesSwitch[self.currentBoxIdx].style.border.fg = 'blue';
+    });
+  }
 
-	// todo fix string to fit into box (with \n or smth)
-	private log(entity: IMainLogEntity) {
-		// clear and initialize logs box as empty array if nothing was logged before
-		if (this.logLinesStorage[entity.optionName] === undefined)
-			this.logLinesStorage[entity.optionName] = [];
+  // *
+  // init configuration section
+  // -
+  // runtime section
+  // *
 
-		let logLines = formatStr(entity.message, 87);
+  public show() {
+    super.show(this);
+  }
 
-		// push log line to object containing logs per id
-		this.logLinesStorage[entity.optionName].push(...logLines);
+  public appendBoxes(screen) {
+    screen.append(this.menuBox);
+    screen.append(this.logBox);
+    screen.append(this.controlsInfoBox);
+  }
 
-		// shift oldest log line if limit exceeded
-		for (let optionName in this.logLinesStorage) {
-			if (this.logLinesStorage[optionName].length > this.logLinesMaxCount) {
-				this.logLinesStorage[optionName].shift();
-			}
-		}
-	}
+  public updateContent() {
+    if (!this.allBoxesAssigned()) return;
 
-	// *
-	// runtime section
+    this.updateMenuBoxContent();
+    this.updateLogsBoxContent();
+  }
+
+  private updateMenuBoxContent() {
+    if (this.menuOptions.length === 0) {
+      this.menuBox.setItem(0, 'No options available');
+      return;
+    }
+
+    // if there's different amount of options came - clear old ones
+    if (this.menuOptions.length != this.menuBox.items.length) {
+      this.menuBox.clearItems();
+      this.menuBox.setItems(this.menuOptions);
+    }
+  }
+
+  private updateLogsBoxContent() {
+    const selectedMenuOption = this.menuOptions[this.menuBox.selected];
+    const logs = this.logLinesStorage[selectedMenuOption];
+
+    if (logs !== undefined) {
+      this.logBox.setItems(logs);
+
+      if (this.autoScrollLogs) {
+        this.logBox.setScrollPerc(100);
+      }
+    }
+
+    this.logBox.setLabel(`  ${selectedMenuOption} Logs  `);
+  }
+
+  private log(entity: IMainLogEntity) {
+    // clear and initialize logs box as empty array if nothing was logged before
+    if (this.logLinesStorage[entity.optionName] === undefined)
+      this.logLinesStorage[entity.optionName] = [];
+
+    const logLines = formatStr(entity.message, 87);
+
+    // push log line to object containing logs per id
+    this.logLinesStorage[entity.optionName].push(...logLines);
+
+    // shift oldest log line if limit exceeded
+    for (const optionName in this.logLinesStorage) {
+      if (this.logLinesStorage[optionName].length > this.logLinesMaxCount) {
+        this.logLinesStorage[optionName].shift();
+      }
+    }
+  }
+
+  // *
+  // runtime section
 }
 
 export { DashboardMain };

@@ -1,2 +1,2 @@
-export * from "./generic.error";
-export * from "./internal";
+export * from './generic.error';
+export * from './internal';

@@ -1,1 +1,1 @@
-export * from "./logger.core.type";
+export * from './logger.core.type';

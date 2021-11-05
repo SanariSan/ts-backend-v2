@@ -1,13 +1,13 @@
-import { appendFileSync } from "fs";
-import { handleErrorExpected, handleErrorUnexpected } from "../core/errors/handle";
-import { SubMain } from "../core/events";
-import { LOG_LEVEL } from "../general.type";
-import { logErrorUnexpected } from "../helpers/pubsub";
+import { appendFileSync } from 'node:fs';
+import { handleErrorExpected, handleErrorUnexpected } from '../core/errors/handle';
+import { SubMain } from '../core/events';
+import { LogLevel } from '../general.type';
+import { logErrorUnexpected } from '../helpers/pubsub';
 
 function setupErrorHandle() {
-	// this can be placed here if not using dashboard or logger
-	// just catching all errors here and console.logging them
-	/*
+  // this can be placed here if not using dashboard or logger
+  // just catching all errors here and console.logging them
+  /*
 	const sub = new SubMain();
 	sub.subscribeErrorExpected();
 	sub.subscribeErrorUnexpected();
@@ -21,12 +21,12 @@ function setupErrorHandle() {
 	});
     */
 
-	process.on("uncaughtException", (e: Error) => {
-		logErrorUnexpected(LOG_LEVEL.ERROR, e);
-	});
-	process.on("unhandledRejection", (e: Error) => {
-		logErrorUnexpected(LOG_LEVEL.ERROR, e);
-	});
+  process.on('uncaughtException', (e: Error) => {
+    logErrorUnexpected(LogLevel.ERROR, e);
+  });
+  process.on('unhandledRejection', (e: Error) => {
+    logErrorUnexpected(LogLevel.ERROR, e);
+  });
 }
 
 export { setupErrorHandle };

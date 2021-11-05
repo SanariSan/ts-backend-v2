@@ -1,5 +1,5 @@
-import { IPromptBase } from "../base";
+import { IPromptBase } from '../base';
 
-type IPromptCheckbox = Pick<IPromptBase, "key" | "question" | "choices" | "validate" | "rest">;
+type IPromptCheckbox = Pick<IPromptBase, 'key' | 'question' | 'choices' | 'validate' | 'rest'>;
 
 export { IPromptCheckbox };

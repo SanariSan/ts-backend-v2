@@ -1,1 +1,1 @@
-export * from "./generic.dashboard";
+export * from './generic.dashboard';

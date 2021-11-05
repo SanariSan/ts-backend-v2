@@ -1,15 +1,16 @@
 import { NoDataError } from './core/errors/generic';
 import { exampleRequests } from './examples/requests';
-import { LOG_LEVEL } from './general.type';
+import { LogLevel } from './general.type';
 import { log, logError } from './helpers/pubsub';
 import { duplicateNTimes, getIntInRange, randomHex, sleep } from './helpers/util';
 
-async function main() {
+/* eslint-disable @typescript-eslint/no-floating-promises */
+function main() {
   async function test() {
     await sleep(2000);
     test();
     log(
-      LOG_LEVEL.INFO,
+      LogLevel.INFO,
       '123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789',
     );
   }
@@ -18,20 +19,20 @@ async function main() {
   async function pubLogs() {
     await sleep(500);
     pubLogs();
-    log(LOG_LEVEL.INFO, `${duplicateNTimes(getIntInRange(1, 3), randomHex())}`);
+    log(LogLevel.INFO, `${duplicateNTimes(getIntInRange(1, 3), randomHex())}`);
   }
   pubLogs();
 
   async function generateError() {
-    await sleep(10000);
+    await sleep(10_000);
     generateError();
-    logError(LOG_LEVEL.WARN, new NoDataError('Some error handled'));
+    logError(LogLevel.WARN, new NoDataError('Some error handled'));
     throw new Error('Some unexpected error thrown by itself');
   }
   generateError();
 }
 
-async function init() {
+function init() {
   exampleRequests();
 
   // setupErrorHandle();

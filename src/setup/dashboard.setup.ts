@@ -1,8 +1,8 @@
-import { DashboardAlt, DashboardMain } from "../core/dashboard";
+import { DashboardAlt, DashboardMain } from '../core/dashboard';
 
 function setupDashboard() {
-	new DashboardMain().show();
-	new DashboardAlt();
+  new DashboardMain().show();
+  new DashboardAlt();
 }
 
 export { setupDashboard };
