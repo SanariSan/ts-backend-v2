@@ -1,2 +1,2 @@
-export * from "./main.dashboard";
-export * from "./main.dashboard.type";
+export * from './main.dashboard';
+export * from './main.dashboard.type';

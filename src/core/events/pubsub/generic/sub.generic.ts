@@ -1,43 +1,48 @@
-import { PubSub } from "../pubsub.events";
-import { TChannels } from "../pubsub.events.type";
+import { PubSub } from '../pubsub.events';
+import { TChannels } from '../pubsub.events.type';
 
 class SubGeneric {
-	private _sub: PubSub;
-	constructor(sub: PubSub) {
-		this._sub = sub;
-	}
+  private _sub: PubSub;
 
-	get sub() {
-		return this._sub;
-	}
+  constructor(sub: PubSub) {
+    this._sub = sub;
+  }
 
-	protected subscribe(channel: TChannels) {
-		this.sub.subscribe(channel);
-	}
-	protected unsubscribe(channel: TChannels) {
-		this.sub.unsubscribe(channel);
-	}
+  get sub() {
+    return this._sub;
+  }
 
-	protected subscribeLog() {
-		this.subscribe("log");
-	}
-	protected unsubscribeLog() {
-		this.unsubscribe("log");
-	}
+  protected subscribe(channel: TChannels) {
+    this.sub.subscribe(channel);
+  }
 
-	protected subscribeErrorExpected() {
-		this.subscribe("error-expected");
-	}
-	protected unsubscribeErrorExpected() {
-		this.unsubscribe("error-expected");
-	}
+  protected unsubscribe(channel: TChannels) {
+    this.sub.unsubscribe(channel);
+  }
 
-	protected subscribeErrorUnexpected() {
-		this.subscribe("error-unexpected");
-	}
-	protected unsubscribeErrorUnexpected() {
-		this.unsubscribe("error-unexpected");
-	}
+  protected subscribeLog() {
+    this.subscribe('log');
+  }
+
+  protected unsubscribeLog() {
+    this.unsubscribe('log');
+  }
+
+  protected subscribeErrorExpected() {
+    this.subscribe('error-expected');
+  }
+
+  protected unsubscribeErrorExpected() {
+    this.unsubscribe('error-expected');
+  }
+
+  protected subscribeErrorUnexpected() {
+    this.subscribe('error-unexpected');
+  }
+
+  protected unsubscribeErrorUnexpected() {
+    this.unsubscribe('error-unexpected');
+  }
 }
 
 export { SubGeneric };

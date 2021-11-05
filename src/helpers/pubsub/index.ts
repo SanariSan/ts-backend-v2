@@ -1,1 +1,1 @@
-export * from "./shortcuts.pubsub";
+export * from './shortcuts.pubsub';

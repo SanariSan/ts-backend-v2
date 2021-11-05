@@ -2,17 +2,99 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
-    "sourceType": "module"
+    "sourceType": "module",
+    // in our case ts parser should use defined configs file
+    "project": "./tsconfig.json"
   },
   "env": {
     "node": true,
     "es2020": true
   },
-  "plugins": ["@typescript-eslint", "prettier"],
-  "extends": ["airbnb-base", "prettier", "plugin:import/typescript"],
+  "settings": {
+    // plugin import, parsers functionality
+    "import/parsers": {
+      // when parsing with @typescript-eslint/parser, it should only process defined exts
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    // plugin import, modules resolvers functionality
+    "import/resolver": {
+      // when using it with typecript
+      "typescript": {
+        // should try importing types from .d.ts files over .js files (even if no such file in dir)
+        "alwaysTryTypes": true,
+        // in our case ts resolver should use defined configs file
+        "project": "./tsconfig.json"
+      }
+    }
+  },
+
+  // plugins - doing something on side (convert/compute), exposing rules to apply (in extends) and apply/change (in rules) if have some
+  "plugins": ["@typescript-eslint", "promise", "unicorn", "import", "prettier"],
+
+  // extends - set of rules from plugin above or eslint-config- <name>
+  "extends": [
+    // airbnb ts rules
+    "airbnb-typescript/base",
+    // ts overall recommended rules
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    // promise recommended rules
+    "plugin:promise/recommended",
+    // TODO: investigate, another set of useful rules?
+    "plugin:unicorn/recommended",
+    // convert prettier config into set of rules
+    "prettier"
+  ],
+
+  // rules - place for overridng rules from plugin/config
   "rules": {
+    // fix & config
+    // ---------------
+
+    // enable prettier check rules
     "prettier/prettier": "error",
-    // removes errors about importing modules with no extension (from airbnb)
+
+    // preference
+    // ---------------
+
+    // https://basarat.gitbooks.io/typescript/docs/tips/defaultIsBad.html
+    "import/prefer-default-export": "off",
+    "import/no-default-export": "error",
+    // Too restrictive, writing ugly code to defend against a very unlikely scenario: https://eslint.org/docs/rules/no-prototype-builtins
+    "no-prototype-builtins": "off",
+    // Use function hoisting to improve code readability
+    "no-use-before-define": ["error", { "functions": false, "classes": true, "variables": true }],
+    // Allow most functions to rely on type inference. If the function is exported, then `@typescript-eslint/explicit-module-boundary-types` will ensure it's typed.
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-use-before-define": [
+      "error",
+      { "functions": false, "classes": true, "variables": true, "typedefs": true }
+    ],
+    // Common abbreviations are known and readable
+    "unicorn/prevent-abbreviations": "off",
+    // Airbnb prefers forEach
+    "unicorn/no-array-for-each": "off"
+  }
+}
+
+/*
+// optional configs
+
+{
+  "extends": [
+    // base for js
+    "airbnb-base",
+    // for this to work you should use airbnb-base (for js)
+    // now using eslint-import-resolver-typescript resolver instead, since ts setup
+    "plugin:import/typescript",
+  ],
+  rules: {
+    // fix & config
+    // ---------------
+
+    // don't need when "airbnb-typescript/base" used (*nots)
+
+    // fix error (airbnb) about importing files with no extension (*nots)
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -22,6 +104,34 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
-  }
+    ],
+    // fixes error (airbnb) about enums being defined before (*nots)
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    // fixes error (airbnb) about unused enums and types (*nots)
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
+    ],
+
+    // preference
+    // ---------------
+
+    // Too restrictive: https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/destructuring-assignment.md
+    // "react/destructuring-assignment": "off",
+    // No jsx extension: https://github.com/facebook/create-react-app/issues/87#issuecomment-234627904
+    // "react/jsx-filename-extension": "off",
+  },
+  "overrides": [
+    {
+      // if somehow js file used
+      "files": ["*.js"],
+      "rules": {
+        // Allow `require()`
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ]
 }
+*/

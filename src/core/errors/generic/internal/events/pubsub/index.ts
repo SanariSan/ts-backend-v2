@@ -1,1 +1,1 @@
-export * from "./pubsub.error";
+export * from './pubsub.error';

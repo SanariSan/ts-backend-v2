@@ -1,1 +1,1 @@
-export * from "./wrap.box";
+export * from './wrap.box';

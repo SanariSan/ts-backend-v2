@@ -1,143 +1,161 @@
-import { formatStr } from "../../../helpers/dashboard";
-import { GenericError } from "../../errors/generic";
-import { handleErrorExpected, handleErrorUnexpected } from "../../errors/handle";
-import { SubDashboard } from "../../events";
-import { Dashboard } from "../generic";
-import { IAltLogEntity, IDashboardAlt } from "./alt.dashboard.type";
-import { makeControlsInfoBox, makeLogBox } from "./box";
+import { formatStr } from '../../../helpers/dashboard';
+import { GenericError } from '../../errors/generic';
+import { handleErrorExpected, handleErrorUnexpected } from '../../errors/handle';
+import { SubDashboard } from '../../events';
+import { Dashboard } from '../generic';
+import { IAltLogEntity, IDashboardAlt } from './alt.dashboard.type';
+import { makeControlsInfoBox, makeLogBox } from './box';
 
 class DashboardAlt extends Dashboard {
-	public dashboardTitle: string;
+  public dashboardTitle: string;
 
-	private subPoint: null | SubDashboard = null;
-	private logLinesStorage: Array<string> = [];
-	private logLinesMaxCount: number = 500;
-	private autoScrollLogs: boolean = true;
+  private subPoint: null | SubDashboard = null;
 
-	private logBox: any;
-	private controlsInfoBox: any;
+  private logLinesStorage: Array<string> = [];
 
-	constructor() {
-		super();
+  private logLinesMaxCount = 500;
 
-		this.dashboardTitle = "Dashboard-Alt";
+  private autoScrollLogs = true;
 
-		this.init();
-	}
+  private logBox: any;
 
-	// init configuration section
-	// *
+  private controlsInfoBox: any;
 
-	protected init() {
-		// init screen if none was before + configure global hotkeys
-		super.init(<IDashboardAlt>(<unknown>this));
+  constructor() {
+    super();
 
-		// initialize subscriber instance
-		this.subPoint = new SubDashboard();
+    this.dashboardTitle = 'Dashboard-Alt';
 
-		// subscribe to logs, errors, etc
-		this.setupSubscribers();
+    this.init();
+  }
 
-		// setup pubsub messages listener
-		this.setupMessagesListener();
+  // init configuration section
+  // *
 
-		this.initializeBoxes();
-		this.configureBoxes(this);
-	}
+  protected init() {
+    // init screen if none was before + configure global hotkeys
+    super.init(<IDashboardAlt>(<unknown>this));
 
-	private setupSubscribers() {
-		if (!this.subPoint) return;
+    // initialize subscriber instance
+    this.subPoint = new SubDashboard();
 
-		this.subPoint.subscribeLog();
-		this.subPoint.subscribeLogAlt();
-		this.subPoint.subscribeErrorExpected();
-		this.subPoint.subscribeErrorUnexpected();
-	}
+    // subscribe to logs, errors, etc
+    this.setupSubscribers();
 
-	private setupMessagesListener() {
-		if (!this.subPoint) return;
+    // setup pubsub messages listener
+    this.setupMessagesListener();
 
-		this.subPoint.sub.onByKey("message", (channel, logLevel, message) => {
-			if (channel === "dash-log") {
-				this.log({
-					message: `${message}`,
-				});
-			} else if (channel === "dash-log-alt") {
-				this.log({
-					message,
-				});
-			} else if (channel === "dash-error-expected") {
-				this.log({
-					message: handleErrorExpected(<GenericError>message),
-				});
-			} else if (channel === "dash-error-unexpected") {
-				this.log({
-					message: handleErrorUnexpected(<Error>message),
-				});
-			}
-		});
-	}
+    this.initializeBoxes();
+    this.configureBoxes(this);
+  }
 
-	private initializeBoxes() {
-		// create predefined screen components = boxes
-		this.logBox = makeLogBox();
-		this.controlsInfoBox = makeControlsInfoBox();
-	}
+  private setupSubscribers() {
+    if (!this.subPoint) return;
 
-	private configureBoxes(self: this) {
-		this.logBox.key("s", (ch, key) => {
-			self.autoScrollLogs = !self.autoScrollLogs;
-		});
-	}
+    this.subPoint.subscribeLog();
+    this.subPoint.subscribeLogAlt();
+    this.subPoint.subscribeErrorExpected();
+    this.subPoint.subscribeErrorUnexpected();
+  }
 
-	private allBoxesAssigned(): boolean {
-		if (this.logBox) return true;
-		return false;
-	}
+  private setupMessagesListener() {
+    if (!this.subPoint) return;
 
-	// *
-	// init configuration section
-	// -
-	// runtime section
-	// *
+    this.subPoint.sub.onByKey('message', (channel, logLevel, message) => {
+      switch (channel) {
+        case 'dash-log': {
+          this.log({
+            message: `${message}`,
+          });
 
-	public show() {
-		super.show(this);
-	}
+          break;
+        }
+        case 'dash-log-alt': {
+          this.log({
+            message,
+          });
 
-	public appendBoxes(screen) {
-		screen.append(this.logBox);
-		screen.append(this.controlsInfoBox);
-	}
+          break;
+        }
+        case 'dash-error-expected': {
+          this.log({
+            message: handleErrorExpected(<GenericError>message),
+          });
 
-	public updateContent() {
-		if (!this.allBoxesAssigned()) return;
+          break;
+        }
+        case 'dash-error-unexpected': {
+          this.log({
+            message: handleErrorUnexpected(<Error>message),
+          });
 
-		this.updateLogsBoxContent();
-	}
+          break;
+        }
+        // No default
+      }
+    });
+  }
 
-	private updateLogsBoxContent() {
-		this.logBox.setItems(this.logLinesStorage);
+  private initializeBoxes() {
+    // create predefined screen components = boxes
+    this.logBox = makeLogBox();
+    this.controlsInfoBox = makeControlsInfoBox();
+  }
 
-		if (this.autoScrollLogs) this.logBox.setScrollPerc(100);
+  private configureBoxes(self: this) {
+    this.logBox.key('s', (ch, key) => {
+      self.autoScrollLogs = !self.autoScrollLogs;
+    });
+  }
 
-		this.logBox.setLabel(`  All Logs  `);
-	}
+  private allBoxesAssigned(): boolean {
+    if (this.logBox) return true;
+    return false;
+  }
 
-	private log(entity: IAltLogEntity) {
-		let logLines = formatStr(entity.message, 128);
+  // *
+  // init configuration section
+  // -
+  // runtime section
+  // *
 
-		// push log line to object containing logs per id
-		this.logLinesStorage.push(...logLines);
+  public show() {
+    super.show(this);
+  }
 
-		// shift oldest log line if limit exceeded
-		if (this.logLinesStorage.length > this.logLinesMaxCount) {
-			this.logLinesStorage.shift();
-		}
-	}
+  public appendBoxes(screen) {
+    screen.append(this.logBox);
+    screen.append(this.controlsInfoBox);
+  }
 
-	// *
-	// runtime section
+  public updateContent() {
+    if (!this.allBoxesAssigned()) return;
+
+    this.updateLogsBoxContent();
+  }
+
+  private updateLogsBoxContent() {
+    this.logBox.setItems(this.logLinesStorage);
+
+    if (this.autoScrollLogs) this.logBox.setScrollPerc(100);
+
+    this.logBox.setLabel(`  All Logs  `);
+  }
+
+  private log(entity: IAltLogEntity) {
+    const logLines = formatStr(entity.message, 128);
+
+    // push log line to object containing logs per id
+    this.logLinesStorage.push(...logLines);
+
+    // shift oldest log line if limit exceeded
+    if (this.logLinesStorage.length > this.logLinesMaxCount) {
+      this.logLinesStorage.shift();
+    }
+  }
+
+  // *
+  // runtime section
 }
 
 export { DashboardAlt };

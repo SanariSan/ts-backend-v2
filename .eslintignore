@@ -169,6 +169,7 @@ sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,node,react,yarn
 
+*.md
 *.ignore*
 dist*
 logs*

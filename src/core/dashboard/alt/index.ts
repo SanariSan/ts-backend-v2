@@ -1,2 +1,2 @@
-export * from "./alt.dashboard";
-export * from "./alt.dashboard.type";
+export * from './alt.dashboard';
+export * from './alt.dashboard.type';

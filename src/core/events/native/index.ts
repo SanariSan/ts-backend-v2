@@ -1,1 +1,1 @@
-export * from "./native.events";
+export * from './native.events';

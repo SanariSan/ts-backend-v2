@@ -1,9 +1,9 @@
 enum LOG_LEVEL_COLORS {
-	ERROR = "red blackBG",
-	WARN = "yellow blackBG",
-	INFO = "cyan blackBG",
-	DEBUG = "green blackBG",
-	SILLY = "cyan magentaBG",
+  ERROR = 'red blackBG',
+  WARN = 'yellow blackBG',
+  INFO = 'cyan blackBG',
+  DEBUG = 'green blackBG',
+  SILLY = 'cyan magentaBG',
 }
 
 export { LOG_LEVEL_COLORS };

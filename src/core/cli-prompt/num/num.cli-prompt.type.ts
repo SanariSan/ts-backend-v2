@@ -1,5 +1,5 @@
-import { IPromptBase } from "../base";
+import { IPromptBase } from '../base';
 
-type IPromptNum = Pick<IPromptBase, "key" | "question" | "defaultAnswer" | "validate" | "rest">;
+type IPromptNum = Pick<IPromptBase, 'key' | 'question' | 'defaultAnswer' | 'validate' | 'rest'>;
 
 export { IPromptNum };

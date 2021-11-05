@@ -9,8 +9,7 @@
 
 **Features:**
 
-~ work in progress
-~~ rework in progress
+~ work in progress ~~ rework in progress
 
 1. Nested Errors throw structure | _classes_ |
 2. Custom wrapper for CLI prompts of all kinds | _based on [Inquirer](https://www.npmjs.com/package/inquirer)_ | _classes_ |
@@ -33,10 +32,12 @@
 
 ---
 
-**All examples could be found in**
-```./src/examples/``` 
-**And should be inported to**
-```./src/app.ts```
+**All examples could be found in** 
+`./src/examples/` 
+
+**And should be inported to** 
+`./src/app.ts` 
+
 **Then execute from init block**
 
 ---
@@ -65,16 +66,18 @@
 
 **2. Prompts preview**
 
-![Pic-1](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/prompt-1.png?raw=true)
+![Pic-1](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/prompt-1.png?raw=true) 
+
 ![Pic-2](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/prompt-2.png?raw=true)
 
 **3. Dashboard preview**
 
-![Page-1](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/cli-1.png?raw=true)
+![Page-1](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/cli-1.png?raw=true) 
+
 ![Page-2](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/cli-2.png?raw=true)
 
 ```
-// blessed key annotations from source code 
+// blessed key annotations from source code
 
 var name = (key.ctrl ? 'C-' : '')
 + (key.meta ? 'M-' : '')
@@ -87,7 +90,7 @@ var name = (key.ctrl ? 'C-' : '')
     ORDER : C M S
 	WORKS : C-key (ctrl) || M-key (alt) || S-key (shift) || C-S-key (ctrl+shift) || M-S-key (alt+shift)
 	DOESN'T WORK :  C-M-key (ctrl + alt) || C-M-S-key (ctrl+alt+shift)
-	VSCODE : C-key (ctrl) || M-key (alt) || S-key (shift) 
+	VSCODE : C-key (ctrl) || M-key (alt) || S-key (shift)
     RECOMMENDED : key || C-key || S-key
 */
 ```
@@ -96,13 +99,12 @@ var name = (key.ctrl ? 'C-' : '')
 
 Dev
 
-```yarn start```
+`yarn start`
 
 Production
 
-```yarn start-prod-linux```
+`yarn start-prod-linux`
 
 Or
 
-```docker-compose up --build```
- 
+`docker-compose up --build`
