@@ -1,7 +1,8 @@
 import blessed from 'blessed';
 
-function makeMenuBox() {
+function makeMenuBox(parent) {
   return blessed.list({
+    parent,
     label: ' Menu ',
 
     top: `${0}%`,

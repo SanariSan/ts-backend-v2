@@ -1,8 +1,8 @@
 import { NoDataError } from './core/errors/generic';
-import { exampleRequests } from './examples/requests';
 import { LogLevel } from './general.type';
 import { log, logError } from './helpers/pubsub';
 import { duplicateNTimes, getIntInRange, randomHex, sleep } from './helpers/util';
+import { setupDashboard, setupErrorHandle } from './setup';
 
 /* eslint-disable @typescript-eslint/no-floating-promises */
 function main() {
@@ -33,13 +33,12 @@ function main() {
 }
 
 function init() {
-  exampleRequests();
-
-  // setupErrorHandle();
-  // setupDashboard();
+  setupErrorHandle();
+  setupDashboard();
   main();
 
   // import from ./examples/
+  // exampleRequests();
   // examplePromptCLI();
   // exampleErrors();
   // exampleEvents();
