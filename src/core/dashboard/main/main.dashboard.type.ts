@@ -9,7 +9,8 @@ interface IMainLogEntity {
 interface IDashboardMain {
   dashboardTitle: string;
 
-  appendBoxes: (screen) => void;
+  appear: (screen) => void;
+  disappear: () => void;
   updateContent: () => void;
   show: () => void;
 }

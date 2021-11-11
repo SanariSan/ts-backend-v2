@@ -4,7 +4,7 @@ import { GenericError } from '../../errors/generic';
 import { handleErrorExpected, handleErrorUnexpected } from '../../errors/handle';
 import { SubDashboard } from '../../events';
 import { Dashboard } from '../generic';
-import { makeControlsInfoBox, makeLogBox, makeMenuBox } from './box';
+import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
 import { IDashboardMain, IMainLogEntity, IMenuOptions } from './main.dashboard.type';
 
 class DashboardMain extends Dashboard {
@@ -16,11 +16,19 @@ class DashboardMain extends Dashboard {
 
   private logLinesMaxCount = 100;
 
+  private wrapBox: any;
+
+  private wrapBoxCb: any;
+
   private menuBox: any;
+
+  private menuBoxCb: any;
 
   private menuOptions: IMenuOptions;
 
   private logBox: any;
+
+  private logBoxCb: any;
 
   private controlsInfoBox: any;
 
@@ -58,8 +66,7 @@ class DashboardMain extends Dashboard {
     this.setupMessagesListener();
 
     this.initializeBoxes();
-    this.configureBoxes(this);
-    this.configureBoxesFocusSwap(this);
+    this.configureBoxesCbs();
   }
 
   private setupSubscribers() {
@@ -115,47 +122,48 @@ class DashboardMain extends Dashboard {
 
   private initializeBoxes() {
     // create predefined screen components = boxes
-    this.menuBox = makeMenuBox();
-    this.logBox = makeLogBox();
-    this.controlsInfoBox = makeControlsInfoBox();
+    this.wrapBox = makeWrapBox();
+    this.menuBox = makeMenuBox(this.wrapBox);
+    this.logBox = makeLogBox(this.wrapBox);
+    this.controlsInfoBox = makeControlsInfoBox(this.wrapBox);
 
     // store switchable boxes
     this.boxesSwitch = [this.menuBox, this.logBox];
   }
 
-  private allBoxesAssigned(): boolean {
-    if (this.menuBox && this.logBox && this.controlsInfoBox) return true;
-    return false;
-  }
+  private configureBoxesCbs() {
+    this.menuBoxCb = (item, i) => {
+      this.logBox.clearItems();
+    };
 
-  private configureBoxes(self: this) {
-    this.menuBox.focus();
-    this.menuBox.on('select item', (item, i) => {
-      self.logBox.clearItems();
-    });
+    this.logBoxCb = (ch, key) => {
+      this.autoScrollLogs = !this.autoScrollLogs;
+    };
 
-    this.logBox.key('s', (ch, key) => {
-      self.autoScrollLogs = !self.autoScrollLogs;
-    });
-  }
-
-  // FIXME: maybe make super.screen.unkey(name, listener) later if problems appear
-  // they probably will since we binding event every time and not unbinding
-  private configureBoxesFocusSwap(self: this) {
-    super.screen.key(['left', 'right'], (ch, key) => {
+    this.wrapBoxCb = (el, ch, key): boolean | void => {
       // remove accent from current box
-      self.boxesSwitch[self.currentBoxIdx].style.border.fg = 'white';
+      this.boxesSwitch[this.currentBoxIdx].style.border.fg = 'white';
 
       // carousel box idx change
       if (key.name === 'left') {
-        if (--self.currentBoxIdx < 0) self.currentBoxIdx = self.boxesSwitch.length - 1;
-      } else if (key.name === 'right' && ++self.currentBoxIdx >= self.boxesSwitch.length)
-        self.currentBoxIdx = 0;
+        if (--this.currentBoxIdx < 0) this.currentBoxIdx = this.boxesSwitch.length - 1;
+      } else if (key.name === 'right' && ++this.currentBoxIdx >= this.boxesSwitch.length)
+        this.currentBoxIdx = 0;
 
       // accent new current box
-      self.boxesSwitch[self.currentBoxIdx].focus();
-      self.boxesSwitch[self.currentBoxIdx].style.border.fg = 'blue';
-    });
+      this.boxesSwitch[this.currentBoxIdx].focus();
+      this.boxesSwitch[this.currentBoxIdx].style.border.fg = 'blue';
+
+      if (el === this.wrapBox) {
+        // Cancel propagation
+        return false;
+      }
+    };
+  }
+
+  private allBoxesAssigned(): boolean {
+    if (this.menuBox && this.logBox && this.controlsInfoBox) return true;
+    return false;
   }
 
   // *
@@ -164,14 +172,28 @@ class DashboardMain extends Dashboard {
   // runtime section
   // *
 
-  public show() {
-    super.show(this);
+  private setBoxesListeners() {
+    this.wrapBox.on('element keypress', this.wrapBoxCb);
+    this.menuBox.on('select item', this.menuBoxCb);
+    this.logBox.on('key s', this.logBoxCb);
   }
 
-  public appendBoxes(screen) {
-    screen.append(this.menuBox);
-    screen.append(this.logBox);
-    screen.append(this.controlsInfoBox);
+  private removeBoxesListeners() {
+    this.wrapBox.off('element keypress', this.wrapBoxCb);
+    this.menuBox.off('select item', this.menuBoxCb);
+    this.logBox.off('key s', this.logBoxCb);
+  }
+
+  public appear(screen) {
+    screen.append(this.wrapBox);
+
+    this.setBoxesListeners();
+    this.menuBox.focus();
+  }
+
+  public disappear() {
+    this.removeBoxesListeners();
+    this.wrapBox.detach();
   }
 
   public updateContent() {

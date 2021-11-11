@@ -5,7 +5,8 @@ interface IAltLogEntity {
 interface IDashboardAlt {
   dashboardTitle: string;
 
-  appendBoxes: (screen) => void;
+  appear: (screen) => void;
+  disappear: () => void;
   updateContent: () => void;
   show: () => void;
 }

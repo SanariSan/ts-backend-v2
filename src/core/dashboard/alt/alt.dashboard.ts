@@ -4,7 +4,7 @@ import { handleErrorExpected, handleErrorUnexpected } from '../../errors/handle'
 import { SubDashboard } from '../../events';
 import { Dashboard } from '../generic';
 import { IAltLogEntity, IDashboardAlt } from './alt.dashboard.type';
-import { makeControlsInfoBox, makeLogBox } from './box';
+import { makeControlsInfoBox, makeLogBox, makeWrapBox } from './box';
 
 class DashboardAlt extends Dashboard {
   public dashboardTitle: string;
@@ -17,7 +17,13 @@ class DashboardAlt extends Dashboard {
 
   private autoScrollLogs = true;
 
+  private wrapBox: any;
+
+  private wrapBoxCb: any;
+
   private logBox: any;
+
+  private logBoxCb: any;
 
   private controlsInfoBox: any;
 
@@ -46,7 +52,7 @@ class DashboardAlt extends Dashboard {
     this.setupMessagesListener();
 
     this.initializeBoxes();
-    this.configureBoxes(this);
+    this.configureBoxesCbs();
   }
 
   private setupSubscribers() {
@@ -98,14 +104,22 @@ class DashboardAlt extends Dashboard {
 
   private initializeBoxes() {
     // create predefined screen components = boxes
-    this.logBox = makeLogBox();
-    this.controlsInfoBox = makeControlsInfoBox();
+    this.wrapBox = makeWrapBox();
+    this.logBox = makeLogBox(this.wrapBox);
+    this.controlsInfoBox = makeControlsInfoBox(this.wrapBox);
   }
 
-  private configureBoxes(self: this) {
-    this.logBox.key('s', (ch, key) => {
-      self.autoScrollLogs = !self.autoScrollLogs;
-    });
+  private configureBoxesCbs() {
+    this.logBoxCb = (ch, key) => {
+      this.autoScrollLogs = !this.autoScrollLogs;
+    };
+
+    this.wrapBoxCb = (el, ch, key): boolean | void => {
+      if (el === this.wrapBox) {
+        // Cancel propagation
+        return false;
+      }
+    };
   }
 
   private allBoxesAssigned(): boolean {
@@ -119,13 +133,26 @@ class DashboardAlt extends Dashboard {
   // runtime section
   // *
 
-  public show() {
-    super.show(this);
+  private setBoxesListeners() {
+    this.wrapBox.on('element keypress', this.wrapBoxCb);
+    this.logBox.on('key s', this.logBoxCb);
   }
 
-  public appendBoxes(screen) {
-    screen.append(this.logBox);
-    screen.append(this.controlsInfoBox);
+  private removeBoxesListeners() {
+    this.wrapBox.off('element keypress', this.wrapBoxCb);
+    this.logBox.off('key s', this.logBoxCb);
+  }
+
+  public appear(screen) {
+    screen.append(this.wrapBox);
+
+    this.setBoxesListeners();
+    this.logBox.focus();
+  }
+
+  public disappear() {
+    this.removeBoxesListeners();
+    this.wrapBox.detach();
   }
 
   public updateContent() {

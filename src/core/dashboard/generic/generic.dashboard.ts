@@ -1,6 +1,4 @@
 import blessed from 'blessed';
-import { LogLevel } from '../../../general.type';
-import { logAlt } from '../../../helpers/pubsub';
 import { sleep } from '../../../helpers/util';
 import { TChildInstance } from './generic.dashboard.type';
 
@@ -23,6 +21,10 @@ class DashboardStatic {
 }
 
 class Dashboard {
+  private screenSwapCb: any;
+
+  private screenExitCb: any;
+
   get screen() {
     return DashboardStatic.screen;
   }
@@ -63,58 +65,47 @@ class Dashboard {
     }
   }
 
-  public show(childInstance: TChildInstance) {
-    this.detachBoxes();
-    childInstance.appendBoxes(this.screen);
-  }
-
-  private detachBoxes() {
-    // detach children boxes
-    let i = this.screen.children.length;
-    while (i--) this.screen.children[i].detach();
-  }
-
   private configureGlobalHotkeys() {
-    this.configureScreenSwapKeys(this);
-    this.configureExitKeys(this);
+    this.configureScreenCbs();
+    this.setScreenListeners();
   }
 
-  /*
-        ORDER : C M S
-	    WORK : C-key (ctrl) || M-key (alt) || S-key (shift) || C-S-key (ctrl+shift) || M-S-key (alt+shift)
-		DOESN'T WORK :  C-M-key (ctrl + alt) || C-M-S-key (ctrl+alt+shift)
-		VSCODE : C-key || M-key || S-key (but even these might not work if local shortcut enabled on those keys)
-        
-        recommended C-key || S-key
-        
-        shift+lef/right for dashboads swap
-    */
-  private configureScreenSwapKeys(self: this) {
-    this.screen.key(['S-left', 'S-right'], (ch, key) => {
-      // temp
-      logAlt(LogLevel.INFO, `${JSON.stringify(key)}`);
-
-      self.detachBoxes();
+  private configureScreenCbs() {
+    // shift+lef/right for dashboads swap
+    this.screenSwapCb = (ch, key) => {
+      this.hide();
 
       // carousel idx change
       if (key.full === 'S-left') {
-        if (--self.currChildIdx < 0) self.currChildIdx = self.childInstances.length - 1;
-      } else if (key.full === 'S-right' && ++self.currChildIdx >= self.childInstances.length)
-        self.currChildIdx = 0;
+        if (--this.currChildIdx < 0) this.currChildIdx = this.childInstances.length - 1;
+      } else if (key.full === 'S-right' && ++this.currChildIdx >= this.childInstances.length)
+        this.currChildIdx = 0;
 
-      // attach next children configured boxes
-      const currChild = self.childInstances[self.currChildIdx];
-      currChild.appendBoxes(self.screen);
-      self.screen.title = currChild.dashboardTitle;
-    });
+      this.show();
+    };
+
+    // ctrl+c / escape = destroy screens + exit
+    this.screenExitCb = (ch, key) => {
+      this.screen.destroy();
+      process.exit(0);
+    };
   }
 
-  // ctrl+c / escape = destroy screens + exit
-  private configureExitKeys(self: this) {
-    this.screen.key(['escape', 'C-c', 'q'], (ch, key) => {
-      self.screen.destroy();
-      process.exit(0);
-    });
+  private setScreenListeners() {
+    this.screen.key(['S-left', 'S-right'], this.screenSwapCb);
+    this.screen.key(['escape', 'C-c', 'q'], this.screenExitCb);
+  }
+
+  public show() {
+    const newChild = this.childInstances[this.currChildIdx];
+    newChild.appear(this.screen);
+
+    this.screen.title = newChild.dashboardTitle;
+  }
+
+  public hide() {
+    const oldChild = this.childInstances[this.currChildIdx];
+    oldChild.disappear();
   }
 }
 

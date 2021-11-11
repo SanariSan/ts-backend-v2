@@ -1,8 +1,9 @@
 import blessed from 'blessed';
 import { SCREEN_DEFAULT_PADDINGS } from '../../dashboard.const';
 
-function makeControlsInfoBox() {
+function makeControlsInfoBox(parent) {
   return blessed.text({
+    parent,
     label: ' Controls ',
 
     top: `${80}%`,

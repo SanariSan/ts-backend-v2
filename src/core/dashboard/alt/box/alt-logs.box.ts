@@ -1,8 +1,9 @@
 import blessed from 'blessed';
 import { SCREEN_DEFAULT_PADDINGS } from '../../dashboard.const';
 
-function makeLogBox() {
+function makeLogBox(parent) {
   return blessed.list({
+    parent,
     label: ' Logs ',
 
     top: `${0}%`,

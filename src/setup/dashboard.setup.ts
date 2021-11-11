@@ -1,8 +1,10 @@
 import { DashboardAlt, DashboardMain } from '../core/dashboard';
 
 function setupDashboard() {
-  new DashboardMain().show();
+  const mainDB = new DashboardMain();
   new DashboardAlt();
+
+  mainDB.show();
 }
 
 export { setupDashboard };
