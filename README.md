@@ -11,16 +11,16 @@
 
 ~ work in progress ~~ rework in progress
 
-1. Nested Errors throw structure | _classes_ |
-2. Custom wrapper for CLI prompts of all kinds | _based on [Inquirer](https://www.npmjs.com/package/inquirer)_ | _classes_ |
-3. Interactive Multiple screens CLI Dashboard | _based on [Blessed](https://www.npmjs.com/package/blessed)_ | _classes_ |
-4. Custom events controller | _classes_ |
-5. ~~Extensible services template | _based on [Axios](https://www.npmjs.com/package/axios)_ |
-6. Custom PUB-SUB realisation | _classes_ |
+1. Nested Errors throw structure
+2. Custom wrapper for CLI prompts of all kinds | _based on [Inquirer](https://www.npmjs.com/package/inquirer)_
+3. Interactive Multiple screens CLI Dashboard | _based on [Blessed](https://www.npmjs.com/package/blessed)_
+4. Custom events controller
+5. ~~Extensible services template | _based on [Axios](https://www.npmjs.com/package/axios)_
+6. Custom PUB-SUB realisation
 7. Various package.json scripts
 8. Docker containerized
 9. tsconfig.json file splitted in 2 layers
-10. ~AirBNB eslint style config with prettier over it
+10. ~AirBNB (and some others) eslint style configs + prettier
 
 **Planned:**
 

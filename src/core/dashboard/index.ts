@@ -1,3 +1,3 @@
-export * from './generic';
+export * from './static';
 export * from './main';
 export * from './alt';

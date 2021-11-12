@@ -73,7 +73,8 @@
     // Common abbreviations are known and readable
     "unicorn/prevent-abbreviations": "off",
     // Airbnb prefers forEach
-    "unicorn/no-array-for-each": "off"
+    "unicorn/no-array-for-each": "off",
+    "unicorn/no-process-exit": "off"
   }
 }
 
