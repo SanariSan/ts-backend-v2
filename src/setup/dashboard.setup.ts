@@ -1,10 +1,10 @@
-import { DashboardAlt, DashboardMain } from '../core/dashboard';
+import { DashboardAlt, DashboardMain, DashboardStatic } from '../core/dashboard';
 
 function setupDashboard() {
-  const mainDB = new DashboardMain();
+  const main = new DashboardMain();
   new DashboardAlt();
 
-  mainDB.show();
+  DashboardStatic.show(main);
 }
 
 export { setupDashboard };

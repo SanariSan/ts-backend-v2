@@ -3,12 +3,13 @@ import { formatStr } from '../../../helpers/dashboard';
 import { GenericError } from '../../errors/generic';
 import { handleErrorExpected, handleErrorUnexpected } from '../../errors/handle';
 import { SubDashboard } from '../../events';
-import { Dashboard } from '../generic';
+import { DashboardStatic } from '../static';
 import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
-import { IDashboardMain, IMainLogEntity, IMenuOptions } from './main.dashboard.type';
+import { IMainLogEntity, IMenuOptions } from './main.dashboard.type';
 
-class DashboardMain extends Dashboard {
-  public dashboardTitle: string;
+// TODO: review if (!smth) return; checks and replace with errors where needed
+class DashboardMain {
+  private dashboardTitle: string;
 
   private subPoint: null | SubDashboard = null;
 
@@ -39,8 +40,6 @@ class DashboardMain extends Dashboard {
   private currentBoxIdx = 0;
 
   constructor() {
-    super();
-
     this.dashboardTitle = 'Dashboard-Main';
 
     // TODO: basic menu option explicitly defined here, but later can add way to add new
@@ -53,8 +52,8 @@ class DashboardMain extends Dashboard {
   // *
 
   protected init() {
-    // init screen if none was before + configure global hotkeys
-    super.init(<IDashboardMain>(<unknown>this));
+    // save this instance, init screen if not done yet
+    DashboardStatic.init(this);
 
     // initialize subscriber instance
     this.subPoint = new SubDashboard();
@@ -172,20 +171,9 @@ class DashboardMain extends Dashboard {
   // runtime section
   // *
 
-  private setBoxesListeners() {
-    this.wrapBox.on('element keypress', this.wrapBoxCb);
-    this.menuBox.on('select item', this.menuBoxCb);
-    this.logBox.on('key s', this.logBoxCb);
-  }
-
-  private removeBoxesListeners() {
-    this.wrapBox.off('element keypress', this.wrapBoxCb);
-    this.menuBox.off('select item', this.menuBoxCb);
-    this.logBox.off('key s', this.logBoxCb);
-  }
-
   public appear(screen) {
     screen.append(this.wrapBox);
+    screen.title = this.dashboardTitle;
 
     this.setBoxesListeners();
     this.menuBox.focus();
@@ -201,6 +189,18 @@ class DashboardMain extends Dashboard {
 
     this.updateMenuBoxContent();
     this.updateLogsBoxContent();
+  }
+
+  private setBoxesListeners() {
+    this.wrapBox.on('element keypress', this.wrapBoxCb);
+    this.menuBox.on('select item', this.menuBoxCb);
+    this.logBox.on('key s', this.logBoxCb);
+  }
+
+  private removeBoxesListeners() {
+    this.wrapBox.off('element keypress', this.wrapBoxCb);
+    this.menuBox.off('select item', this.menuBoxCb);
+    this.logBox.off('key s', this.logBoxCb);
   }
 
   private updateMenuBoxContent() {

@@ -7,12 +7,9 @@ interface IMainLogEntity {
 }
 
 interface IDashboardMain {
-  dashboardTitle: string;
-
   appear: (screen) => void;
   disappear: () => void;
   updateContent: () => void;
-  show: () => void;
 }
 
 export { IDashboardMain, IMainLogEntity, IMenuOptions };

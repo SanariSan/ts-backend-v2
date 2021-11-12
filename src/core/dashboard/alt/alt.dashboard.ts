@@ -2,12 +2,13 @@ import { formatStr } from '../../../helpers/dashboard';
 import { GenericError } from '../../errors/generic';
 import { handleErrorExpected, handleErrorUnexpected } from '../../errors/handle';
 import { SubDashboard } from '../../events';
-import { Dashboard } from '../generic';
-import { IAltLogEntity, IDashboardAlt } from './alt.dashboard.type';
+import { DashboardStatic } from '../static';
+import { IAltLogEntity } from './alt.dashboard.type';
 import { makeControlsInfoBox, makeLogBox, makeWrapBox } from './box';
 
-class DashboardAlt extends Dashboard {
-  public dashboardTitle: string;
+// TODO: review if (!smth) return; checks and replace with errors where needed
+class DashboardAlt {
+  private dashboardTitle: string;
 
   private subPoint: null | SubDashboard = null;
 
@@ -28,8 +29,6 @@ class DashboardAlt extends Dashboard {
   private controlsInfoBox: any;
 
   constructor() {
-    super();
-
     this.dashboardTitle = 'Dashboard-Alt';
 
     this.init();
@@ -39,8 +38,8 @@ class DashboardAlt extends Dashboard {
   // *
 
   protected init() {
-    // init screen if none was before + configure global hotkeys
-    super.init(<IDashboardAlt>(<unknown>this));
+    // save this instance, init screen if not done yet
+    DashboardStatic.init(this);
 
     // initialize subscriber instance
     this.subPoint = new SubDashboard();
@@ -133,18 +132,9 @@ class DashboardAlt extends Dashboard {
   // runtime section
   // *
 
-  private setBoxesListeners() {
-    this.wrapBox.on('element keypress', this.wrapBoxCb);
-    this.logBox.on('key s', this.logBoxCb);
-  }
-
-  private removeBoxesListeners() {
-    this.wrapBox.off('element keypress', this.wrapBoxCb);
-    this.logBox.off('key s', this.logBoxCb);
-  }
-
   public appear(screen) {
     screen.append(this.wrapBox);
+    screen.title = this.dashboardTitle;
 
     this.setBoxesListeners();
     this.logBox.focus();
@@ -159,6 +149,16 @@ class DashboardAlt extends Dashboard {
     if (!this.allBoxesAssigned()) return;
 
     this.updateLogsBoxContent();
+  }
+
+  private setBoxesListeners() {
+    this.wrapBox.on('element keypress', this.wrapBoxCb);
+    this.logBox.on('key s', this.logBoxCb);
+  }
+
+  private removeBoxesListeners() {
+    this.wrapBox.off('element keypress', this.wrapBoxCb);
+    this.logBox.off('key s', this.logBoxCb);
   }
 
   private updateLogsBoxContent() {
