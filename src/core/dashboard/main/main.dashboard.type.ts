@@ -12,4 +12,4 @@ interface IDashboardMain {
   updateContent: () => void;
 }
 
-export { IDashboardMain, IMainLogEntity, IMenuOptions };
+export type { IDashboardMain, IMainLogEntity, IMenuOptions };

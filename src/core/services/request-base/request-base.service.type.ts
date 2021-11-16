@@ -1,5 +1,5 @@
-import { AxiosProxyConfig, AxiosRequestConfig } from 'axios';
-import { ObjectAny } from '../../../general.type';
+import type { AxiosProxyConfig, AxiosRequestConfig } from 'axios';
+import type { ObjectAny } from '../../../general.type';
 
 type TRequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -26,4 +26,4 @@ interface IGenericRequest {
   args?: AxiosRequestConfig | ICustomConfig;
 }
 
-export { IRequest, TRequestMethod, IGenericRequest, ICustomConfig };
+export type { IRequest, TRequestMethod, IGenericRequest, ICustomConfig };

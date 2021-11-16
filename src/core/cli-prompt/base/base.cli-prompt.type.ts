@@ -1,5 +1,5 @@
-import Separator from 'inquirer/lib/objects/separator';
-import { ObjectAny } from '../../../general.type';
+import type Separator from 'inquirer/lib/objects/separator';
+import type { ObjectAny } from '../../../general.type';
 
 interface IPromptBase {
   key?: string;
@@ -18,4 +18,4 @@ interface IPromptBase {
   rest?: ObjectAny;
 }
 
-export { IPromptBase };
+export type { IPromptBase };

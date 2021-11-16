@@ -12,7 +12,7 @@ class DashboardAlt {
 
   private subPoint: null | SubDashboard = null;
 
-  private logLinesStorage: Array<string> = [];
+  private logLinesStorage: string[] = [];
 
   private logLinesMaxCount = 500;
 

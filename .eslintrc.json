@@ -48,14 +48,14 @@
 
   // rules - place for overridng rules from plugin/config
   "rules": {
+    // ===|
     // fix & config
-    // ---------------
 
     // enable prettier check rules
     "prettier/prettier": "error",
 
+    // ===|
     // preference
-    // ---------------
 
     // https://basarat.gitbooks.io/typescript/docs/tips/defaultIsBad.html
     "import/prefer-default-export": "off",
@@ -64,8 +64,6 @@
     "no-prototype-builtins": "off",
     // Use function hoisting to improve code readability
     "no-use-before-define": ["error", { "functions": false, "classes": true, "variables": true }],
-    // Allow most functions to rely on type inference. If the function is exported, then `@typescript-eslint/explicit-module-boundary-types` will ensure it's typed.
-    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-use-before-define": [
       "error",
       { "functions": false, "classes": true, "variables": true, "typedefs": true }
@@ -74,8 +72,210 @@
     "unicorn/prevent-abbreviations": "off",
     // Airbnb prefers forEach
     "unicorn/no-array-for-each": "off",
-    "unicorn/no-process-exit": "off"
-  }
+    "unicorn/no-process-exit": "off",
+
+    // ===
+    // @typescript-eslint
+
+    // ==
+    // minor
+
+    // T[] for simple arrays, Array<T> for unions, intersection, etc. https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/array-type.md
+    "@typescript-eslint/array-type": [
+      "error",
+      {
+        "default": "array-simple"
+      }
+    ],
+    // allow ts disable comments with description only https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/ban-ts-comment.md
+    "@typescript-eslint/ban-ts-comment": [
+      "error",
+      {
+        "ts-ignore": "allow-with-description",
+        "ts-nocheck": "allow-with-description",
+        "ts-check": "allow-with-description",
+        "ts-expect-error": "allow-with-description",
+        "minimumDescriptionLength": 10
+      }
+    ],
+    // maybe remove | type casting only with "as" keyword https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-assertions.md
+    "@typescript-eslint/consistent-type-assertions": [
+      "error",
+      {
+        "assertionStyle": "as",
+        "objectLiteralTypeAssertions": "allow"
+      }
+    ],
+    // delimiter in types/interfaces https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/member-delimiter-style.md
+    "@typescript-eslint/member-delimiter-style": [
+      "error",
+      {
+        "multiline": {
+          "delimiter": "semi",
+          "requireLast": true
+        },
+        "singleline": {
+          "delimiter": "semi",
+          "requireLast": true
+        },
+        "multilineDetection": "brackets"
+      }
+    ],
+    // prop: () => {} for functions in objects https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/method-signature-style.md
+    "@typescript-eslint/method-signature-style": ["error", "property"],
+
+    // ==
+    // major
+
+    // naming rules for everything https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/naming-convention.md
+    "@typescript-eslint/naming-convention": [
+      "error",
+
+      /**
+       * lead-trail undercores forbidden (if member is private, it should be
+       * written in the way user can't acces it, not just marked like "don't call please")
+       * general style is camelCase
+       */
+      {
+        "selector": "default",
+        "format": ["camelCase"],
+        "leadingUnderscore": "forbid",
+        "trailingUnderscore": "forbid"
+      },
+
+      // but for destructured params - do not apply style (you may want to save original look)
+      {
+        "selector": "variable",
+        "modifiers": ["destructured"],
+        "format": null
+      },
+
+      // for variables that are both const AND exported - style is UPPER_CASE
+      {
+        "selector": "variable",
+        "format": ["UPPER_CASE"],
+        "modifiers": ["const", "exported"]
+      },
+
+      // but for variables that are just const style is default - camelCase
+      {
+        "selector": "variable",
+        "format": ["camelCase"],
+        "modifiers": ["const"]
+      },
+
+      // for variables, properties and parameters, that are boolean, add one of prefixes and make PascalCase
+      {
+        "selector": [
+          "variable",
+          "parameter",
+          "classProperty",
+          "objectLiteralProperty",
+          "typeProperty",
+          "parameterProperty"
+        ],
+        "format": ["PascalCase"],
+        "types": ["boolean"],
+        "prefix": ["is", "should", "has", "can", "did", "will"]
+      },
+
+      // for properties and variables that requires quotes - ignore style (http headers and similar)
+      {
+        "selector": [
+          "classProperty",
+          "objectLiteralProperty",
+          "typeProperty",
+          "classMethod",
+          "objectLiteralMethod",
+          "typeMethod",
+          "accessor",
+          "enumMember"
+        ],
+        "format": null,
+        "modifiers": ["requiresQuotes"]
+      },
+
+      // for interfaces add I before name
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "prefix": ["I"]
+      },
+
+      // for types add T before name
+      {
+        "selector": "typeAlias",
+        "format": ["PascalCase"],
+        "prefix": ["T"]
+      },
+
+      // for types' generic params make it start with T (or be just T), type TMyType<T/Tsmth> = Array<T/Tsmth>
+      {
+        "selector": "typeParameter",
+        "format": ["PascalCase"],
+        "prefix": ["T"]
+      },
+
+      // for enum - style is UPPER_CASE with prefix E
+      {
+        "selector": ["enum"],
+        "format": ["UPPER_CASE"],
+        "prefix": ["E"]
+      },
+
+      // for enum members - style is UPPER_CASE
+      {
+        "selector": ["enumMember"],
+        "format": ["UPPER_CASE"]
+      }
+    ],
+
+    // TS 3.8+ "export type {}" for type exporting https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-exports.md
+    "@typescript-eslint/consistent-type-exports": "error",
+
+    // TS 3.8+ "import type {}" for type importing, conflict with ide imports autocompletion (ctrl+space), but auto-fixes on save https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-imports.md
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports",
+        "disallowTypeAnnotations": true
+      }
+    ],
+
+    // allow/disallow functions to rely on implicit type inference. Currently Allowed (off). ALWAYS (off) in override section to support js files https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/explicit-function-return-type.md
+    "@typescript-eslint/explicit-function-return-type": [
+      "off",
+      {
+        "allowExpressions": false,
+        "allowTypedFunctionExpressions": true,
+        "allowHigherOrderFunctions": true,
+        "allowDirectConstAssertionInArrowFunctions": true,
+        "allowConciseArrowFunctionExpressionsStartingWithVoid": false
+      }
+    ],
+
+    // allow/disallow EXPORTED functions to rely on type inference. Currently Allowed (off). ALWAYS (off) https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/explicit-module-boundary-types.md
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "off",
+      {
+        "allowArgumentsExplicitlyTypedAsAny": false,
+        "allowDirectConstAssertionInArrowFunctions": true,
+        "allowedNames": [],
+        "allowHigherOrderFunctions": true,
+        "allowTypedFunctionExpressions": true
+      }
+    ]
+  },
+  "overrides": [
+    {
+      // disable the rule for js files
+      "files": ["*.js", "*.jsx"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": ["off"],
+        "@typescript-eslint/explicit-module-boundary-types": ["off"]
+      }
+    }
+  ]
 }
 
 /*

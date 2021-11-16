@@ -17,6 +17,7 @@ function main() {
   test();
 
   async function pubLogs() {
+    // @ts-ignore: 12345678
     await sleep(500);
     pubLogs();
     log(LogLevel.INFO, `${duplicateNTimes(getIntInRange(1, 3), randomHex())}`);
