@@ -29,7 +29,15 @@
   },
 
   // plugins - doing something on side (convert/compute), exposing rules to apply (in extends) and apply/change (in rules) if have some
-  "plugins": ["@typescript-eslint", "promise", "unicorn", "import", "prettier"],
+  "plugins": [
+    // a lot of useful typescript specific rules https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+    "@typescript-eslint",
+    "promise",
+    "unicorn",
+    "import",
+    // converting local prettier config into set of rules https://github.com/prettier/eslint-plugin-prettier#installation
+    "prettier"
+  ],
 
   // extends - set of rules from plugin above or eslint-config- <name>
   "extends": [
@@ -42,7 +50,7 @@
     "plugin:promise/recommended",
     // TODO: investigate, another set of useful rules?
     "plugin:unicorn/recommended",
-    // convert prettier config into set of rules
+    // disabling all the rules that might conflict with prettier https://github.com/prettier/eslint-config-prettier#installation
     "prettier"
   ],
 
@@ -51,8 +59,16 @@
     // ===|
     // fix & config
 
-    // enable prettier check rules
+    // enable prettier format rules to be check and marked as errors when violated https://github.com/prettier/eslint-plugin-prettier#installation
     "prettier/prettier": "error",
+
+    // allow void in some cases for @typescript-eslint/no-floating-promises compatibility https://eslint.org/docs/rules/no-void -> https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-floating-promises.md#ignorevoid
+    "no-void": [
+      "error",
+      {
+        "allowAsStatement": true
+      }
+    ],
 
     // ===|
     // preference
@@ -87,6 +103,7 @@
         "default": "array-simple"
       }
     ],
+
     // allow ts disable comments with description only https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/ban-ts-comment.md
     "@typescript-eslint/ban-ts-comment": [
       "error",
@@ -98,6 +115,7 @@
         "minimumDescriptionLength": 10
       }
     ],
+
     // maybe remove | type casting only with "as" keyword https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-assertions.md
     "@typescript-eslint/consistent-type-assertions": [
       "error",
@@ -106,6 +124,7 @@
         "objectLiteralTypeAssertions": "allow"
       }
     ],
+
     // delimiter in types/interfaces https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/member-delimiter-style.md
     "@typescript-eslint/member-delimiter-style": [
       "error",
@@ -121,8 +140,21 @@
         "multilineDetection": "brackets"
       }
     ],
+
     // prop: () => {} for functions in objects https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/method-signature-style.md
     "@typescript-eslint/method-signature-style": ["error", "property"],
+
+    // forbid returning function call if it returns nothing https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-confusing-void-expression.md
+    "@typescript-eslint/no-confusing-void-expression": [
+      "error",
+      {
+        "ignoreArrowShorthand": false,
+        "ignoreVoidOperator": false
+      }
+    ],
+
+    // just the style of using delete keyword (who even uses that...) with computed props https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-dynamic-delete.md
+    "@typescript-eslint/no-dynamic-delete": ["error"],
 
     // ==
     // major
@@ -148,6 +180,12 @@
         "selector": "variable",
         "modifiers": ["destructured"],
         "format": null
+      },
+
+      // for class use PacalCase
+      {
+        "selector": "class",
+        "format": ["PascalCase"]
       },
 
       // for variables that are both const AND exported - style is UPPER_CASE
@@ -230,8 +268,11 @@
       }
     ],
 
+    // no explicit any https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-explicit-any.md
+    "@typescript-eslint/no-explicit-any": ["warn"],
+
     // TS 3.8+ "export type {}" for type exporting https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-exports.md
-    "@typescript-eslint/consistent-type-exports": "error",
+    "@typescript-eslint/consistent-type-exports": ["error"],
 
     // TS 3.8+ "import type {}" for type importing, conflict with ide imports autocompletion (ctrl+space), but auto-fixes on save https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-imports.md
     "@typescript-eslint/consistent-type-imports": [
@@ -263,6 +304,26 @@
         "allowedNames": [],
         "allowHigherOrderFunctions": true,
         "allowTypedFunctionExpressions": true
+      }
+    ],
+
+    // disallow .toString (or implicit call) in cases method not expicitly defined, example `${ {a: 1} }` NOT allowed https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-base-to-string.md
+    "@typescript-eslint/no-base-to-string": ["error"],
+
+    // propper promise format, with await/void, then+catch https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-floating-promises.md
+    "@typescript-eslint/no-floating-promises": [
+      "error",
+      {
+        "ignoreVoid": true,
+        "ignoreIIFE": false
+      }
+    ],
+
+    // explicitly add void before fn call when it returns value, but you don't assign it to variable or use in any way https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-meaningless-void-operator.md
+    "@typescript-eslint/no-meaningless-void-operator": [
+      "error",
+      {
+        "checkNever": false
       }
     ]
   },
