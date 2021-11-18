@@ -1,7 +1,7 @@
 import { ObjectAny } from '../../general.type';
 
 interface ISuccessResponseData {
-  result?: string | Array<ObjectAny>;
+  result?: string | ObjectAny[];
   success: boolean;
   errorCode: number;
   message: string | null;

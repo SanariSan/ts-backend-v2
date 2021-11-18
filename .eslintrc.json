@@ -1,61 +1,86 @@
 {
-  "parser": "@typescript-eslint/parser",
+  // could explicitly define parser here, but leaving default eslint parser (*)
+  // "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
-    "sourceType": "module",
-    // in our case ts parser should use defined configs file
-    "project": "./tsconfig.json"
+    "sourceType": "module"
   },
   "env": {
     "node": true,
     "es2020": true
+    // "browser": true,
+    // "jest": true
   },
   "settings": {
-    // plugin import, parsers functionality
-    "import/parsers": {
-      // when parsing with @typescript-eslint/parser, it should only process defined exts
-      "@typescript-eslint/parser": [".ts", ".tsx"]
-    },
-    // plugin import, modules resolvers functionality
+    // plugin import, resolving process https://github.com/import-js/eslint-plugin-import#resolvers
     "import/resolver": {
-      // when using it with typecript
-      "typescript": {
-        // should try importing types from .d.ts files over .js files (even if no such file in dir)
-        "alwaysTryTypes": true,
-        // in our case ts resolver should use defined configs file
-        "project": "./tsconfig.json"
+      // https://github.com/import-js/eslint-plugin-import#importextensions
+      // use eslint-import-resolver-node only for these extensions https://www.npmjs.com/package/eslint-import-resolver-node
+      "node": {
+        "extensions": [".js", ".jsx"],
+        "ecmaFeatures": {
+          "jsx": true
+        }
       }
     }
   },
 
-  // plugins - doing something on side (convert/compute), exposing rules to apply (in extends) and apply/change (in rules) if have some
-  "plugins": ["@typescript-eslint", "promise", "unicorn", "import", "prettier"],
-
-  // extends - set of rules from plugin above or eslint-config- <name>
-  "extends": [
-    // airbnb ts rules
-    "airbnb-typescript/base",
-    // ts overall recommended rules
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    // promise recommended rules
-    "plugin:promise/recommended",
-    // TODO: investigate, another set of useful rules?
-    "plugin:unicorn/recommended",
-    // convert prettier config into set of rules
+  // plugins (eslint-plugin- <name>) - doing something on side (convert/compute) ;
+  // exposing sets of rules to apply (in extends) ; exposing individual rules to apply/change (in rules) if have some
+  "plugins": [
+    // a lot of useful typescript specific rules https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin
+    "@typescript-eslint",
+    // promises rules https://github.com/xjamundx/eslint-plugin-promise
+    "promise",
+    // set of useful rules rules https://github.com/sindresorhus/eslint-plugin-unicorn
+    "unicorn",
+    // everything about importing https://github.com/import-js/eslint-plugin-import
+    "import",
+    // converting local prettier config into set of rules https://github.com/prettier/eslint-plugin-prettier#installation
     "prettier"
   ],
 
-  // rules - place for overridng rules from plugin/config
-  "rules": {
-    // fix & config
-    // ---------------
+  // extends (eslint-config- <name>) - sets of rules from plugins above
+  "extends": [
+    "airbnb-base",
+    // airbnb ts rules (compatibility only, no documented rules to change)
+    "airbnb-typescript/base",
+    // setting up resolvers for import/export https://github.com/import-js/eslint-plugin-import#typescript
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    // ts overall recommended rules https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+    "plugin:@typescript-eslint/recommended",
+    // ts overall recommended rules https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#extension-rules
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    // promise recommended rules https://github.com/xjamundx/eslint-plugin-promise#rules
+    "plugin:promise/recommended",
+    // TODO: investigate, another set of useful rules?
+    "plugin:unicorn/recommended",
+    // disabling all the rules that might conflict with prettier https://github.com/prettier/eslint-config-prettier#installation
+    "prettier"
+  ],
 
-    // enable prettier check rules
+  // rules - place for overridng/setting rules from plugin/config
+  // *although typescript configs are in "overrides" section, these rules work for both js and ts, then some overrided
+  "rules": {
+    // ===
+    // prettier
+
+    // enable prettier format rules to be check and marked as errors when violated https://github.com/prettier/eslint-plugin-prettier#installation
     "prettier/prettier": "error",
 
-    // preference
-    // ---------------
+    // ===
+    // eslint
+
+    // allow void in some cases for @typescript-eslint/no-floating-promises compatibility https://eslint.org/docs/rules/no-void -> https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-floating-promises.md#ignorevoid
+    "no-void": [
+      "error",
+      {
+        "allowAsStatement": true
+      }
+    ],
+
+    // REMOVE
 
     // https://basarat.gitbooks.io/typescript/docs/tips/defaultIsBad.html
     "import/prefer-default-export": "off",
@@ -64,8 +89,6 @@
     "no-prototype-builtins": "off",
     // Use function hoisting to improve code readability
     "no-use-before-define": ["error", { "functions": false, "classes": true, "variables": true }],
-    // Allow most functions to rely on type inference. If the function is exported, then `@typescript-eslint/explicit-module-boundary-types` will ensure it's typed.
-    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-use-before-define": [
       "error",
       { "functions": false, "classes": true, "variables": true, "typedefs": true }
@@ -74,65 +97,351 @@
     "unicorn/prevent-abbreviations": "off",
     // Airbnb prefers forEach
     "unicorn/no-array-for-each": "off",
-    "unicorn/no-process-exit": "off"
-  }
+    "unicorn/no-process-exit": "off",
+
+    // ===
+    // @typescript-eslint minor
+
+    // Requires using either T[] or Array<T> for arrays https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/array-type.md
+    "@typescript-eslint/array-type": [
+      "error",
+      {
+        "default": "array-simple"
+      }
+    ],
+
+    // Bans @ts-<directive> comments from being used or requires descriptions after directive https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/ban-ts-comment.md
+    "@typescript-eslint/ban-ts-comment": [
+      "error",
+      {
+        "ts-ignore": "allow-with-description",
+        "ts-nocheck": "allow-with-description",
+        "ts-check": "allow-with-description",
+        "ts-expect-error": "allow-with-description",
+        "minimumDescriptionLength": 10
+      }
+    ],
+
+    // Enforces consistent usage of type assertions https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-assertions.md
+    "@typescript-eslint/consistent-type-assertions": [
+      "error",
+      {
+        "assertionStyle": "as",
+        "objectLiteralTypeAssertions": "allow"
+      }
+    ],
+
+    // Require a specific member delimiter style for interfaces and type literals https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/member-delimiter-style.md
+    "@typescript-eslint/member-delimiter-style": [
+      "error",
+      {
+        "multiline": {
+          "delimiter": "semi",
+          "requireLast": true
+        },
+        "singleline": {
+          "delimiter": "semi",
+          "requireLast": true
+        },
+        "multilineDetection": "brackets"
+      }
+    ],
+
+    // Enforces using a particular method signature syntax https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/method-signature-style.md
+    // prop: () => {} for functions in objects
+    "@typescript-eslint/method-signature-style": ["error", "property"],
+
+    // Requires expressions of type void to appear in statement position https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-confusing-void-expression.md
+    "@typescript-eslint/no-confusing-void-expression": [
+      "error",
+      {
+        "ignoreArrowShorthand": false,
+        "ignoreVoidOperator": false
+      }
+    ],
+
+    // Disallow the delete operator with computed key expressions https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-dynamic-delete.md
+    "@typescript-eslint/no-dynamic-delete": ["error"],
+
+    // Enforces that type arguments will not be used if not required https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unnecessary-type-arguments.md
+    "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
+
+    // ===
+    // @typescript-eslint major
+
+    // naming rules for everything https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/naming-convention.md
+    "@typescript-eslint/naming-convention": [
+      "error",
+
+      /**
+       * lead-trail undercores forbidden (if member is private, it should be
+       * written in the way user can't acces it, not just marked like "don't call please")
+       * general style is camelCase
+       */
+      {
+        "selector": "default",
+        "format": ["camelCase"],
+        "leadingUnderscore": "forbid",
+        "trailingUnderscore": "forbid"
+      },
+
+      // but for destructured params - do not apply style (you may want to save original look)
+      {
+        "selector": "variable",
+        "modifiers": ["destructured"],
+        "format": null
+      },
+
+      // for class use PacalCase
+      {
+        "selector": "class",
+        "format": ["PascalCase"]
+      },
+
+      // for variables that are both const AND exported - style is UPPER_CASE
+      {
+        "selector": "variable",
+        "format": ["UPPER_CASE"],
+        "modifiers": ["const", "exported"]
+      },
+
+      // but for variables that are just const style is default - camelCase
+      {
+        "selector": "variable",
+        "format": ["camelCase"],
+        "modifiers": ["const"]
+      },
+
+      // for variables, properties and parameters, that are boolean, add one of prefixes and make PascalCase
+      {
+        "selector": [
+          "variable",
+          "parameter",
+          "classProperty",
+          "objectLiteralProperty",
+          "typeProperty",
+          "parameterProperty"
+        ],
+        "format": ["PascalCase"],
+        "types": ["boolean"],
+        "prefix": ["is", "should", "has", "can", "did", "will"]
+      },
+
+      // for properties and variables that requires quotes - ignore style (http headers and similar)
+      {
+        "selector": [
+          "classProperty",
+          "objectLiteralProperty",
+          "typeProperty",
+          "classMethod",
+          "objectLiteralMethod",
+          "typeMethod",
+          "accessor",
+          "enumMember"
+        ],
+        "format": null,
+        "modifiers": ["requiresQuotes"]
+      },
+
+      // for interfaces add I before name
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "prefix": ["I"]
+      },
+
+      // for types add T before name
+      {
+        "selector": "typeAlias",
+        "format": ["PascalCase"],
+        "prefix": ["T"]
+      },
+
+      // for types' generic params make it start with T (or be just T), type TMyType<T/Tsmth> = Array<T/Tsmth>
+      {
+        "selector": "typeParameter",
+        "format": ["PascalCase"],
+        "prefix": ["T"]
+      },
+
+      // for enum - style is UPPER_CASE with prefix E
+      {
+        "selector": ["enum"],
+        "format": ["UPPER_CASE"],
+        "prefix": ["E"]
+      },
+
+      // for enum members - style is UPPER_CASE
+      {
+        "selector": ["enumMember"],
+        "format": ["UPPER_CASE"]
+      }
+    ],
+
+    // Disallow usage of the any type https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-explicit-any.md
+    "@typescript-eslint/no-explicit-any": ["warn"],
+
+    // TS 3.8+ Enforces consistent usage of type exports https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-exports.md
+    "@typescript-eslint/consistent-type-exports": ["error"],
+
+    // TS 3.8+ Enforces consistent usage of type imports https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-imports.md
+    // Conflict with ide imports autocompletion (ctrl+space), but auto-fixes on save
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports",
+        "disallowTypeAnnotations": true
+      }
+    ],
+
+    // Require explicit return types on functions and class methods https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/explicit-function-return-type.md
+    // Currently off ; ALWAYS off for js files in "overrides"
+    "@typescript-eslint/explicit-function-return-type": [
+      "off",
+      {
+        "allowExpressions": false,
+        "allowTypedFunctionExpressions": true,
+        "allowHigherOrderFunctions": true,
+        "allowDirectConstAssertionInArrowFunctions": true,
+        "allowConciseArrowFunctionExpressionsStartingWithVoid": false
+      }
+    ],
+
+    // Require explicit return and argument types on exported functions' and classes' public class methods https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/explicit-module-boundary-types.md
+    // Currently off ; ALWAYS off for js files in "overrides"
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "off",
+      {
+        "allowArgumentsExplicitlyTypedAsAny": false,
+        "allowDirectConstAssertionInArrowFunctions": true,
+        "allowedNames": [],
+        "allowHigherOrderFunctions": true,
+        "allowTypedFunctionExpressions": true
+      }
+    ],
+
+    // Requires that .toString() is only called on objects which provide useful information when stringified https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-base-to-string.md
+    "@typescript-eslint/no-base-to-string": ["error"],
+
+    // Requires Promise-like values to be handled appropriately https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-floating-promises.md
+    "@typescript-eslint/no-floating-promises": [
+      "error",
+      {
+        "ignoreVoid": true,
+        "ignoreIIFE": false
+      }
+    ],
+
+    // Disallow the void operator except when used to discard a value https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-meaningless-void-operator.md
+    "@typescript-eslint/no-meaningless-void-operator": [
+      "error",
+      {
+        "checkNever": false
+      }
+    ],
+
+    // Disallow the use of custom TypeScript modules and namespaces https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-namespace.md
+    // todo: rewrite errors core type file, then change to "error"
+    "@typescript-eslint/no-namespace": "warn",
+
+    // Disallow the use of parameter properties in class constructors https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-parameter-properties.md
+    "@typescript-eslint/no-parameter-properties": ["error"],
+
+    // Prevents conditionals where the type is always truthy or always falsy https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unnecessary-condition.md
+    "@typescript-eslint/no-unnecessary-condition": [
+      "error",
+      {
+        "allowConstantLoopConditions": true
+      }
+    ],
+
+    // Warns if a type assertion does not change the type of an expression https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unnecessary-type-assertion.md
+    // enabled by default, but might be useful to off later
+    "@typescript-eslint/no-unnecessary-type-assertion": ["warn"],
+
+    // Disallows the use of require statements except in import statements https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-var-requires.mds
+    "@typescript-eslint/no-var-requires": ["warn"],
+
+    // Require that all enum members be literal values to prevent unintended enum member name shadow issues https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/prefer-literal-enum-member.md
+    "@typescript-eslint/prefer-literal-enum-member": [
+      "error",
+      {
+        "allowBitwiseExpressions": true
+      }
+    ]
+  },
+  "overrides": [
+    {
+      // disable rules for js files
+      "files": ["**/*.{js,jsx}"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": ["off"],
+        "@typescript-eslint/explicit-module-boundary-types": ["off"],
+        "@typescript-eslint/no-var-requires": ["off"]
+      }
+    },
+    // TYPESCRIPT PARSING SETUP
+    {
+      "files": ["**/*.{ts,tsx}"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        // ts parser should read following configs file
+        "project": "./tsconfig.json"
+      },
+      "env": {
+        "node": true,
+        "es2020": true
+        // "browser": true,
+        // "jest": true
+      },
+      "settings": {
+        // plugin import, resolving process https://github.com/import-js/eslint-plugin-import#resolvers
+        "import/resolver": {
+          // use eslint-import-resolver-typescript https://github.com/alexgorbatchev/eslint-import-resolver-typescript
+          "typescript": {
+            // ts resolver, when used, should read following configs file
+            "project": "./tsconfig.json"
+          }
+        }
+      }
+    }
+  ]
 }
 
 /*
-// optional configs
+// optional configs, look closer later
 
 {
-  "extends": [
-    // base for js
-    "airbnb-base",
-    // for this to work you should use airbnb-base (for js)
-    // now using eslint-import-resolver-typescript resolver instead, since ts setup
-    "plugin:import/typescript",
-  ],
   rules: {
-    // fix & config
-    // ---------------
+    // // don't need when "airbnb-typescript/base" used (*nots)
 
-    // don't need when "airbnb-typescript/base" used (*nots)
-
-    // fix error (airbnb) about importing files with no extension (*nots)
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
-      }
-    ],
-    // fixes error (airbnb) about enums being defined before (*nots)
-    "no-shadow": "off",
-    "@typescript-eslint/no-shadow": ["error"],
-    // fixes error (airbnb) about unused enums and types (*nots)
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
-      { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
-    ],
-
-    // preference
-    // ---------------
+    // // fix error (airbnb) about importing files with no extension (*nots)
+    // "import/extensions": [
+    //   "error",
+    //   "ignorePackages",
+    //   {
+    //     "js": "never",
+    //     "jsx": "never",
+    //     "ts": "never",
+    //     "tsx": "never"
+    //   }
+    // ],
+    // // fixes error (airbnb) about enums being defined before (*nots)
+    // "no-shadow": "off",
+    // "@typescript-eslint/no-shadow": ["error"],
+    // // fixes error (airbnb) about unused enums and types (*nots)
+    // "no-unused-vars": "off",
+    // "@typescript-eslint/no-unused-vars": [
+    //   "warn",
+    //   { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
+    // ],
 
     // Too restrictive: https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/destructuring-assignment.md
     // "react/destructuring-assignment": "off",
     // No jsx extension: https://github.com/facebook/create-react-app/issues/87#issuecomment-234627904
     // "react/jsx-filename-extension": "off",
   },
-  "overrides": [
-    {
-      // if somehow js file used
-      "files": ["*.js"],
-      "rules": {
-        // Allow `require()`
-        "@typescript-eslint/no-var-requires": "off"
-      }
-    }
-  ]
 }
 */

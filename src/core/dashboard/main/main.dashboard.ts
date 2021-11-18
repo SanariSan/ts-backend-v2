@@ -1,11 +1,11 @@
-import { ObjectAny } from '../../../general.type';
+import type { IMainLogEntity, IMenuOptions } from './main.dashboard.type';
+import type { ObjectAny } from '../../../general.type';
 import { formatStr } from '../../../helpers/dashboard';
-import { GenericError } from '../../errors/generic';
 import { handleErrorExpected, handleErrorUnexpected } from '../../errors/handle';
 import { SubDashboard } from '../../events';
 import { DashboardStatic } from '../static';
 import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
-import { IMainLogEntity, IMenuOptions } from './main.dashboard.type';
+import type { GenericError } from '../../errors/generic';
 
 // TODO: review if (!smth) return; checks and replace with errors where needed
 class DashboardMain {
