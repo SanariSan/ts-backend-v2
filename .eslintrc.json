@@ -42,7 +42,7 @@
 
   // extends (eslint-config- <name>) - sets of rules from plugins above
   "extends": [
-    "airbnb-base",
+    // "airbnb-base",
     // airbnb ts rules (compatibility only, no documented rules to change)
     "airbnb-typescript/base",
     // setting up resolvers for import/export https://github.com/import-js/eslint-plugin-import#typescript
@@ -114,13 +114,17 @@
     "@typescript-eslint/ban-ts-comment": [
       "error",
       {
-        "ts-ignore": "allow-with-description",
+        "ts-ignore": false,
         "ts-nocheck": "allow-with-description",
         "ts-check": "allow-with-description",
         "ts-expect-error": "allow-with-description",
         "minimumDescriptionLength": 10
       }
     ],
+
+    // Recommends using @ts-expect-error over @ts-ignore https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-ts-expect-error.md
+    // Because of rule "@typescript-eslint/ban-ts-comment", ts-ignore can't be used anyway, but with this - getting autofixed if written by mistake
+    "@typescript-eslint/prefer-ts-expect-error": ["error"],
 
     // Enforces consistent usage of type assertions https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-assertions.md
     "@typescript-eslint/consistent-type-assertions": [
@@ -165,6 +169,30 @@
 
     // Enforces that type arguments will not be used if not required https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unnecessary-type-arguments.md
     "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
+
+    // Requires that private members are marked as readonly if they're never modified outside of the constructor https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-readonly.md
+    "@typescript-eslint/prefer-readonly": ["error"],
+
+    // Prefer using type parameter when calling Array#reduce instead of casting https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-reduce-type-parameter.md
+    "@typescript-eslint/prefer-reduce-type-parameter": ["error"],
+
+    // Enforce that this is used when only this type is returned https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-return-this-type.md
+    "@typescript-eslint/prefer-return-this-type": ["error"],
+
+    // Enforce the use of String#startsWith and String#endsWith instead of other equivalent methods of checking substrings https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-string-starts-ends-with.md
+    "@typescript-eslint/prefer-string-starts-ends-with": ["error"],
+
+    // Enforce template literal expressions to be of string type https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/restrict-template-expressions.md
+    "@typescript-eslint/restrict-template-expressions": [
+      "error",
+      {
+        "allowNumber": true,
+        "allowBoolean": true
+      }
+    ],
+
+    // Exhaustiveness checking in switch with union type https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/switch-exhaustiveness-check.md
+    "@typescript-eslint/switch-exhaustiveness-check": ["error"],
 
     // ===
     // @typescript-eslint major
@@ -367,6 +395,38 @@
       "error",
       {
         "allowBitwiseExpressions": true
+      }
+    ],
+
+    // Requires that function parameters are typed as readonly to prevent accidental mutation of inputs https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-readonly-parameter-types.md
+    "@typescript-eslint/prefer-readonly-parameter-types": [
+      "error",
+      {
+        "checkParameterProperties": true,
+        "ignoreInferredTypes": false,
+        "treatMethodsAsReadonly": false
+      }
+    ],
+
+    // Requires any function or method that returns a Promise to be marked async https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/promise-function-async.md
+    // Ensures that each function is only capable of: 1) returning a rejected promise OR 2) throwing an Error object. NOT BOTH.
+    "@typescript-eslint/promise-function-async": ["error"],
+
+    // Restricts the types allowed in boolean expressions https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/strict-boolean-expressions.md
+    "@typescript-eslint/strict-boolean-expressions": [
+      "error",
+      {
+        // str != ''
+        "allowString": false,
+        // num != 0 && !Number.isNaN(num)
+        "allowNumber": false,
+        // var ?? false
+        "allowNullableObject": true,
+        "allowNullableBoolean": false,
+        "allowNullableString": false,
+        "allowNullableNumber": false,
+        "allowAny": false,
+        "allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing": false
       }
     ]
   },
