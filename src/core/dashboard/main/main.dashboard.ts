@@ -9,13 +9,13 @@ import type { GenericError } from '../../errors/generic';
 
 // TODO: review if (!smth) return; checks and replace with errors where needed
 class DashboardMain {
-  private dashboardTitle: string;
+  private readonly dashboardTitle: string;
 
   private subPoint: null | SubDashboard = null;
 
   private logLinesStorage: ObjectAny = {};
 
-  private logLinesMaxCount = 100;
+  private readonly logLinesMaxCount = 100;
 
   private wrapBox: any;
 
@@ -25,7 +25,7 @@ class DashboardMain {
 
   private menuBoxCb: any;
 
-  private menuOptions: IMenuOptions;
+  private readonly menuOptions: IMenuOptions;
 
   private logBox: any;
 
