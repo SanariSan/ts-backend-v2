@@ -36,6 +36,21 @@ function init() {
   setupDashboard();
   main();
 
+  const a = [1, 2, 3, 4, 5];
+  const b = {
+    a: 1,
+  };
+
+  class Test {
+    public isFoo = true;
+
+    test() {
+      a.forEach((el) => {
+        console.log(this.isFoo);
+      });
+    }
+  }
+
   // import from ./examples/
   // exampleRequests();
   // examplePromptCLI();
