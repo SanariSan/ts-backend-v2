@@ -5,8 +5,8 @@ import { logErrorUnexpected } from '../pubsub';
 const parseResponse = ({ response }: { response: AxiosResponse }) => ({
   request: {
     request: response.request,
-    data: response.request.data,
-    headers: response.request.headers,
+    // data: response.request.data,
+    headers: response.request._header,
   },
   response: {
     response,

@@ -1,5 +1,5 @@
-import { NoClassInstanceError } from '../../errors/generic';
-import { CustomEventEmitter } from '../native';
+import { NoClassInstanceError } from '../../../errors/generic';
+import { CustomEventEmitter } from '../../native';
 import { TChannels } from './pubsub.events.type';
 
 class PubSubStatic {
@@ -60,6 +60,7 @@ class PubSub extends CustomEventEmitter {
   // removes client AND message listeners
   public quit(): this {
     PubSubStatic.clients.delete(this);
+    super.clearAllListeners();
 
     return this;
   }

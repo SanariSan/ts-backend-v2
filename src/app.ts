@@ -1,10 +1,17 @@
+import { DashboardLogsController } from './core/dashboard/controllers';
 import { NoDataError } from './core/errors/generic';
 import { LogLevel } from './general.type';
-import { log, logError } from './helpers/pubsub';
+import { log, logCustom, logError } from './helpers/pubsub';
 import { duplicateNTimes, getIntInRange, randomHex, sleep } from './helpers/util';
 import { setupDashboard, setupErrorHandle } from './setup';
 
 function main() {
+  // sub to custom channel
+  DashboardLogsController.subscribeChannel('custom-channel', `Custom-Option`);
+
+  // publish to custom channel
+  logCustom('custom-channel', LogLevel.INFO, 'message');
+
   async function test() {
     await sleep(2000);
     void test();
@@ -35,21 +42,6 @@ function init() {
   setupErrorHandle();
   setupDashboard();
   main();
-
-  const a = [1, 2, 3, 4, 5];
-  const b = {
-    a: 1,
-  };
-
-  class Test {
-    public isFoo = true;
-
-    test() {
-      a.forEach((el) => {
-        console.log(this.isFoo);
-      });
-    }
-  }
 
   // import from ./examples/
   // exampleRequests();

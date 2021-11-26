@@ -1,21 +1,9 @@
-import type { IMainLogEntity, IMenuOptions } from './main.dashboard.type';
-import type { ObjectAny } from '../../../general.type';
-import { formatStr } from '../../../helpers/dashboard';
-import { handleErrorExpected, handleErrorUnexpected } from '../../errors/handle';
-import { SubDashboard } from '../../events';
-import { DashboardStatic } from '../static';
+import { DashboardInstancesController } from '../controllers';
+import { DashboardLogsController } from '../controllers/log';
 import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
-import type { GenericError } from '../../errors/generic';
 
-// TODO: review if (!smth) return; checks and replace with errors where needed
 class DashboardMain {
-  private readonly dashboardTitle: string;
-
-  private subPoint: null | SubDashboard = null;
-
-  private logLinesStorage: ObjectAny = {};
-
-  private readonly logLinesMaxCount = 100;
+  private dashboardTitle: string;
 
   private wrapBox: any;
 
@@ -24,8 +12,6 @@ class DashboardMain {
   private menuBox: any;
 
   private menuBoxCb: any;
-
-  private readonly menuOptions: IMenuOptions;
 
   private logBox: any;
 
@@ -42,9 +28,6 @@ class DashboardMain {
   constructor() {
     this.dashboardTitle = 'Dashboard-Main';
 
-    // TODO: basic menu option explicitly defined here, but later can add way to add new
-    this.menuOptions = ['Logs-Main', 'Logs-Alt', 'Errors', 'Errors-Unexpected'];
-
     this.init();
   }
 
@@ -53,70 +36,10 @@ class DashboardMain {
 
   protected init() {
     // save this instance, init screen if not done yet
-    DashboardStatic.init(this);
-
-    // initialize subscriber instance
-    this.subPoint = new SubDashboard();
-
-    // subscribe to logs, errors, etc
-    this.setupSubscribers();
-
-    // setup pubsub messages listener
-    this.setupMessagesListener();
+    DashboardInstancesController.init(this);
 
     this.initializeBoxes();
     this.configureBoxesCbs();
-  }
-
-  private setupSubscribers() {
-    if (!this.subPoint) return;
-
-    this.subPoint.subscribeLog();
-    this.subPoint.subscribeLogAlt();
-    this.subPoint.subscribeErrorExpected();
-    this.subPoint.subscribeErrorUnexpected();
-  }
-
-  private setupMessagesListener() {
-    if (!this.subPoint) return;
-
-    this.subPoint.sub.onByKey('message', (channel, logLevel, message) => {
-      switch (channel) {
-        case 'dash-log': {
-          this.log({
-            optionName: 'Logs-Main',
-            message: `${message}`,
-          });
-
-          break;
-        }
-        case 'dash-log-alt': {
-          this.log({
-            optionName: 'Logs-Alt',
-            message,
-          });
-
-          break;
-        }
-        case 'dash-error-expected': {
-          this.log({
-            optionName: 'Errors',
-            message: handleErrorExpected(<GenericError>message),
-          });
-
-          break;
-        }
-        case 'dash-error-unexpected': {
-          this.log({
-            optionName: 'Errors-Unexpected',
-            message: handleErrorUnexpected(<Error>message),
-          });
-
-          break;
-        }
-        // No default
-      }
-    });
   }
 
   private initializeBoxes() {
@@ -204,21 +127,24 @@ class DashboardMain {
   }
 
   private updateMenuBoxContent() {
-    if (this.menuOptions.length === 0) {
-      this.menuBox.setItem(0, 'No options available');
+    const options = DashboardLogsController.getOptions();
+
+    if (options.length === 0) {
+      this.menuBox.setItems(['No options available']);
       return;
     }
 
     // if there's different amount of options came - clear old ones
-    if (this.menuOptions.length != this.menuBox.items.length) {
+    if (options.length != this.menuBox.items.length) {
       this.menuBox.clearItems();
-      this.menuBox.setItems(this.menuOptions);
+      this.menuBox.setItems(options);
     }
   }
 
   private updateLogsBoxContent() {
-    const selectedMenuOption = this.menuOptions[this.menuBox.selected];
-    const logs = this.logLinesStorage[selectedMenuOption];
+    const options = DashboardLogsController.getOptions();
+    const selectedMenuOption = options[this.menuBox.selected];
+    const logs = DashboardLogsController.getLogLinesByOptions()[selectedMenuOption];
 
     if (logs !== undefined) {
       this.logBox.setItems(logs);
@@ -229,24 +155,6 @@ class DashboardMain {
     }
 
     this.logBox.setLabel(`  ${selectedMenuOption} Logs  `);
-  }
-
-  private log(entity: IMainLogEntity) {
-    // clear and initialize logs box as empty array if nothing was logged before
-    if (this.logLinesStorage[entity.optionName] === undefined)
-      this.logLinesStorage[entity.optionName] = [];
-
-    const logLines = formatStr(entity.message, 87);
-
-    // push log line to object containing logs per id
-    this.logLinesStorage[entity.optionName].push(...logLines);
-
-    // shift oldest log line if limit exceeded
-    for (const optionName in this.logLinesStorage) {
-      if (this.logLinesStorage[optionName].length > this.logLinesMaxCount) {
-        this.logLinesStorage[optionName].shift();
-      }
-    }
   }
 
   // *

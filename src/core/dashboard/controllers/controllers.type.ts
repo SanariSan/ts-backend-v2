@@ -1,4 +1,5 @@
-import { IDashboardAlt, IDashboardMain } from '..';
+import { IDashboardAlt } from '../alt';
+import { IDashboardMain } from '../main';
 
 type TDashboardInstance = IDashboardMain | IDashboardAlt; // | etc
 

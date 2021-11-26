@@ -70,9 +70,6 @@
     // Common abbreviations are known and readable
     "unicorn/prevent-abbreviations": "off",
 
-    // 123
-    "unicorn/no-process-exit": "off",
-
     // ==========================================
     // rules:unicorn
 
@@ -81,6 +78,24 @@
 
     // Enforce correct Error subclassing https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/custom-error-definition.md
     "unicorn/custom-error-definition": ["error"],
+
+    // Enforce specifying rules to disable in eslint-disable comments https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-abusive-eslint-disable.md
+    "unicorn/no-abusive-eslint-disable": ["warn"],
+
+    // Disallow Array#reduce() and Array#reduceRight() https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-array-reduce.md
+    // Warn, because sometimes it's acceptable to use reduce (not only simple operations). Just mark the line and maybe rewrite later.
+    "unicorn/no-array-reduce": ["warn"],
+
+    // Disallow process.exit() https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-process-exit.md
+    // Off because using dashboard, when exit it - exit process
+    "unicorn/no-process-exit": "off",
+
+    // Forbid classes that only have static members https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-static-only-class.md
+    // Off because doesn't work for static methods with private keyword anyways, so won't get misleaded
+    "unicorn/no-static-only-class": ["off"],
+
+    // Uses safe-regex to disallow potentially catastrophic exponential-time regular expressions https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-unsafe-regex.md
+    "unicorn/no-unsafe-regex": ["warn"],
 
     // ==========================================
     // rules:prettier
@@ -125,11 +140,17 @@
     // When using node console should be allowed
     "no-console": ["off"],
 
+    // Disallow if statements as the only statement in else blocks https://eslint.org/docs/rules/no-lonely-if
+    "no-lonely-if": ["error"],
+
     // ==========================================
     // rules:import
 
-    // import/recommended below (applied)
-    // "import/no-unresolved": "error",
+    // Ensures an imported module can be resolved to a module on the local filesystem https://github.com/import-js/eslint-plugin-import/blob/v2.25.2/docs/rules/no-unresolved.md
+    // Ignoring node:* because these are core node modules, false positive
+    "import/no-unresolved": ["error", { "ignore": ["node:*"] }],
+
+    // import/recommended below (commented are applied)
     // "import/named": "error",
     // "import/namespace": "error",
     // "import/default": "error",
@@ -138,7 +159,7 @@
     // "import/no-named-as-default-member": "warn",
     // "import/no-duplicates": "warn",
 
-    // import/typescript below (applied)
+    // import/typescript below (commented are applied)
     // "import/named": 'off',
 
     // Forbid a module from importing a module with a dependency path back to itself https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-cycle.md

@@ -1,15 +1,15 @@
 import blessed from 'blessed';
-import { sleep } from '../../../helpers/util';
-import { TDashboardInstance } from './static.dashboard.type';
+import { sleep } from '../../../../helpers/util';
+import { TDashboardInstance } from '../controllers.type';
 
-class DashboardStatic {
+class DashboardInstancesController {
   private static screen: any = null;
 
   private static dashboardInstances = new Array<TDashboardInstance>();
 
   private static currDashboardIdx = 0;
 
-  private static refreshRate: number = 1000 / 30; // 1000/fps
+  private static refreshRate: number = 1000 / 10; // 1000/fps
 
   private static screenSwapCb: any;
 
@@ -83,4 +83,4 @@ class DashboardStatic {
   }
 }
 
-export { DashboardStatic };
+export { DashboardInstancesController };
