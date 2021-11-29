@@ -1,5 +1,5 @@
 import { CliPromptBase } from '../base';
-import { IPromptPass } from './pass.cli-prompt.type';
+import type { IPromptPass } from './pass.cli-prompt.type';
 
 class CliPromptPass extends CliPromptBase {
   constructor() {

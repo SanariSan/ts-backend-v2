@@ -1,5 +1,5 @@
 import { CliPromptBase } from '../base';
-import { IPromptText } from './text.cli-prompt.type';
+import type { IPromptText } from './text.cli-prompt.type';
 
 class CliPromptText extends CliPromptBase {
   constructor() {

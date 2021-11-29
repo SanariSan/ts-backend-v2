@@ -1,7 +1,8 @@
-import inquirer, { QuestionTypeName } from 'inquirer';
+import type { QuestionTypeName } from 'inquirer';
+import inquirer from 'inquirer';
 import { randomHex } from '../../../helpers/util';
 import { CliInternalModuleError, CliNoEntryError } from '../../errors/generic';
-import { IPromptBase } from './base.cli-prompt.type';
+import type { IPromptBase } from './base.cli-prompt.type';
 
 class CliPromptBase {
   protected value: Map<string, any> = new Map();
@@ -43,7 +44,9 @@ class CliPromptBase {
         validate,
         ...rest,
       })
-      .then((answer) => this.setValue(key, answer[key]))
+      .then((answer) => {
+        this.setValue(key, answer[key]);
+      })
       .then(() => key)
       .catch((error) => {
         throw new CliInternalModuleError(error);

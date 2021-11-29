@@ -7,4 +7,4 @@ interface ILogEntity {
   message: string;
 }
 
-export { ILogEntity, IOptions };
+export type { ILogEntity, IOptions };

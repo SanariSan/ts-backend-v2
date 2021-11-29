@@ -9,4 +9,5 @@ enum LogLevel {
   SILLY,
 }
 
-export { ObjectAny, FunctionAny, LogLevel };
+export type { ObjectAny, FunctionAny };
+export { LogLevel };

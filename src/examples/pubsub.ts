@@ -1,5 +1,4 @@
-import { PubStatic } from '../core/events';
-import { Sub } from '../core/events';
+import { PubStatic, Sub } from '../core/events';
 import { LogLevel } from '../general.type';
 import { sleep } from '../helpers/util';
 

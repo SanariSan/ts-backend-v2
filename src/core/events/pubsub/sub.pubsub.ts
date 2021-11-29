@@ -25,7 +25,7 @@ class Sub {
   }
 
   public offByKey(key) {
-    return this.sub.offByKey('message', key);
+    this.sub.offByKey('message', key);
   }
 
   public quit() {

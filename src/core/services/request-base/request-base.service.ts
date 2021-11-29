@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IGenericRequest } from '.';
+import type { IGenericRequest } from '.';
 import { DEFAULT_HEADERS, LIB_SPECIFIC_OPTIONS } from './request-base.service.const';
 import { RequestBuilder } from './request-builder.service';
 

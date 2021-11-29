@@ -1,5 +1,5 @@
 import { CliPromptBase } from '../base';
-import { IPromptCheckbox } from './checkbox.cli-prompt.type';
+import type { IPromptCheckbox } from './checkbox.cli-prompt.type';
 
 class CliPromptCheckbox extends CliPromptBase {
   constructor() {

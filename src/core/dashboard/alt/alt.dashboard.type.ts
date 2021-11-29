@@ -4,4 +4,4 @@ interface IDashboardAlt {
   updateContent: () => void;
 }
 
-export { IDashboardAlt };
+export type { IDashboardAlt };

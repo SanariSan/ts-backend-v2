@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
 import { LogLevel } from '../../general.type';
 import { logErrorUnexpected } from '../pubsub';
 

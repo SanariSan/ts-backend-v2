@@ -1,5 +1,5 @@
-import { IPromptBase } from '../base';
+import type { IPromptBase } from '../base';
 
 type IPromptConfirm = Pick<IPromptBase, 'key' | 'question' | 'rest'>;
 
-export { IPromptConfirm };
+export type { IPromptConfirm };

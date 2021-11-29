@@ -1,3 +1,3 @@
 type TChannels = string;
 
-export { TChannels };
+export type { TChannels };

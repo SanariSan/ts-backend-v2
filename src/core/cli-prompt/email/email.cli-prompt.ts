@@ -1,5 +1,5 @@
 import { CliPromptBase } from '../base';
-import { IPromptEmail } from './email.cli-prompt.type';
+import type { IPromptEmail } from './email.cli-prompt.type';
 
 class CliPromptEmail extends CliPromptBase {
   constructor() {

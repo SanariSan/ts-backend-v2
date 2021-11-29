@@ -1,5 +1,5 @@
 import { CliPromptBase } from '../base';
-import { IPromptConfirm } from './confirm.cli-prompt.type';
+import type { IPromptConfirm } from './confirm.cli-prompt.type';
 
 class CliPromptConfirm extends CliPromptBase {
   constructor() {

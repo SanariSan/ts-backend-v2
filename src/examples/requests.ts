@@ -1,5 +1,5 @@
 import { sendJson, sendMultipart, sendQs } from '../api-wrappers/sample';
-import { GenericError } from '../core/errors/generic';
+import type { GenericError } from '../core/errors/generic';
 import { LogLevel } from '../general.type';
 import { logError } from '../helpers/pubsub';
 

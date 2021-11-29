@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { IGenericRequest, IRequest, TRequestMethod } from '.';
+import type { IGenericRequest, IRequest, TRequestMethod } from '.';
 
 class RequestBuilder {
   private request: IRequest;

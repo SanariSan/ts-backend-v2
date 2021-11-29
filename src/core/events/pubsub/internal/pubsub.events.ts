@@ -1,6 +1,6 @@
 import { NoClassInstanceError } from '../../../errors/generic';
 import { CustomEventEmitter } from '../../native';
-import { TChannels } from './pubsub.events.type';
+import type { TChannels } from './pubsub.events.type';
 
 class PubSubStatic {
   // { PubSub instance : Set of channels names client subscribed to }

@@ -1,25 +1,31 @@
-import { ObjectAny } from '../../../../general.type';
+import type { ObjectAny } from '../../../../general.type';
 import { Sub } from '../../../events';
-import { ILogEntity } from './log.controller.type';
+import type { ILogEntity } from './log.controller.type';
 
 class DashboardLogsController {
   private static logLinesByChannels: ObjectAny = {};
-  private static logLinesGeneral: string[] = [];
-  private static logLinesRaw: any[] = [];
+
+  private static readonly logLinesGeneral: string[] = [];
+
+  private static readonly logLinesRaw: any[] = [];
 
   // initialize subscriber instance
-  private static subPoint = new Sub();
+  private static readonly subPoint = new Sub();
 
-  private static logLinesByOptionsMaxCount = 300;
-  private static logLinesGeneralMaxCount = 500;
-  private static logLinesRawMaxCount = 1000;
+  private static readonly logLinesByOptionsMaxCount = 300;
+
+  private static readonly logLinesGeneralMaxCount = 500;
+
+  private static readonly logLinesRawMaxCount = 1000;
 
   public static getLogLinesByChannels() {
     return this.logLinesByChannels;
   }
+
   public static getLogLinesGeneral() {
     return this.logLinesGeneral;
   }
+
   public static getLogLinesRaw() {
     return this.logLinesRaw;
   }

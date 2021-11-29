@@ -1,4 +1,4 @@
-import { appendFile } from 'fs/promises';
+import { appendFile } from 'node:fs/promises';
 import { handleErrorExpected, handleErrorUnexpected } from '../core/errors/handle';
 import { Sub } from '../core/events';
 import { LogLevel } from '../general.type';

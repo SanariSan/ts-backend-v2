@@ -3,7 +3,7 @@ import { DashboardLogsController } from '../controllers/log';
 import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
 
 class DashboardMain {
-  private dashboardTitle: string;
+  private readonly dashboardTitle: string;
 
   private wrapBox: any;
 
