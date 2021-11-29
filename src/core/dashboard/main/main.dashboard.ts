@@ -127,7 +127,7 @@ class DashboardMain {
   }
 
   private updateMenuBoxContent() {
-    const options = DashboardLogsController.getOptions();
+    const options = DashboardLogsController.getLogOptions();
 
     if (options.length === 0) {
       this.menuBox.setItems(['No options available']);
@@ -142,9 +142,9 @@ class DashboardMain {
   }
 
   private updateLogsBoxContent() {
-    const options = DashboardLogsController.getOptions();
+    const options = DashboardLogsController.getLogOptions();
     const selectedMenuOption = options[this.menuBox.selected];
-    const logs = DashboardLogsController.getLogLinesByOptions()[selectedMenuOption];
+    const logs = DashboardLogsController.getLogLinesByChannels()[selectedMenuOption];
 
     if (logs !== undefined) {
       this.logBox.setItems(logs);

@@ -3,24 +3,29 @@ import { Sub } from '../../../events';
 import { ILogEntity } from './log.controller.type';
 
 class DashboardLogsController {
-  private static logLinesByOptions: ObjectAny = {};
+  private static logLinesByChannels: ObjectAny = {};
   private static logLinesGeneral: string[] = [];
+  private static logLinesRaw: any[] = [];
 
   // initialize subscriber instance
   private static subPoint = new Sub();
 
   private static logLinesByOptionsMaxCount = 300;
   private static logLinesGeneralMaxCount = 500;
+  private static logLinesRawMaxCount = 1000;
 
-  public static getLogLinesByOptions() {
-    return this.logLinesByOptions;
+  public static getLogLinesByChannels() {
+    return this.logLinesByChannels;
   }
   public static getLogLinesGeneral() {
     return this.logLinesGeneral;
   }
+  public static getLogLinesRaw() {
+    return this.logLinesRaw;
+  }
 
-  public static getOptions() {
-    return Object.keys(this.logLinesByOptions);
+  public static getLogOptions() {
+    return Object.keys(this.logLinesByChannels);
   }
 
   public static subscribeChannel(channelCustom, customOptionName?: string) {
@@ -39,7 +44,7 @@ class DashboardLogsController {
   }
 
   private static checkSetupOption(optionName) {
-    if (this.logLinesByOptions[optionName] === undefined) this.logLinesByOptions[optionName] = [];
+    if (this.logLinesByChannels[optionName] === undefined) this.logLinesByChannels[optionName] = [];
   }
 
   private static saveMessage(entity: ILogEntity) {
@@ -47,20 +52,26 @@ class DashboardLogsController {
     this.checkSetupOption(entity.optionName);
 
     const logLines = this.formatStr(entity.message, 87);
+    const logLineRaw = entity.message;
 
     // push log line to object containing logs per id
-    this.logLinesByOptions[entity.optionName].push(...logLines);
+    this.logLinesByChannels[entity.optionName].push(...logLines);
     this.logLinesGeneral.push(...logLines);
+    this.logLinesRaw.push(logLineRaw);
 
     // shift oldest log line if limit exceeded
-    for (const optionName in this.logLinesByOptions) {
-      if (this.logLinesByOptions[optionName].length > this.logLinesByOptionsMaxCount) {
-        this.logLinesByOptions[optionName].shift();
+    for (const optionName in this.logLinesByChannels) {
+      if (this.logLinesByChannels[optionName].length > this.logLinesByOptionsMaxCount) {
+        this.logLinesByChannels[optionName].shift();
       }
     }
 
     if (this.logLinesGeneral.length > this.logLinesGeneralMaxCount) {
       this.logLinesGeneral.shift();
+    }
+
+    if (this.logLinesRaw.length > this.logLinesRawMaxCount) {
+      this.logLinesRaw.shift();
     }
   }
 

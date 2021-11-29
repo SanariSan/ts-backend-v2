@@ -65,12 +65,6 @@
   // *although typescript configs are in separate "overrides" section, these rules work for both js and ts, then some overrided
   "rules": {
     // ==========================================
-    // TODO
-
-    // Common abbreviations are known and readable
-    "unicorn/prevent-abbreviations": "off",
-
-    // ==========================================
     // rules:unicorn
 
     // Airbnb prefers functional iteration over arrays, with forEach https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-array-for-each.md | https://github.com/airbnb/javascript#iterators--nope
@@ -96,6 +90,23 @@
 
     // Uses safe-regex to disallow potentially catastrophic exponential-time regular expressions https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-unsafe-regex.md
     "unicorn/no-unsafe-regex": ["warn"],
+
+    // Prefer .addEventListener() and .removeEventListener() over on-functions https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/prefer-add-event-listener.md
+    // Already in recommended, but exposed for including packages
+    "unicorn/prefer-add-event-listener": [
+      "error",
+      {
+        "excludedPackages": ["express", "koa", "sax"]
+      }
+    ],
+
+    // Enforce throwing TypeError in type checking conditions https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/prefer-type-error.md
+    // Warn, because can conflict with custom errors + no big difference
+    "unicorn/prefer-type-error": ["warn"],
+
+    // Prevent abbreviations https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/prevent-abbreviations.md
+    // Common abbreviations are known and readable
+    "unicorn/prevent-abbreviations": "off",
 
     // ==========================================
     // rules:prettier
@@ -561,39 +572,3 @@
     }
   ]
 }
-
-/*
-// optional configs, look closer later
-
-{
-  rules: {
-    // // don't need when "airbnb-typescript/base" used (*nots)
-
-    // // fix error (airbnb) about importing files with no extension (*nots)
-    // "import/extensions": [
-    //   "error",
-    //   "ignorePackages",
-    //   {
-    //     "js": "never",
-    //     "jsx": "never",
-    //     "ts": "never",
-    //     "tsx": "never"
-    //   }
-    // ],
-    // // fixes error (airbnb) about enums being defined before (*nots)
-    // "no-shadow": "off",
-    // "@typescript-eslint/no-shadow": ["error"],
-    // // fixes error (airbnb) about unused enums and types (*nots)
-    // "no-unused-vars": "off",
-    // "@typescript-eslint/no-unused-vars": [
-    //   "warn",
-    //   { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
-    // ],
-
-    // Too restrictive: https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/destructuring-assignment.md
-    // "react/destructuring-assignment": "off",
-    // No jsx extension: https://github.com/facebook/create-react-app/issues/87#issuecomment-234627904
-    // "react/jsx-filename-extension": "off",
-  },
-}
-*/
