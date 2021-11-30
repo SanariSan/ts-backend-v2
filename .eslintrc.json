@@ -328,34 +328,42 @@
         "leadingUnderscore": "allow"
       },
 
-      // for variables that are both const AND exported - style is UPPER_CASE
-      {
-        "selector": "variable",
-        "format": ["UPPER_CASE"],
-        "modifiers": ["const", "exported"]
-      },
-
-      // but for variables that are just const style is default - camelCase
+      // for const variables that contains lambda/arrow style is default - camelCase
       {
         "selector": "variable",
         "format": ["camelCase"],
+        "types": ["function"],
+        "modifiers": ["const"]
+      },
+
+      // for const variables that are exported - style is UPPER_CASE (default values) or PascalCase (Object with fns properties for example)
+      {
+        "selector": "variable",
+        "format": ["UPPER_CASE", "PascalCase"],
+        "modifiers": ["const", "exported"]
+      },
+
+      // for just const variables style is camelCase or PascalCase (Object with fns properties for example)
+      {
+        "selector": "variable",
+        "format": ["camelCase", "PascalCase"],
         "modifiers": ["const"]
       },
 
       // for variables, properties and parameters, that are boolean, add one of prefixes and make PascalCase
-      {
-        "selector": [
-          "variable",
-          "parameter",
-          "classProperty",
-          "objectLiteralProperty",
-          "typeProperty",
-          "parameterProperty"
-        ],
-        "format": ["PascalCase"],
-        "types": ["boolean"],
-        "prefix": ["is", "should", "has", "can", "did", "will"]
-      },
+      // {
+      //   "selector": [
+      //     "variable",
+      //     "parameter",
+      //     "classProperty",
+      //     "objectLiteralProperty",
+      //     "typeProperty",
+      //     "parameterProperty"
+      //   ],
+      //   "format": ["PascalCase"],
+      //   "types": ["boolean"],
+      //   "prefix": ["is", "should", "has", "can", "did", "will"]
+      // },
 
       // for properties and variables that requires quotes - ignore style (http headers and similar)
       {
@@ -479,7 +487,7 @@
 
     // Prevents conditionals where the type is always truthy or always falsy https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unnecessary-condition.md
     "@typescript-eslint/no-unnecessary-condition": [
-      "error",
+      "warn",
       {
         "allowConstantLoopConditions": true
       }
@@ -501,8 +509,9 @@
     ],
 
     // Requires that function parameters are typed as readonly to prevent accidental mutation of inputs https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-readonly-parameter-types.md
+    // Off because it's too complicated to get it to work
     "@typescript-eslint/prefer-readonly-parameter-types": [
-      "error",
+      "off",
       {
         "checkParameterProperties": true,
         "ignoreInferredTypes": false,

@@ -44,8 +44,8 @@ function init() {
   main();
 
   // import from ./examples/
+  // await examplePromptCLI();
   // exampleRequests();
-  // examplePromptCLI();
   // exampleErrors();
   // exampleEvents();
   // examplePubsub();
