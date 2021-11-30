@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:stream';
 import { randomHex } from '../../../helpers/util';
 import { NoEventOrKeyError } from '../../errors/generic';
-import {
+import type {
   TCb,
   TEName,
   TENameKeyCb,
@@ -11,7 +11,7 @@ import {
 } from './native.events.type';
 
 class EventEmitterStatic {
-  private static emitters = new Map<CustomEventEmitter, TENameKeyCb>();
+  private static readonly emitters = new Map<CustomEventEmitter, TENameKeyCb>();
 
   public static setCurrentClassInstance(currentClassInstance) {
     this.emitters.set(currentClassInstance, new Map());

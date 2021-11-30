@@ -1,24 +1,19 @@
-import { BadStatusError, NoDataError } from '../../core/errors/generic';
-import { request } from '../../core/services';
+import type { AxiosError } from 'axios';
+import { BadStatusError } from '../../core/errors/generic';
+import { Request } from '../../core/services';
 import { parseResponse } from '../../helpers/services';
 
-const sendJson = async () => {
-  const response = await request
-    .post({
-      host: 'https://postman-echo.com',
-      path: '/post',
-      data: { foo: 1, bar: 2, baz: 3 },
-    })
-    .catch((error) => {
-      // TODO: later parse error more carefully
-      throw new BadStatusError(error ? error.statusText : null);
-    });
+async function sendJson() {
+  const response = await Request.post({
+    host: 'https://postman-echo.com',
+    path: '/post',
+    data: { foo: 1, bar: 2, baz: 3 },
+  }).catch((error: AxiosError) => {
+    // TODO: later parse error more carefully
+    throw new BadStatusError(error.code ?? '');
+  });
 
-  if (response) {
-    return parseResponse({ response });
-  }
-
-  throw new NoDataError('No response in sendJson response');
-};
+  return parseResponse({ response });
+}
 
 export { sendJson };

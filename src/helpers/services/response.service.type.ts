@@ -1,4 +1,4 @@
-import { ObjectAny } from '../../general.type';
+import type { ObjectAny } from '../../general.type';
 
 interface ISuccessResponseData {
   result?: string | ObjectAny[];
@@ -9,4 +9,4 @@ interface ISuccessResponseData {
   stackTrace: string | null;
 }
 
-export { ISuccessResponseData };
+export type { ISuccessResponseData };

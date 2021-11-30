@@ -1,10 +1,17 @@
+import { DashboardLogsController } from './core/dashboard/controllers';
 import { NoDataError } from './core/errors/generic';
 import { LogLevel } from './general.type';
-import { log, logError } from './helpers/pubsub';
+import { log, logCustom, logError } from './helpers/pubsub';
 import { duplicateNTimes, getIntInRange, randomHex, sleep } from './helpers/util';
 import { setupDashboard, setupErrorHandle } from './setup';
 
 function main() {
+  // sub to custom channel
+  DashboardLogsController.subscribeChannel('custom-channel', `Custom-Option`);
+
+  // publish to custom channel
+  logCustom('custom-channel', LogLevel.INFO, 'message');
+
   async function test() {
     await sleep(2000);
     void test();
@@ -16,7 +23,6 @@ function main() {
   void test();
 
   async function pubLogs() {
-    // @ts-ignore: 12345678
     await sleep(500);
     void pubLogs();
     log(LogLevel.INFO, `${duplicateNTimes(getIntInRange(1, 3), randomHex())}`);
@@ -38,8 +44,8 @@ function init() {
   main();
 
   // import from ./examples/
+  // await examplePromptCLI();
   // exampleRequests();
-  // examplePromptCLI();
   // exampleErrors();
   // exampleEvents();
   // examplePubsub();

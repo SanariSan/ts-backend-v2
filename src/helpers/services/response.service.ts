@@ -1,12 +1,12 @@
-import { AxiosError, AxiosResponse } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
 import { LogLevel } from '../../general.type';
 import { logErrorUnexpected } from '../pubsub';
 
 const parseResponse = ({ response }: { response: AxiosResponse }) => ({
   request: {
     request: response.request,
-    data: response.request.data,
-    headers: response.request.headers,
+    // data: response.request.data,
+    headers: response.request._header,
   },
   response: {
     response,

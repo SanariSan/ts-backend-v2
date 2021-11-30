@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IGenericRequest } from '.';
+import type { IGenericRequest } from '.';
 import { DEFAULT_HEADERS, LIB_SPECIFIC_OPTIONS } from './request-base.service.const';
 import { RequestBuilder } from './request-builder.service';
 
@@ -25,7 +25,7 @@ const requestGeneric = ({ method, host, path, data, headers, proxy, ...args }: I
   return axios(options);
 };
 
-const request = {
+const Request = {
   get: ({ host, path, data, headers, ...args }: Omit<IGenericRequest, 'method'>) =>
     requestGeneric({ method: 'GET', host, path, data, headers, ...args }),
   post: ({ host, path, data, headers, ...args }: Omit<IGenericRequest, 'method'>) =>
@@ -38,16 +38,16 @@ const request = {
 
 const requestBindedHost = ({ host }: Pick<IGenericRequest, 'host'>) => ({
   get: ({ path, data, headers, ...args }: Omit<IGenericRequest, 'method' | 'host'>) =>
-    request.get({ host, path, data, headers, ...args }),
+    Request.get({ host, path, data, headers, ...args }),
   post: ({ path, data, headers, ...args }: Omit<IGenericRequest, 'method' | 'host'>) =>
-    request.post({ host, path, data, headers, ...args }),
+    Request.post({ host, path, data, headers, ...args }),
   put: ({ path, data, headers, ...args }: Omit<IGenericRequest, 'method' | 'host'>) =>
-    request.put({ host, path, data, headers, ...args }),
+    Request.put({ host, path, data, headers, ...args }),
   delete: ({ path, data, headers, ...args }: Omit<IGenericRequest, 'method' | 'host'>) =>
-    request.delete({ host, path, data, headers, ...args }),
+    Request.delete({ host, path, data, headers, ...args }),
 });
 
 // handleRequest(bindedHostRequest.get({1,2,3}))
 // const handleRequest = (req) => req.catch((res: AxiosError) => handleErrorResponse(res));
 
-export { request, requestBindedHost };
+export { Request, requestBindedHost };

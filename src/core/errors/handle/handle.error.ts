@@ -1,4 +1,4 @@
-import { GenericError } from '../generic';
+import type { GenericError } from '../generic';
 import { ERROR } from '../error.type';
 
 function handleErrorExpected(e: GenericError) {

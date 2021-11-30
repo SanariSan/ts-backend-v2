@@ -1,4 +1,5 @@
 import blessed from 'blessed';
+import { SCREEN_DEFAULT_PADDINGS } from '../../dashboard.const';
 
 function makeMenuBox(parent) {
   return blessed.list({
@@ -9,7 +10,7 @@ function makeMenuBox(parent) {
     left: `${0}%`,
     width: `${30}%`,
     height: `${80}%`,
-    padding: 0,
+    padding: SCREEN_DEFAULT_PADDINGS,
 
     scrollable: true,
     scrollbar: {

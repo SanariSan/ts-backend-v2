@@ -43,6 +43,7 @@
   // extends (eslint-config- <name>) - sets of rules from plugins above
   "extends": [
     "airbnb-base",
+    "eslint:recommended",
     // airbnb ts rules (compatibility only, no documented rules to change)
     "airbnb-typescript/base",
     // setting up resolvers for import/export https://github.com/import-js/eslint-plugin-import#typescript
@@ -61,16 +62,65 @@
   ],
 
   // rules - place for overridng/setting rules from plugin/config
-  // *although typescript configs are in "overrides" section, these rules work for both js and ts, then some overrided
+  // *although typescript configs are in separate "overrides" section, these rules work for both js and ts, then some overrided
   "rules": {
-    // ===
-    // prettier
+    // ==========================================
+    // rules:unicorn
+
+    // Airbnb prefers functional iteration over arrays, with forEach https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-array-for-each.md | https://github.com/airbnb/javascript#iterators--nope
+    "unicorn/no-array-for-each": "off",
+
+    // Enforce correct Error subclassing https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/custom-error-definition.md
+    "unicorn/custom-error-definition": ["error"],
+
+    // Enforce specifying rules to disable in eslint-disable comments https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-abusive-eslint-disable.md
+    "unicorn/no-abusive-eslint-disable": ["warn"],
+
+    // Disallow Array#reduce() and Array#reduceRight() https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-array-reduce.md
+    // Warn, because sometimes it's acceptable to use reduce (not only simple operations). Just mark the line and maybe rewrite later.
+    "unicorn/no-array-reduce": ["warn"],
+
+    // Disallow process.exit() https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-process-exit.md
+    // Off because using dashboard, when exit it - exit process
+    "unicorn/no-process-exit": "off",
+
+    // Forbid classes that only have static members https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-static-only-class.md
+    // Off because doesn't work for static methods with private keyword anyways, so won't get misleaded
+    "unicorn/no-static-only-class": ["off"],
+
+    // Uses safe-regex to disallow potentially catastrophic exponential-time regular expressions https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-unsafe-regex.md
+    "unicorn/no-unsafe-regex": ["warn"],
+
+    // Prefer .addEventListener() and .removeEventListener() over on-functions https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/prefer-add-event-listener.md
+    // Already in recommended, but exposed for including packages
+    "unicorn/prefer-add-event-listener": [
+      "error",
+      {
+        "excludedPackages": ["express", "koa", "sax"]
+      }
+    ],
+
+    // Enforce throwing TypeError in type checking conditions https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/prefer-type-error.md
+    // Warn, because can conflict with custom errors + no big difference
+    "unicorn/prefer-type-error": ["warn"],
+
+    // Prevent abbreviations https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/prevent-abbreviations.md
+    // Common abbreviations are known and readable
+    "unicorn/prevent-abbreviations": "off",
+
+    // ==========================================
+    // rules:prettier
 
     // enable prettier format rules to be check and marked as errors when violated https://github.com/prettier/eslint-plugin-prettier#installation
     "prettier/prettier": "error",
 
-    // ===
-    // eslint
+    // ==========================================
+    // rules:eslint
+
+    // Don’t use iterators. Prefer JavaScript’s higher-order functions instead of loops like for-in or for-of https://github.com/airbnb/javascript#iterators--nope
+    // Just warn, because it's more clear to write for-of at first, then refactor into functional solution like forEach, map, etc.
+    "no-iterator": ["warn"],
+    "no-restricted-syntax": ["warn"],
 
     // allow void in some cases for @typescript-eslint/no-floating-promises compatibility https://eslint.org/docs/rules/no-void -> https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-floating-promises.md#ignorevoid
     "no-void": [
@@ -80,27 +130,72 @@
       }
     ],
 
-    // REMOVE
+    // Putting default parameter at last allows function calls to omit optional tail arguments. https://eslint.org/docs/rules/default-param-last
+    "default-param-last": ["error"],
 
-    // https://basarat.gitbooks.io/typescript/docs/tips/defaultIsBad.html
-    "import/prefer-default-export": "off",
-    "import/no-default-export": "error",
-    // Too restrictive, writing ugly code to defend against a very unlikely scenario: https://eslint.org/docs/rules/no-prototype-builtins
+    // Disallow async functions which have no await expression https://eslint.org/docs/rules/require-await
+    "require-await": ["error"],
+
+    // Disallow use of Object.prototypes builtins directly https://eslint.org/docs/rules/no-prototype-builtins
+    // Too restrictive, writing ugly code to defend against a very unlikely scenario
     "no-prototype-builtins": "off",
+
     // Use function hoisting to improve code readability
-    "no-use-before-define": ["error", { "functions": false, "classes": true, "variables": true }],
+    "no-use-before-define": ["error", { "functions": true, "classes": true, "variables": true }],
+
+    // Require return statements to either always or never specify values https://eslint.org/docs/rules/consistent-return
+    // Too much extra code for no profit + ts analysis takes care
+    "consistent-return": ["off"],
+
+    // Disallow the use of console https://eslint.org/docs/rules/no-console
+    // When using node console should be allowed
+    "no-console": ["off"],
+
+    // Disallow if statements as the only statement in else blocks https://eslint.org/docs/rules/no-lonely-if
+    "no-lonely-if": ["error"],
+
+    // ==========================================
+    // rules:import
+
+    // Ensures an imported module can be resolved to a module on the local filesystem https://github.com/import-js/eslint-plugin-import/blob/v2.25.2/docs/rules/no-unresolved.md
+    // Ignoring node:* because these are core node modules, false positive
+    "import/no-unresolved": ["error", { "ignore": ["node:*"] }],
+
+    // import/recommended below (commented are applied)
+    // "import/named": "error",
+    // "import/namespace": "error",
+    // "import/default": "error",
+    // "import/export": "error",
+    // "import/no-named-as-default": "warn",
+    // "import/no-named-as-default-member": "warn",
+    // "import/no-duplicates": "warn",
+
+    // import/typescript below (commented are applied)
+    // "import/named": 'off',
+
+    // Forbid a module from importing a module with a dependency path back to itself https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-cycle.md
+    "import/no-cycle": ["warn", { "maxDepth": "∞" }],
+
+    // Prefer a default export if module exports a single name https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/prefer-default-export.md
+    "import/prefer-default-export": ["off"],
+
+    // Forbid default exports https://basarat.gitbooks.io/typescript/docs/tips/defaultIsBad.html | https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-default-export.md
+    "import/no-default-export": ["error"],
+
+    // ==========================================
+    // rules:promise
+
+    // all recommended are good
+    // others not worth enabling
+
+    // ==========================================
+    // rules:@typescript-eslint minor
+
+    // Disallow the use of variables before they are defined (extends eslint no-use-before-define) https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/no-use-before-define.md
     "@typescript-eslint/no-use-before-define": [
       "error",
-      { "functions": false, "classes": true, "variables": true, "typedefs": true }
+      { "functions": true, "classes": true, "variables": true, "typedefs": true }
     ],
-    // Common abbreviations are known and readable
-    "unicorn/prevent-abbreviations": "off",
-    // Airbnb prefers forEach
-    "unicorn/no-array-for-each": "off",
-    "unicorn/no-process-exit": "off",
-
-    // ===
-    // @typescript-eslint minor
 
     // Requires using either T[] or Array<T> for arrays https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/array-type.md
     "@typescript-eslint/array-type": [
@@ -114,13 +209,17 @@
     "@typescript-eslint/ban-ts-comment": [
       "error",
       {
-        "ts-ignore": "allow-with-description",
+        "ts-ignore": false,
         "ts-nocheck": "allow-with-description",
         "ts-check": "allow-with-description",
         "ts-expect-error": "allow-with-description",
         "minimumDescriptionLength": 10
       }
     ],
+
+    // Recommends using @ts-expect-error over @ts-ignore https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-ts-expect-error.md
+    // Because of rule "@typescript-eslint/ban-ts-comment", ts-ignore can't be used anyway, but with this - getting autofixed if written by mistake
+    "@typescript-eslint/prefer-ts-expect-error": ["error"],
 
     // Enforces consistent usage of type assertions https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/consistent-type-assertions.md
     "@typescript-eslint/consistent-type-assertions": [
@@ -166,8 +265,32 @@
     // Enforces that type arguments will not be used if not required https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unnecessary-type-arguments.md
     "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
 
-    // ===
-    // @typescript-eslint major
+    // Requires that private members are marked as readonly if they're never modified outside of the constructor https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-readonly.md
+    "@typescript-eslint/prefer-readonly": ["error"],
+
+    // Prefer using type parameter when calling Array#reduce instead of casting https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-reduce-type-parameter.md
+    "@typescript-eslint/prefer-reduce-type-parameter": ["error"],
+
+    // Enforce that this is used when only this type is returned https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-return-this-type.md
+    "@typescript-eslint/prefer-return-this-type": ["error"],
+
+    // Enforce the use of String#startsWith and String#endsWith instead of other equivalent methods of checking substrings https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-string-starts-ends-with.md
+    "@typescript-eslint/prefer-string-starts-ends-with": ["error"],
+
+    // Enforce template literal expressions to be of string type https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/restrict-template-expressions.md
+    "@typescript-eslint/restrict-template-expressions": [
+      "error",
+      {
+        "allowNumber": true,
+        "allowBoolean": true
+      }
+    ],
+
+    // Exhaustiveness checking in switch with union type https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/switch-exhaustiveness-check.md
+    "@typescript-eslint/switch-exhaustiveness-check": ["error"],
+
+    // ==========================================
+    // rules:@typescript-eslint major
 
     // naming rules for everything https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/naming-convention.md
     "@typescript-eslint/naming-convention": [
@@ -198,34 +321,49 @@
         "format": ["PascalCase"]
       },
 
-      // for variables that are both const AND exported - style is UPPER_CASE
+      // for funtion parameters allow leading underscore (so it can be just _)
       {
-        "selector": "variable",
-        "format": ["UPPER_CASE"],
-        "modifiers": ["const", "exported"]
+        "selector": "parameter",
+        "format": ["camelCase"],
+        "leadingUnderscore": "allow"
       },
 
-      // but for variables that are just const style is default - camelCase
+      // for const variables that contains lambda/arrow style is default - camelCase
       {
         "selector": "variable",
         "format": ["camelCase"],
+        "types": ["function"],
+        "modifiers": ["const"]
+      },
+
+      // for const variables that are exported - style is UPPER_CASE (default values) or PascalCase (Object with fns properties for example)
+      {
+        "selector": "variable",
+        "format": ["UPPER_CASE", "PascalCase"],
+        "modifiers": ["const", "exported"]
+      },
+
+      // for just const variables style is camelCase or PascalCase (Object with fns properties for example)
+      {
+        "selector": "variable",
+        "format": ["camelCase", "PascalCase"],
         "modifiers": ["const"]
       },
 
       // for variables, properties and parameters, that are boolean, add one of prefixes and make PascalCase
-      {
-        "selector": [
-          "variable",
-          "parameter",
-          "classProperty",
-          "objectLiteralProperty",
-          "typeProperty",
-          "parameterProperty"
-        ],
-        "format": ["PascalCase"],
-        "types": ["boolean"],
-        "prefix": ["is", "should", "has", "can", "did", "will"]
-      },
+      // {
+      //   "selector": [
+      //     "variable",
+      //     "parameter",
+      //     "classProperty",
+      //     "objectLiteralProperty",
+      //     "typeProperty",
+      //     "parameterProperty"
+      //   ],
+      //   "format": ["PascalCase"],
+      //   "types": ["boolean"],
+      //   "prefix": ["is", "should", "has", "can", "did", "will"]
+      // },
 
       // for properties and variables that requires quotes - ignore style (http headers and similar)
       {
@@ -349,7 +487,7 @@
 
     // Prevents conditionals where the type is always truthy or always falsy https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unnecessary-condition.md
     "@typescript-eslint/no-unnecessary-condition": [
-      "error",
+      "warn",
       {
         "allowConstantLoopConditions": true
       }
@@ -367,6 +505,35 @@
       "error",
       {
         "allowBitwiseExpressions": true
+      }
+    ],
+
+    // Requires that function parameters are typed as readonly to prevent accidental mutation of inputs https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-readonly-parameter-types.md
+    // Off because it's too complicated to get it to work
+    "@typescript-eslint/prefer-readonly-parameter-types": [
+      "off",
+      {
+        "checkParameterProperties": true,
+        "ignoreInferredTypes": false,
+        "treatMethodsAsReadonly": false
+      }
+    ],
+
+    // Restricts the types allowed in boolean expressions https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/strict-boolean-expressions.md
+    "@typescript-eslint/strict-boolean-expressions": [
+      "error",
+      {
+        // str != ''
+        "allowString": false,
+        // num != 0 && !Number.isNaN(num)
+        "allowNumber": false,
+        // var ?? false
+        "allowNullableObject": true,
+        "allowNullableBoolean": false,
+        "allowNullableString": false,
+        "allowNullableNumber": false,
+        "allowAny": false,
+        "allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing": false
       }
     ]
   },
@@ -405,43 +572,12 @@
             "project": "./tsconfig.json"
           }
         }
+      },
+      "rules": {
+        // These 2 rules extend the base eslint/default-param-last rule. It adds support for optional parameters. https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/default-param-last.md
+        "default-param-last": "off",
+        "@typescript-eslint/default-param-last": ["error"]
       }
     }
   ]
 }
-
-/*
-// optional configs, look closer later
-
-{
-  rules: {
-    // // don't need when "airbnb-typescript/base" used (*nots)
-
-    // // fix error (airbnb) about importing files with no extension (*nots)
-    // "import/extensions": [
-    //   "error",
-    //   "ignorePackages",
-    //   {
-    //     "js": "never",
-    //     "jsx": "never",
-    //     "ts": "never",
-    //     "tsx": "never"
-    //   }
-    // ],
-    // // fixes error (airbnb) about enums being defined before (*nots)
-    // "no-shadow": "off",
-    // "@typescript-eslint/no-shadow": ["error"],
-    // // fixes error (airbnb) about unused enums and types (*nots)
-    // "no-unused-vars": "off",
-    // "@typescript-eslint/no-unused-vars": [
-    //   "warn",
-    //   { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
-    // ],
-
-    // Too restrictive: https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/destructuring-assignment.md
-    // "react/destructuring-assignment": "off",
-    // No jsx extension: https://github.com/facebook/create-react-app/issues/87#issuecomment-234627904
-    // "react/jsx-filename-extension": "off",
-  },
-}
-*/

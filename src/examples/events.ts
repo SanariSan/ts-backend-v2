@@ -4,8 +4,8 @@ async function exampleEvents() {
   const emitter = new CustomEventEmitter();
 
   // if not passing key as 3-rd arg, random will be created and returned
-  const key = emitter.onByKey('test-event', (...args) => {
-    console.log(`Event: eName, args: ${JSON.stringify(args)}, key: ${key}`);
+  const key = emitter.onByKey('test-event', (message) => {
+    console.log(`Event: eName, message: ${message}, key: ${key}`);
   });
 
   console.log(`Listeners for current emitter instance: ${emitter.listenerCount('test-event')}`);

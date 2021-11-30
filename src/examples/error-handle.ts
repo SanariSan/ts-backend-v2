@@ -1,10 +1,10 @@
 import { CliNoEntryError, NoDataError } from '../core/errors/generic';
 import { handleErrorExpected, handleErrorUnexpected } from '../core/errors/handle';
-import { SubMain } from '../core/events';
+import { Sub } from '../core/events';
 import { LogLevel } from '../general.type';
 import { logError, logErrorUnexpected } from '../helpers/pubsub';
 
-async function _exampleErrors() {
+async function exampleError() {
   console.log('Error #1\n');
   try {
     throw new NoDataError('Some info');
@@ -31,10 +31,10 @@ async function _exampleErrors() {
 function setupErrorHandle() {
   // this block can be placed here if not using dashboard or logger
   // just catching all errors here and console.logging them
-  const sub = new SubMain();
-  sub.subscribeErrorExpected();
-  sub.subscribeErrorUnexpected();
-  sub.sub.onByKey('message', (channel, logLevel, message) => {
+  const sub = new Sub();
+  sub.subscribe('error-expected');
+  sub.subscribe('error-unexpected');
+  sub.onByKey((channel, logLevel, message) => {
     if (channel === 'error-expected') {
       console.log(handleErrorExpected(message));
     } else if (channel === 'error-unexpected') {
@@ -54,7 +54,7 @@ function setupErrorHandle() {
 
 function exampleErrors() {
   setupErrorHandle();
-  _exampleErrors();
+  void exampleError();
 }
 
 export { exampleErrors };

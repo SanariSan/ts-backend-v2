@@ -1,4 +1,4 @@
-import { CustomEventEmitter } from '.';
+import type { CustomEventEmitter } from '.';
 
 type TCb = (...args: any[]) => void;
 type TKey = string;
@@ -13,4 +13,4 @@ type TGetEmitterKeyCbMapsListener =
     }
   | never;
 
-export { TCb, TEName, TKey, TKeyCb, TENameKeyCb, TGetEmitterKeyCbMapsListener };
+export type { TCb, TEName, TKey, TKeyCb, TENameKeyCb, TGetEmitterKeyCbMapsListener };
