@@ -1,4 +1,4 @@
-import { DashboardInstancesController, DashboardLogsController } from '../controllers';
+// import { DashboardInstancesController, DashboardLogsController } from '../controllers';
 import { makeControlsInfoBox, makeLogBox, makeWrapBox } from './box';
 
 // TODO: review if (!smth) return; checks and replace with errors where needed

@@ -1,5 +1,4 @@
-import { DashboardInstancesController } from '../controllers';
-import { DashboardLogsController } from '../controllers/log';
+// import { DashboardInstancesController, DashboardLogsController } from '../controllers';
 import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
 
 class DashboardMain {

@@ -1,6 +1,6 @@
-import type { ObjectAny } from '../../../../general.type';
-import { Sub } from '../../../events';
-import type { ILogEntity } from './log.controller.type';
+import type { ObjectAny } from '../../../general.type';
+import { Sub } from '../../events';
+import type { ILogEntity } from './logs.controller.type';
 
 class DashboardLogsController {
   private static logLinesByChannels: ObjectAny = {};

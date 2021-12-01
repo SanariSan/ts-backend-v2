@@ -240,7 +240,7 @@
         },
         "singleline": {
           "delimiter": "semi",
-          "requireLast": true
+          "requireLast": false
         },
         "multilineDetection": "brackets"
       }
@@ -509,13 +509,12 @@
     ],
 
     // Requires that function parameters are typed as readonly to prevent accidental mutation of inputs https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-readonly-parameter-types.md
-    // Off because it's too complicated to get it to work
     "@typescript-eslint/prefer-readonly-parameter-types": [
-      "off",
+      "warn",
       {
         "checkParameterProperties": true,
-        "ignoreInferredTypes": false,
-        "treatMethodsAsReadonly": false
+        "ignoreInferredTypes": true,
+        "treatMethodsAsReadonly": true
       }
     ],
 

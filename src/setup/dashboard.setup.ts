@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import { DashboardAlt } from '../core/dashboard/alt';
 import { DashboardInstancesController } from '../core/dashboard/controllers';
-import { DashboardLogsController } from '../core/dashboard/controllers/log';
+import { DashboardLogsController } from '../core/dashboard/controllers/logs';
 import { DashboardMain } from '../core/dashboard/main';
 
 function setupDashboard() {

@@ -1,6 +1,6 @@
 import blessed from 'blessed';
-import { sleep } from '../../../../helpers/util';
-import type { TDashboardInstance } from '../controllers.type';
+import { sleep } from '../../../helpers/util';
+import type { TDashboardInstance } from './instances.controllers.type';
 
 class DashboardInstancesController {
   private static screen: any = null;

@@ -1,5 +1,6 @@
 import { DashboardLogsController } from './core/dashboard/controllers';
 import { NoDataError } from './core/errors/generic';
+import { exampleRequests } from './examples/requests';
 import { LogLevel } from './general.type';
 import { log, logCustom, logError } from './helpers/pubsub';
 import { duplicateNTimes, getIntInRange, randomHex, sleep } from './helpers/util';
@@ -38,11 +39,12 @@ function main() {
   void generateError();
 }
 
-function init() {
-  setupErrorHandle();
-  setupDashboard();
-  main();
+async function init() {
+  // setupErrorHandle();
+  // setupDashboard();
+  // main();
 
+  await exampleRequests();
   // import from ./examples/
   // await examplePromptCLI();
   // exampleRequests();
@@ -51,4 +53,4 @@ function init() {
   // examplePubsub();
 }
 
-init();
+void init();

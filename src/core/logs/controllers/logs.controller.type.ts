@@ -1,4 +1,4 @@
-enum LOG_LEVEL_COLORS {
+enum ELOG_LEVEL_COLORS {
   ERROR = 'red blackBG',
   WARN = 'yellow blackBG',
   INFO = 'cyan blackBG',
@@ -6,7 +6,16 @@ enum LOG_LEVEL_COLORS {
   SILLY = 'cyan magentaBG',
 }
 
-export { LOG_LEVEL_COLORS };
+type TOption = string;
+type TOptions = TOption[];
+// type IOptions = Array<Required<IOption>>;
+
+interface ILogEntity {
+  optionName: TOption;
+  message: string;
+}
+
+export type { ILogEntity, TOptions, ELOG_LEVEL_COLORS };
 
 /*
 winston.addColors(myCustomLevels.colors);
