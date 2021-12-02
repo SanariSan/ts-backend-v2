@@ -1,7 +1,7 @@
 import type { AxiosError } from 'axios';
-import { BadStatusError } from '../../core/errors/generic';
-import { Request } from '../../core/services';
-import { makeForm, parseResponse } from '../../helpers/services';
+import { BadStatusError } from '../../../core/errors/generic';
+import { Request } from '../../../core/services';
+import { makeForm, parseResponse } from '../../../helpers/services';
 
 async function sendMultipart() {
   const form = makeForm({ obj: { foo: 1, bar: 2, baz: 3 } });
@@ -12,9 +12,9 @@ async function sendMultipart() {
     headers: {
       ...form.getHeaders(),
     },
-  }).catch((error: AxiosError) => {
+  }).catch((error: Readonly<unknown>) => {
     // later parse error more carefully
-    throw new BadStatusError(error.code ?? '');
+    throw new BadStatusError((error as AxiosError).code ?? '');
   });
 
   return parseResponse({ response });

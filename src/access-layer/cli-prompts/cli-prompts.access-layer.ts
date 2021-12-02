@@ -9,11 +9,11 @@ const cliPromptEmail = ({
   message,
   defaultAnswer = '',
   validate = validateEmailDefault,
-}: Pick<IPrompt, 'message' | 'defaultAnswer' | 'validate'>): Promise<string> => {
+}: Readonly<Pick<IPrompt, 'message' | 'defaultAnswer' | 'validate'>>): Promise<string> => {
   const name = randomHex();
   return prompt({ type: 'input', name, message, default: defaultAnswer, validate })
     .then((value) => value[name] as string)
-    .catch((error: Error) => {
+    .catch((error: Readonly<Error>) => {
       throw new CliInternalModuleError(error.message);
     });
 };
@@ -22,11 +22,11 @@ const cliPromptNum = ({
   message,
   defaultAnswer = '',
   validate = validateNumDefault,
-}: Pick<IPrompt, 'message' | 'defaultAnswer' | 'validate'>): Promise<number> => {
+}: Readonly<Pick<IPrompt, 'message' | 'defaultAnswer' | 'validate'>>): Promise<number> => {
   const name = randomHex();
   return prompt({ type: 'number', name, message, default: defaultAnswer, validate })
     .then((value) => value[name] as number)
-    .catch((error: Error) => {
+    .catch((error: Readonly<Error>) => {
       throw new CliInternalModuleError(error.message);
     });
 };
@@ -35,11 +35,11 @@ const cliPromptPass = ({
   message,
   defaultAnswer = '',
   validate = validatePassDefault,
-}: Pick<IPrompt, 'message' | 'defaultAnswer' | 'validate'>): Promise<string> => {
+}: Readonly<Pick<IPrompt, 'message' | 'defaultAnswer' | 'validate'>>): Promise<string> => {
   const name = randomHex();
   return prompt({ type: 'password', name, message, default: defaultAnswer, validate })
     .then((value) => value[name] as string)
-    .catch((error: Error) => {
+    .catch((error: Readonly<Error>) => {
       throw new CliInternalModuleError(error.message);
     });
 };
@@ -48,11 +48,11 @@ const cliPromptText = ({
   message,
   defaultAnswer = '',
   validate,
-}: Pick<IPrompt, 'message' | 'defaultAnswer' | 'validate'>): Promise<string> => {
+}: Readonly<Pick<IPrompt, 'message' | 'defaultAnswer' | 'validate'>>): Promise<string> => {
   const name = randomHex();
   return prompt({ type: 'input', name, message, default: defaultAnswer, validate })
     .then((value) => value[name] as string)
-    .catch((error: Error) => {
+    .catch((error: Readonly<Error>) => {
       throw new CliInternalModuleError(error.message);
     });
 };
@@ -60,11 +60,11 @@ const cliPromptText = ({
 const cliPromptConfirm = ({
   message,
   defaultAnswer = '',
-}: Pick<IPrompt, 'message' | 'defaultAnswer'>): Promise<boolean> => {
+}: Readonly<Pick<IPrompt, 'message' | 'defaultAnswer'>>): Promise<boolean> => {
   const name = randomHex();
   return prompt({ type: 'confirm', name, message, default: defaultAnswer })
     .then((value) => value[name] as boolean)
-    .catch((error: Error) => {
+    .catch((error: Readonly<Error>) => {
       throw new CliInternalModuleError(error.message);
     });
 };
@@ -72,11 +72,13 @@ const cliPromptConfirm = ({
 const cliPromptCheckbox = ({
   message,
   choices,
-}: Pick<IPrompt, 'message' | 'defaultAnswer' | 'choices'>): Promise<string[] | ObjectAny[]> => {
+}: Readonly<Pick<IPrompt, 'message' | 'defaultAnswer' | 'choices'>>): Promise<
+  string[] | ObjectAny[]
+> => {
   const name = randomHex();
   return prompt({ type: 'checkbox', name, message, choices })
     .then((value) => value[name] as string[] | ObjectAny[])
-    .catch((error: Error) => {
+    .catch((error: Readonly<Error>) => {
       throw new CliInternalModuleError(error.message);
     });
 };
@@ -84,13 +86,13 @@ const cliPromptCheckbox = ({
 const cliPromptList = ({
   message,
   choices,
-}: Pick<IPrompt, 'message' | 'defaultAnswer' | 'validate' | 'choices'>): Promise<
+}: Readonly<Pick<IPrompt, 'message' | 'defaultAnswer' | 'validate' | 'choices'>>): Promise<
   string | ObjectAny
 > => {
   const name = randomHex();
   return prompt({ type: 'list', name, message, choices })
     .then((value) => value[name] as string | ObjectAny)
-    .catch((error: Error) => {
+    .catch((error: Readonly<Error>) => {
       throw new CliInternalModuleError(error.message);
     });
 };

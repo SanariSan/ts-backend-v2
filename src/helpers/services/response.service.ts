@@ -1,27 +1,33 @@
 import type { AxiosError, AxiosResponse } from 'axios';
+import type { IParsedResponse } from '.';
+import type { ObjectAny } from '../../general.type';
 import { LogLevel } from '../../general.type';
 import { logErrorUnexpected } from '../pubsub';
 
-const parseResponse = ({ response }: { response: AxiosResponse }) => ({
-  request: {
-    request: response.request,
-    // data: response.request.data,
-    headers: response.request._header,
-  },
-  response: {
-    response,
-    data: response.data,
-    headers: response.headers,
-  },
-});
+function parseResponse({ response }: { readonly response: unknown }): IParsedResponse {
+  const castedResponse = response as AxiosResponse;
+  return {
+    request: {
+      // data: response.request.data,
+      request: castedResponse.request as ObjectAny,
+      /* eslint-disable-next-line no-underscore-dangle */
+      headers: (castedResponse.request as ObjectAny)._header as string,
+      /* eslint-enable-next-line no-underscore-dangle */
+    },
+    response: {
+      response: castedResponse,
+      data: castedResponse.data as string | ObjectAny | undefined,
+      headers: castedResponse.headers as ObjectAny,
+    },
+  };
+}
 
-const handleErrorResponse = async (response: AxiosError): Promise<any> => {
-  // temp, actually need to parse response and define what error is this
-  logErrorUnexpected(LogLevel.WARN, response.message);
+function handleErrorResponse(response: Readonly<unknown>): Promise<AxiosResponse> {
+  const castedResponse = response as AxiosError;
 
-  // here will probably call some request related error definer, then reject defining result
-  // so I can catch it in the place it's called and logError after
-  return Promise.reject(response.response);
-};
+  logErrorUnexpected(LogLevel.WARN, castedResponse.message);
+
+  return Promise.reject(castedResponse.response);
+}
 
 export { handleErrorResponse, parseResponse };

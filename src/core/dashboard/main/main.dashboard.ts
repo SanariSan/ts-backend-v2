@@ -1,5 +1,4 @@
-import { DashboardInstancesController } from '../controllers';
-import { DashboardLogsController } from '../controllers/log';
+import { DashboardInstancesController, DashboardLogsController } from '../controller';
 import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
 
 class DashboardMain {
@@ -127,7 +126,10 @@ class DashboardMain {
   }
 
   private updateMenuBoxContent() {
-    const options = DashboardLogsController.getLogOptions();
+    // cut "all" source, not necessary!
+    const options = Object.keys(DashboardLogsController.getLogsBySources()).filter(
+      (el) => el !== 'all',
+    );
 
     if (options.length === 0) {
       this.menuBox.setItems(['No options available']);
@@ -142,9 +144,19 @@ class DashboardMain {
   }
 
   private updateLogsBoxContent() {
-    const options = DashboardLogsController.getLogOptions();
+    const logsByChannels = DashboardLogsController.getLogsBySources() as {
+      [key: string]: string[];
+    };
+
+    // cut "all" source, not necessary!
+    const logsByChannelsFiltered = {
+      ...logsByChannels,
+      all: undefined,
+    };
+
+    const options = Object.keys(logsByChannelsFiltered);
     const selectedMenuOption = options[this.menuBox.selected];
-    const logs = DashboardLogsController.getLogLinesByChannels()[selectedMenuOption];
+    const logs = logsByChannelsFiltered[selectedMenuOption];
 
     if (logs !== undefined) {
       this.logBox.setItems(logs);
