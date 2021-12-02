@@ -1,1 +1,2 @@
-export * from './instances.controller';
+export * from './instances';
+export * from './logs';

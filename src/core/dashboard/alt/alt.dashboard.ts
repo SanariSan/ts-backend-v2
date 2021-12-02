@@ -1,4 +1,4 @@
-// import { DashboardInstancesController, DashboardLogsController } from '../controllers';
+import { DashboardInstancesController, DashboardLogsController } from '../controller';
 import { makeControlsInfoBox, makeLogBox, makeWrapBox } from './box';
 
 // TODO: review if (!smth) return; checks and replace with errors where needed
@@ -95,7 +95,7 @@ class DashboardAlt {
   }
 
   private updateLogsBoxContent() {
-    const logs = DashboardLogsController.getLogLinesGeneral();
+    const logs = DashboardLogsController.getLogsBySources('all') as string[];
 
     this.logBox.setItems(logs);
 

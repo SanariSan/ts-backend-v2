@@ -1,5 +1,5 @@
 import blessed from 'blessed';
-import { sleep } from '../../../helpers/util';
+import { sleep } from '../../../../helpers/util';
 import type { TDashboardInstance } from './instances.controllers.type';
 
 class DashboardInstancesController {

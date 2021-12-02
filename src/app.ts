@@ -1,6 +1,5 @@
-import { DashboardLogsController } from './core/dashboard/controllers';
+import { DashboardLogsController } from './core/dashboard/controller';
 import { NoDataError } from './core/errors/generic';
-import { exampleRequests } from './examples/requests';
 import { LogLevel } from './general.type';
 import { log, logCustom, logError } from './helpers/pubsub';
 import { duplicateNTimes, getIntInRange, randomHex, sleep } from './helpers/util';
@@ -39,12 +38,13 @@ function main() {
   void generateError();
 }
 
+/* eslint-disable @typescript-eslint/require-await */
 async function init() {
-  // setupErrorHandle();
-  // setupDashboard();
-  // main();
+  setupErrorHandle();
+  setupDashboard();
+  main();
 
-  await exampleRequests();
+  // await exampleRequests();
   // import from ./examples/
   // await examplePromptCLI();
   // exampleRequests();

@@ -108,6 +108,9 @@
     // Common abbreviations are known and readable
     "unicorn/prevent-abbreviations": "off",
 
+    // just leave it here for now
+    // "unicorn/no-useless-undefined": "off",
+
     // ==========================================
     // rules:prettier
 
@@ -134,7 +137,8 @@
     "default-param-last": ["error"],
 
     // Disallow async functions which have no await expression https://eslint.org/docs/rules/require-await
-    "require-await": ["error"],
+    // off because in recommended for @typescript-eslint as  @typescript-eslint/require-await
+    "require-await": ["off"],
 
     // Disallow use of Object.prototypes builtins directly https://eslint.org/docs/rules/no-prototype-builtins
     // Too restrictive, writing ugly code to defend against a very unlikely scenario
@@ -144,8 +148,13 @@
     "no-use-before-define": ["error", { "functions": true, "classes": true, "variables": true }],
 
     // Require return statements to either always or never specify values https://eslint.org/docs/rules/consistent-return
-    // Too much extra code for no profit + ts analysis takes care
+    // Too much extra code (return undefined in every void fn) for little profit + ts analysis takes care
     "consistent-return": ["off"],
+
+    // Disallow redundant return statements https://eslint.org/docs/rules/no-useless-return
+    // Conflict with TS { Not all code paths return a value.ts(7030) }
+    // Removing empty return; Don't want to type return undefined; so it's off
+    "no-useless-return": ["off"],
 
     // Disallow the use of console https://eslint.org/docs/rules/no-console
     // When using node console should be allowed
@@ -433,7 +442,7 @@
     ],
 
     // Require explicit return types on functions and class methods https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/explicit-function-return-type.md
-    // Currently off ; ALWAYS off for js files in "overrides"
+    // Currently off, relying on type inference ; ALWAYS off for js files in "overrides"
     "@typescript-eslint/explicit-function-return-type": [
       "off",
       {
@@ -446,7 +455,7 @@
     ],
 
     // Require explicit return and argument types on exported functions' and classes' public class methods https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/explicit-module-boundary-types.md
-    // Currently off ; ALWAYS off for js files in "overrides"
+    // Currently off, relying on type inference ; ALWAYS off for js files in "overrides"
     "@typescript-eslint/explicit-module-boundary-types": [
       "off",
       {
