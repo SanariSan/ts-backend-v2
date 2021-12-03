@@ -1,4 +1,4 @@
-import { dashboardSubscribeChannel } from './access-layer/dashboard';
+import { dashboardSubscribeChannel } from './access-layer/logger/dashboard';
 import { NoDataError } from './core/errors/generic';
 import { LogLevel } from './general.type';
 import { log, logCustom, logError } from './helpers/pubsub';

@@ -1,7 +1,28 @@
-import { isValidString, sleep } from '../../helpers/util';
-import type { ICategory, ISources, IStorage } from './storage-runtime.logs.type';
+import { isValidString, sleep } from '../../../helpers/util';
+import type {
+  ICategory,
+  ISources,
+  IStorage,
+  TCheckInitializeStorage,
+  TGetLogsStorage,
+  TUpdateLogsStorage,
+} from './logs.storage.type';
+
+/**
+ * Module basically allows you to store fixed amount of logs at runtime
+ * So you can access it whenever needed and send/save/show/...
+ *
+ * However, it's not really suitable for consumers which need
+ * 1 log entity at a time and don't need access to logs history
+ *
+ * In this case you should store a hash/copy of last accessed log on consumer side
+ * When next time accessing storage - find last log position and parse trailing, then repeat
+ *
+ * ! Or just avoid using this module when don't need runtime storage !
+ */
 
 // TODO: throw error if not valid string passed (?)
+
 class LogsStorage {
   private static readonly defaultMaxCount = 150;
 
@@ -9,15 +30,9 @@ class LogsStorage {
 
   private static readonly logsStorage: IStorage = {};
 
-  public static getLogsStorage({
-    category,
-    property,
-    source,
-  }: {
-    readonly category: keyof IStorage;
-    readonly property?: keyof ICategory;
-    readonly source?: keyof ISources;
-  }) {
+  public static getLogsStorage(optionsObject: TGetLogsStorage) {
+    const { category, property, source } = optionsObject;
+
     this.checkIntializeStorage({ category, source });
 
     if (isValidString(category)) {
@@ -33,38 +48,25 @@ class LogsStorage {
     return;
   }
 
-  public static setLogsStorage({
-    category,
-    property,
-    source,
-    value,
-  }: {
-    readonly category: keyof IStorage;
-    readonly property: keyof ICategory;
-    readonly source?: keyof ISources;
-    readonly value: number | Array<string | number>;
-  }) {
-    this.checkIntializeStorage({ category, source });
+  public static updateLogsStorage(optionsObject: TUpdateLogsStorage) {
+    const { property } = optionsObject;
 
     if (property === 'maxCount') {
-      this.logsStorage[category].maxCount = value as number;
+      const { category, value } = optionsObject;
+      this.checkIntializeStorage({ category });
+      this.logsStorage[category].maxCount = value;
       return;
     }
 
-    if (property === 'sources' && isValidString(source)) {
-      this.logsStorage[category].sources[source as keyof ISources] = value as Array<
-        string | number
-      >;
+    const { category, source, value } = optionsObject;
+
+    if (isValidString(source)) {
+      this.checkIntializeStorage({ category, source });
+      this.logsStorage[category].sources[source].push(...value);
     }
   }
 
-  public static checkIntializeStorage({
-    category,
-    source,
-  }: {
-    readonly category: keyof IStorage;
-    readonly source?: keyof ISources;
-  }) {
+  public static checkIntializeStorage({ category, source }: TCheckInitializeStorage) {
     // if global category is not defined - put template into it
     if (isValidString(category)) {
       this.logsStorage[category] ??= {

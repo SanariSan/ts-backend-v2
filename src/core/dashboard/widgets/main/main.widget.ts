@@ -1,4 +1,3 @@
-import type { ObjectAny } from '../../../../general.type';
 import { DashboardInstancesController, DashboardLogsController } from '../../controllers';
 import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
 

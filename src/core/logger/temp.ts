@@ -1,18 +1,3 @@
-interface ISources {
-  [key: string]: Array<string | number>;
-}
-
-interface ICategory {
-  maxCount: number;
-  sources: ISources;
-}
-
-interface IStorage {
-  [key: string]: ICategory;
-}
-
-export type { IStorage, ICategory, ISources };
-
 /*
 enum ELOG_LEVEL_COLORS {
   ERROR = 'red blackBG',
