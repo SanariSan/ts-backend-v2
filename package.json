@@ -40,7 +40,9 @@
     "cli-wipe-win": "todo: test when on windows",
     "---additional": "---------------------------------------------------------------",
     "format": "./node_modules/prettier/bin-prettier.js -w --config ./.prettierrc .",
-    "lint": "./node_modules/.bin/eslint --fix --ext .ts .",
+    "lint": "./node_modules/.bin/eslint --ext .ts .",
+    "lint-quiet": "./node_modules/.bin/eslint --quiet --ext .ts .",
+    "lint-fix": "./node_modules/.bin/eslint --fix --ext .ts .",
     "madge-json": "node ./node_modules/madge/bin/cli.js -c -j --ts-config ./tsconfig.json ./dist/",
     "madge-pic": "node ./node_modules/madge/bin/cli.js -c -j -i ./dep.svg --ts-config ./tsconfig.json ./dist/"
   },
