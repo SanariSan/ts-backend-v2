@@ -1,11 +1,11 @@
 import blessed from 'blessed';
 import { sleep } from '../../../../helpers/util';
-import type { TDashboardInstance } from './instances.controllers.type';
+import type { TWidgetInstance } from './instances.controllers.type';
 
 class DashboardInstancesController {
-  private static screen: any = null;
+  private static screen: any = undefined;
 
-  private static readonly dashboardInstances = new Array<TDashboardInstance>();
+  private static readonly dashboardInstances = new Array<TWidgetInstance>();
 
   private static currDashboardIdx = 0;
 
@@ -15,37 +15,34 @@ class DashboardInstancesController {
 
   private static screenExitCb: any;
 
-  public static init(dashboardInstance: TDashboardInstance) {
+  public static init(dashboardInstance: TWidgetInstance) {
     // save dashboard instance
     this.dashboardInstances.push(dashboardInstance);
 
-    if (this.screen === null) {
+    if (this.screen === undefined) {
       this.screen = blessed.screen({
         smartCSR: true,
         fullUnicode: true,
       });
       this.configureScreenCbs();
       this.setScreenListeners();
-      this.refreshScreen();
+      void this.refreshScreen();
     }
   }
 
-  public static show(dashboardInstance: TDashboardInstance) {
+  public static show(dashboardInstance: TWidgetInstance) {
     this.updateCurrentDashboardIdx(dashboardInstance);
     dashboardInstance.appear(this.screen);
   }
 
-  public static hide(dashboardInstance: TDashboardInstance) {
+  public static hide(dashboardInstance: TWidgetInstance) {
     this.updateCurrentDashboardIdx(dashboardInstance);
     dashboardInstance.disappear();
   }
 
-  private static async refreshScreen() {
-    this.dashboardInstances[this.currDashboardIdx].updateContent();
-    this.screen.render();
-
-    await sleep(this.refreshRate);
-    this.refreshScreen();
+  private static updateCurrentDashboardIdx(dashboardInstance: TWidgetInstance) {
+    const currDashboardIdx = this.dashboardInstances.indexOf(dashboardInstance);
+    this.currDashboardIdx = currDashboardIdx !== -1 ? currDashboardIdx : 0;
   }
 
   private static configureScreenCbs() {
@@ -55,31 +52,36 @@ class DashboardInstancesController {
 
       // carousel idx change
       if (key.full === 'S-left') {
-        if (--this.currDashboardIdx < 0) this.currDashboardIdx = this.dashboardInstances.length - 1;
-      } else if (
-        key.full === 'S-right' &&
-        ++this.currDashboardIdx >= this.dashboardInstances.length
-      )
-        this.currDashboardIdx = 0;
+        this.currDashboardIdx -= 1;
+        this.currDashboardIdx =
+          this.currDashboardIdx < 0 ? this.dashboardInstances.length - 1 : this.currDashboardIdx;
+      } else if (key.full === 'S-right') {
+        this.currDashboardIdx += 1;
+        this.currDashboardIdx =
+          this.currDashboardIdx >= this.dashboardInstances.length ? 0 : this.currDashboardIdx;
+      }
 
       this.show(this.dashboardInstances[this.currDashboardIdx]);
     };
 
     // ctrl+c / escape = destroy screens + exit
-    this.screenExitCb = (ch, key) => {
+    this.screenExitCb = () => {
       this.screen.destroy();
       process.exit(0);
     };
   }
 
-  private static updateCurrentDashboardIdx(dashboardInstance: TDashboardInstance) {
-    const currDashboardIdx = this.dashboardInstances.indexOf(dashboardInstance);
-    this.currDashboardIdx = currDashboardIdx !== -1 ? currDashboardIdx : 0;
-  }
-
   private static setScreenListeners() {
     this.screen.key(['S-left', 'S-right'], this.screenSwapCb);
     this.screen.key(['escape', 'C-c', 'q'], this.screenExitCb);
+  }
+
+  private static async refreshScreen() {
+    this.dashboardInstances[this.currDashboardIdx].updateContent();
+    this.screen.render();
+
+    await sleep(this.refreshRate);
+    void this.refreshScreen();
   }
 }
 

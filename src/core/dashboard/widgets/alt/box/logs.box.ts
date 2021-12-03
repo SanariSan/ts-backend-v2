@@ -1,5 +1,5 @@
 import blessed from 'blessed';
-import { SCREEN_DEFAULT_PADDINGS } from '../../dashboard.const';
+import { SCREEN_DEFAULT_PADDINGS } from '../../widgets.const';
 
 function makeLogBox(parent) {
   return blessed.list({
@@ -7,8 +7,8 @@ function makeLogBox(parent) {
     label: ' Logs ',
 
     top: `${0}%`,
-    left: `${30}%`,
-    width: `${100 - 30}%`,
+    left: `${0}%`,
+    width: `${100}%`,
     height: `${80}%`,
     padding: SCREEN_DEFAULT_PADDINGS,
 

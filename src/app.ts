@@ -1,4 +1,4 @@
-import { DashboardLogsController } from './core/dashboard/controller';
+import { dashboardSubscribeChannel } from './access-layer/dashboard';
 import { NoDataError } from './core/errors/generic';
 import { LogLevel } from './general.type';
 import { log, logCustom, logError } from './helpers/pubsub';
@@ -7,7 +7,7 @@ import { setupDashboard, setupErrorHandle } from './setup';
 
 function main() {
   // sub to custom channel
-  DashboardLogsController.subscribeChannel('custom-channel', `Custom-Option`);
+  dashboardSubscribeChannel('custom-channel', `Custom-Option`);
 
   // publish to custom channel
   logCustom('custom-channel', LogLevel.INFO, 'message');

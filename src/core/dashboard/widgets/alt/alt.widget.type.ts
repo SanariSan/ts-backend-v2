@@ -1,7 +1,7 @@
-interface IDashboardMain {
+interface IWidgetAlt {
   appear: (screen) => void;
   disappear: () => void;
   updateContent: () => void;
 }
 
-export type { IDashboardMain };
+export type { IWidgetAlt };

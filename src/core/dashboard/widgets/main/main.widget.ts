@@ -1,8 +1,9 @@
-import { DashboardInstancesController, DashboardLogsController } from '../controller';
+import type { ObjectAny } from '../../../../general.type';
+import { DashboardInstancesController, DashboardLogsController } from '../../controllers';
 import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
 
-class DashboardMain {
-  private readonly dashboardTitle: string;
+class WidgetMain {
+  private readonly widgetTitle: string;
 
   private wrapBox: any;
 
@@ -25,21 +26,17 @@ class DashboardMain {
   private currentBoxIdx = 0;
 
   constructor() {
-    this.dashboardTitle = 'Dashboard-Main';
+    this.widgetTitle = 'Dashboard-Main';
 
-    this.init();
-  }
-
-  // init configuration section
-  // *
-
-  protected init() {
-    // save this instance, init screen if not done yet
+    // save this instance ; init screen if not done yet
     DashboardInstancesController.init(this);
 
     this.initializeBoxes();
     this.configureBoxesCbs();
   }
+
+  // init configuration section
+  // *
 
   private initializeBoxes() {
     // create predefined screen components = boxes
@@ -53,11 +50,11 @@ class DashboardMain {
   }
 
   private configureBoxesCbs() {
-    this.menuBoxCb = (item, i) => {
+    this.menuBoxCb = () => {
       this.logBox.clearItems();
     };
 
-    this.logBoxCb = (ch, key) => {
+    this.logBoxCb = () => {
       this.autoScrollLogs = !this.autoScrollLogs;
     };
 
@@ -67,9 +64,13 @@ class DashboardMain {
 
       // carousel box idx change
       if (key.name === 'left') {
-        if (--this.currentBoxIdx < 0) this.currentBoxIdx = this.boxesSwitch.length - 1;
-      } else if (key.name === 'right' && ++this.currentBoxIdx >= this.boxesSwitch.length)
-        this.currentBoxIdx = 0;
+        this.currentBoxIdx -= 1;
+        this.currentBoxIdx =
+          this.currentBoxIdx < 0 ? this.boxesSwitch.length - 1 : this.currentBoxIdx;
+      } else if (key.name === 'right') {
+        this.currentBoxIdx += 1;
+        this.currentBoxIdx = this.currentBoxIdx >= this.boxesSwitch.length ? 0 : this.currentBoxIdx;
+      }
 
       // accent new current box
       this.boxesSwitch[this.currentBoxIdx].focus();
@@ -93,13 +94,16 @@ class DashboardMain {
   // runtime section
   // *
 
+  /* eslint-disable no-param-reassign */
+  // blessed lib forces to use mutation style to be able to swap widgets
   public appear(screen) {
     screen.append(this.wrapBox);
-    screen.title = this.dashboardTitle;
+    screen.title = this.widgetTitle;
 
     this.setBoxesListeners();
     this.menuBox.focus();
   }
+  /* eslint-enable no-param-reassign */
 
   public disappear() {
     this.removeBoxesListeners();
@@ -137,7 +141,7 @@ class DashboardMain {
     }
 
     // if there's different amount of options came - clear old ones
-    if (options.length != this.menuBox.items.length) {
+    if (options.length !== this.menuBox.items.length) {
       this.menuBox.clearItems();
       this.menuBox.setItems(options);
     }
@@ -173,4 +177,4 @@ class DashboardMain {
   // runtime section
 }
 
-export { DashboardMain };
+export { WidgetMain };

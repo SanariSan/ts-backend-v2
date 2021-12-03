@@ -1,9 +1,9 @@
-import { DashboardInstancesController, DashboardLogsController } from '../controller';
+import { DashboardInstancesController, DashboardLogsController } from '../../controllers';
 import { makeControlsInfoBox, makeLogBox, makeWrapBox } from './box';
 
 // TODO: review if (!smth) return; checks and replace with errors where needed
-class DashboardAlt {
-  private readonly dashboardTitle: string;
+class WidgetAlt {
+  private readonly widgetTitle: string;
 
   private autoScrollLogs = true;
 
@@ -18,21 +18,17 @@ class DashboardAlt {
   private controlsInfoBox: any;
 
   constructor() {
-    this.dashboardTitle = 'Dashboard-Alt';
+    this.widgetTitle = 'Dashboard-Alt';
 
-    this.init();
-  }
-
-  // init configuration section
-  // *
-
-  protected init() {
-    // save this instance, init screen if not done yet
+    // save this instance ; init screen if not done yet
     DashboardInstancesController.init(this);
 
     this.initializeBoxes();
     this.configureBoxesCbs();
   }
+
+  // init configuration section
+  // *
 
   private initializeBoxes() {
     // create predefined screen components = boxes
@@ -42,11 +38,11 @@ class DashboardAlt {
   }
 
   private configureBoxesCbs() {
-    this.logBoxCb = (ch, key) => {
+    this.logBoxCb = () => {
       this.autoScrollLogs = !this.autoScrollLogs;
     };
 
-    this.wrapBoxCb = (el, ch, key): boolean | void => {
+    this.wrapBoxCb = (el): boolean | void => {
       if (el === this.wrapBox) {
         // Cancel propagation
         return false;
@@ -65,13 +61,16 @@ class DashboardAlt {
   // runtime section
   // *
 
+  /* eslint-disable no-param-reassign */
+  // blessed lib forces to use mutation style to be able to swap widgets
   public appear(screen) {
     screen.append(this.wrapBox);
-    screen.title = this.dashboardTitle;
+    screen.title = this.widgetTitle;
 
     this.setBoxesListeners();
     this.logBox.focus();
   }
+  /* eslint-enable no-param-reassign */
 
   public disappear() {
     this.removeBoxesListeners();
@@ -108,4 +107,4 @@ class DashboardAlt {
   // runtime section
 }
 
-export { DashboardAlt };
+export { WidgetAlt };

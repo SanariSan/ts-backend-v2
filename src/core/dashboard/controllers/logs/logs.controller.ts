@@ -3,6 +3,7 @@ import { Sub } from '../../../events';
 import { LogsStorage } from '../../../logs';
 import type { ILogEntity } from './logs.controller.type';
 
+// TODO: provide routines for changing max lines number for category in LogStorage
 class DashboardLogsController {
   private static readonly category = 'dashboard';
 

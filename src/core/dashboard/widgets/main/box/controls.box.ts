@@ -1,5 +1,5 @@
 import blessed from 'blessed';
-import { SCREEN_DEFAULT_PADDINGS } from '../../dashboard.const';
+import { SCREEN_DEFAULT_PADDINGS } from '../../widgets.const';
 
 function makeControlsInfoBox(parent) {
   return blessed.text({
@@ -27,6 +27,7 @@ function makeControlsInfoBox(parent) {
     content:
       '{cyan-fg}{bold}Shift + Left/Right: switch dashboards{/}\n' +
       '{blue-fg}{bold}S: toggle auto scroll{/}\n' +
+      '{magenta-fg}{bold}Left/Right: switch boxes{/}\n' +
       '{yellow-fg}{bold}Up/Down/Mouse: scroll{/}\n' +
       '{red-fg}{bold}Ctrl + C / Q / Esc: exit {/}',
   });

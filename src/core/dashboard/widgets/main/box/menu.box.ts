@@ -1,5 +1,5 @@
 import blessed from 'blessed';
-import { SCREEN_DEFAULT_PADDINGS } from '../../dashboard.const';
+import { SCREEN_DEFAULT_PADDINGS } from '../../widgets.const';
 
 function makeMenuBox(parent) {
   return blessed.list({
