@@ -1,5 +1,5 @@
 import type { AxiosProxyConfig, AxiosRequestConfig } from 'axios';
-import type { ObjectAny } from '../../../general.type';
+import type { TObjectAny } from '../../../general.type';
 
 type TRequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -21,7 +21,7 @@ interface IGenericRequest {
   host: string;
   path: string;
   data?: any;
-  headers?: ObjectAny;
+  headers?: TObjectAny;
   proxy?: AxiosProxyConfig;
   args?: AxiosRequestConfig | ICustomConfig;
 }

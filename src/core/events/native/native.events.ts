@@ -1,5 +1,5 @@
 import { EventEmitter } from 'node:stream';
-import { randomHex } from '../../../helpers/util';
+import { randomHexSync } from '../../../helpers/util';
 import { NoEventOrKeyError } from '../../errors/generic';
 import type {
   TCb,
@@ -59,7 +59,7 @@ class CustomEventEmitter extends EventEmitter {
     EventEmitterStatic.setCurrentClassInstance(this);
   }
 
-  public onByKey(eventName: TEName, listener: TCb, key: TKey = randomHex()): TKey | never {
+  public onByKey(eventName: TEName, listener: TCb, key: TKey = randomHexSync()): TKey | never {
     const eNamesMaps = EventEmitterStatic.getENamesMaps(this);
     if (!eNamesMaps.has(eventName)) {
       eNamesMaps.set(eventName, new Map());

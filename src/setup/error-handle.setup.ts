@@ -1,7 +1,7 @@
 import { appendFile } from 'node:fs/promises';
 import { handleErrorExpected, handleErrorUnexpected } from '../core/errors/handle';
 import { Sub } from '../core/events';
-import { LogLevel } from '../general.type';
+import { ELOG_LEVEL } from '../general.type';
 import { logErrorUnexpected } from '../helpers/pubsub';
 
 function setupErrorHandle() {
@@ -24,10 +24,10 @@ function setupErrorHandle() {
   // });
 
   process.on('uncaughtException', (e: Error) => {
-    logErrorUnexpected(LogLevel.ERROR, e);
+    logErrorUnexpected(ELOG_LEVEL.ERROR, e);
   });
   process.on('unhandledRejection', (e: Error) => {
-    logErrorUnexpected(LogLevel.ERROR, e);
+    logErrorUnexpected(ELOG_LEVEL.ERROR, e);
   });
 }
 

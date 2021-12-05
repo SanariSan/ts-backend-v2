@@ -1,7 +1,6 @@
-type ObjectAny = { [key: string]: any };
-type FunctionAny = (any) => any;
+type TObjectAny = { [key: string]: any };
 
-enum LogLevel {
+enum ELOG_LEVEL {
   ERROR,
   WARN,
   INFO,
@@ -9,5 +8,5 @@ enum LogLevel {
   SILLY,
 }
 
-export type { ObjectAny, FunctionAny };
-export { LogLevel };
+export type { TObjectAny };
+export { ELOG_LEVEL };

@@ -1,13 +1,13 @@
 import { PubStatic, Sub } from '../core/events';
-import { LogLevel } from '../general.type';
+import { ELOG_LEVEL } from '../general.type';
 import { sleep } from '../helpers/util';
 
 async function examplePubsub() {
   const sub = new Sub();
 
   // key = "test-key";
-  const key = sub.onByKey((channel, logLevel, message) => {
-    console.log(`Message-app.ts channel: ${channel} | message: ${message}`);
+  const key = sub.onByKey((channel: string, logLevel, message: unknown) => {
+    console.log(`Message-app.ts channel: ${channel} | message: ${String(message)}`);
   }, 'test-key');
 
   sub.subscribe('test-channel');
@@ -16,10 +16,12 @@ async function examplePubsub() {
 
   let i = 0;
   while (sub.getSub().hasKey('message', 'test-key')) {
+    /* eslint-disable-next-line no-await-in-loop */
     await sleep(500);
-    PubStatic.publish('test-channel', LogLevel.INFO, 'message here');
+    PubStatic.publish('test-channel', ELOG_LEVEL.INFO, 'message here');
 
-    if (i++ === 5) {
+    i += 1;
+    if (i === 5) {
       // unsubscribe from channel
       sub.unsubscribe('test-channel');
 

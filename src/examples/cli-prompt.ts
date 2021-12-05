@@ -1,42 +1,64 @@
 import { Separator } from 'inquirer';
 import {
-  cliPromptCheckbox,
-  cliPromptConfirm,
-  cliPromptEmail,
-  cliPromptList,
-  cliPromptNum,
-  cliPromptPass,
-  cliPromptText,
+  cliPrompt,
+  validateEmailDefault,
+  validateNumDefault,
+  validatePassDefault,
 } from '../access-layer/cli-prompts';
+import type { TObjectAny } from '../general.type';
 
 async function examplePromptCLI() {
-  const textPromptResult = await cliPromptText({
-    message: 'text input',
+  const confirmPromptResult = await cliPrompt<boolean>({
+    type: 'confirm',
+    message: 'confirm',
+    default: true,
   });
-  const confirmPromptResult = await cliPromptConfirm({ message: 'confirm' });
-  const numPromptResult = await cliPromptNum({ message: 'number' });
-  const passPromptResult = await cliPromptPass({ message: 'pass' });
-  const emailPromptResult = await cliPromptEmail({ message: 'email' });
-  const checkboxPromptResult = await cliPromptCheckbox({
+  const textPromptResult = await cliPrompt<string>({
+    type: 'input',
+    message: 'text',
+    default: 'sample',
+  });
+  const numPromptResult = await cliPrompt<number>({
+    type: 'number',
+    message: 'number',
+    default: 123,
+    validate: validateNumDefault,
+  });
+  const passPromptResult = await cliPrompt<string>({
+    type: 'password',
+    message: 'pass',
+    default: 'ABCabc123',
+    validate: validatePassDefault,
+  });
+  const emailPromptResult = await cliPrompt<string>({
+    type: 'input',
+    message: 'email',
+    default: 'e@mail.ru',
+    validate: validateEmailDefault,
+  });
+  const checkboxPromptResult = await cliPrompt<Array<string | TObjectAny>>({
+    type: 'checkbox',
     message: 'checkbox',
     choices: [
       new Separator(),
       'first',
-      { name: 'second', checked: true },
+      { name: 'second', value: 'value second', checked: true }, // string
+      { name: 'third', value: { a: 1, b: 2 }, checked: true }, // ObjectAny
       new Separator(' = Custom separator = '),
-      'third',
-      { name: 'fourth', disabled: 'Unavailable now' },
+      'fourth',
+      { name: 'fifth', value: 'value fifth', disabled: 'Unavailable now' },
     ],
   });
-  const listPromptResult = await cliPromptList({
-    message: 'checkbox',
+  const listPromptResult = await cliPrompt<string>({
+    type: 'list',
+    message: 'list',
     choices: [
       new Separator(),
       'first',
       'second',
       new Separator(' = Custom separator = '),
       'third',
-      { name: 'fourth', disabled: 'Unavailable now' },
+      { name: 'fourth', value: 'value fourth', disabled: 'Unavailable now' },
     ],
   });
 

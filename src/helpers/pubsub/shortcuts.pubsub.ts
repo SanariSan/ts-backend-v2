@@ -1,17 +1,17 @@
 import type { GenericError } from '../../core/errors/generic';
 import { PubStatic } from '../../core/events';
-import type { LogLevel } from '../../general.type';
+import type { ELOG_LEVEL } from '../../general.type';
 
-function logCustom(channel: string, logLevel: LogLevel, message: any) {
+function logCustom(channel: string, logLevel: ELOG_LEVEL, message: any) {
   PubStatic.publish(channel, logLevel, message);
 }
-function log(logLevel: LogLevel, message: any) {
+function log(logLevel: ELOG_LEVEL, message: any) {
   logCustom('log', logLevel, message);
 }
-function logError(logLevel: LogLevel, e: GenericError) {
+function logError(logLevel: ELOG_LEVEL, e: GenericError) {
   logCustom('error-expected', logLevel, e);
 }
-function logErrorUnexpected(logLevel: LogLevel, e: any) {
+function logErrorUnexpected(logLevel: ELOG_LEVEL, e: any) {
   logCustom('error-unexpected', logLevel, e);
 }
 

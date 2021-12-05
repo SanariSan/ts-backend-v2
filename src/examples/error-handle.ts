@@ -1,7 +1,7 @@
 import { CliNoEntryError, NoDataError } from '../core/errors/generic';
 import { handleErrorExpected, handleErrorUnexpected } from '../core/errors/handle';
 import { Sub } from '../core/events';
-import { LogLevel } from '../general.type';
+import { ELOG_LEVEL } from '../general.type';
 import { logError, logErrorUnexpected } from '../helpers/pubsub';
 
 async function exampleError() {
@@ -9,14 +9,14 @@ async function exampleError() {
   try {
     throw new NoDataError('Some info');
   } catch (error: any) {
-    logError(LogLevel.WARN, error);
+    logError(ELOG_LEVEL.WARN, error);
   }
 
   console.log('\nError #2\n');
-  await new Promise((res, rej) => {
+  await new Promise(() => {
     throw new CliNoEntryError('Some more info');
   }).catch((error: any) => {
-    logError(LogLevel.WARN, error);
+    logError(ELOG_LEVEL.WARN, error);
   });
 
   // and even if not caught, will be caught
@@ -44,11 +44,11 @@ function setupErrorHandle() {
   });
 
   // these are any error catchers
-  process.on('uncaughtException', (e: Error) => {
-    logErrorUnexpected(LogLevel.ERROR, e);
+  process.on('uncaughtException', (e: Readonly<Error>) => {
+    logErrorUnexpected(ELOG_LEVEL.ERROR, e);
   });
-  process.on('unhandledRejection', (e: Error) => {
-    logErrorUnexpected(LogLevel.ERROR, e);
+  process.on('unhandledRejection', (e: Readonly<Error>) => {
+    logErrorUnexpected(ELOG_LEVEL.ERROR, e);
   });
 }
 
