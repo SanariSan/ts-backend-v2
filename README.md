@@ -12,23 +12,22 @@
 ~ work in progress ~~ rework in progress
 
 1. Nested Errors throw structure
-2. Custom wrapper for CLI prompts of all kinds | _based on [Inquirer](https://www.npmjs.com/package/inquirer)_
-3. Interactive Multiple screens CLI Dashboard | _based on [Blessed](https://www.npmjs.com/package/blessed)_
-4. Custom events controller
-5. ~~Extensible services template | _based on [Axios](https://www.npmjs.com/package/axios)_
-6. Custom PUB-SUB realisation
+2. Wrapper for CLI prompts | _based on [Inquirer](https://www.npmjs.com/package/inquirer)_
+3. Interactive CLI Dashboard with multiple widgets  | _based on [Blessed](https://www.npmjs.com/package/blessed)_
+4. Custom lightweight PUB-SUB implementation 
+5. Multiple channels of logging | _based on custom PUB-SUB_
+6. ~~Requests wrapper | _based on [Axios](https://www.npmjs.com/package/axios)_
 7. Various package.json scripts
 8. Docker containerized
-9. tsconfig.json file splitted in 2 layers
-10. ~AirBNB (and some others) eslint style configs + prettier
+9. tsconfig file splitted in 2 layers
+10. Well thought eslint config
 
 **Planned:**
 
-1. Logger
-2. Websocket
-3. Add express and split to another boilerplate
-4. Database (postgres?) integration
-5. Actions with filesystem
+1. Websocket
+2. Add express and split to another boilerplate
+3. Database (postgres?) integration
+4. Actions with filesystem
 
 ---
 
@@ -77,7 +76,7 @@
 ![Page-2](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/cli-2.png?raw=true)
 
 ```
-// blessed key annotations from source code
+// blessed key annotations ; from library source code
 
 var name = (key.ctrl ? 'C-' : '')
 + (key.meta ? 'M-' : '')
