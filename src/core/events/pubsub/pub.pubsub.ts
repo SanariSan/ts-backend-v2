@@ -1,13 +1,15 @@
-import type { LogLevel } from '../../../general.type';
-import type { TChannels } from './internal';
-import { PubSub } from './internal';
+import type { IPublishEntityCore } from './pubsub.type';
+import { PubSubStorage } from './storage.pubsub';
 
-class PubStatic {
-  private static readonly pub = new PubSub();
-
-  public static publish(channel: TChannels, logLevel: LogLevel, message: any) {
-    this.pub.publish(channel, logLevel, message);
+class PubCore {
+  // send message from all instances who has channel in their sets
+  public static publish<T>(optionsObject: IPublishEntityCore<T>): void {
+    [...PubSubStorage.getInstancesToChannelsMap().entries()].forEach(([emitter, channels]) => {
+      if (channels.has(optionsObject.channel)) {
+        emitter.emit('message', optionsObject);
+      }
+    });
   }
 }
 
-export { PubStatic };
+export { PubCore };

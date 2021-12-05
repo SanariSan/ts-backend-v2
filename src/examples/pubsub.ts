@@ -1,36 +1,31 @@
-import { PubStatic, Sub } from '../core/events';
-import { LogLevel } from '../general.type';
-import { sleep } from '../helpers/util';
+import type { IPublishEntity } from '../access-layer/events/pubsub';
+import { logCustom, Sub } from '../access-layer/events/pubsub';
+import { ELOG_LEVEL } from '../general.type';
 
-async function examplePubsub() {
+function testCb({ channel, logLevel, message }: IPublishEntity) {
+  console.log(`Message-app.ts channel: ${channel} | message: ${String(message)}`);
+}
+
+function examplePubsub() {
   const sub = new Sub();
 
-  // key = "test-key";
-  const key = sub.onByKey((channel, logLevel, message) => {
-    console.log(`Message-app.ts channel: ${channel} | message: ${message}`);
-  }, 'test-key');
-
+  sub.listen(testCb);
   sub.subscribe('test-channel');
 
-  console.log(`Listeners for current pubsub instance: ${sub.getSub().listenerCount('message')}`);
+  console.log(`Listeners for current sub instance: ${sub.listenerCount()}`);
 
-  let i = 0;
-  while (sub.getSub().hasKey('message', 'test-key')) {
-    await sleep(500);
-    PubStatic.publish('test-channel', LogLevel.INFO, 'message here');
+  logCustom('test-channel', ELOG_LEVEL.INFO, 'message here-1');
+  logCustom('test-channel', ELOG_LEVEL.INFO, 'message here-2');
 
-    if (i++ === 5) {
-      // unsubscribe from channel
-      sub.unsubscribe('test-channel');
+  // unsubscribe from channel
+  sub.unsubscribe('test-channel');
 
-      // or if quit completely
+  logCustom('test-channel', ELOG_LEVEL.INFO, 'message not here-3');
 
-      // propper quit with removing all listeners and leaving all channels
-      sub.quit(); // after this need to new Sub() again or can't use
-    }
-  }
+  // maybe remove listener at all
+  sub.removeListener(testCb);
 
-  console.log(`Listeners for current pubsub instance: ${sub.getSub().listenerCount('message')}`);
+  console.log(`Listeners for current sub instance: ${sub.listenerCount()}`);
 }
 
 export { examplePubsub };

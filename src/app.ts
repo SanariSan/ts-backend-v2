@@ -1,22 +1,32 @@
+import { log, logCustom, logError, Sub } from './access-layer/events/pubsub';
 import { dashboardSubscribeChannel } from './access-layer/logger/dashboard';
 import { NoDataError } from './core/errors/generic';
-import { LogLevel } from './general.type';
-import { log, logCustom, logError } from './helpers/pubsub';
-import { duplicateNTimes, getIntInRange, randomHex, sleep } from './helpers/util';
+import { examplePromptCLI } from './examples/cli-prompt';
+import { examplePubsub } from './examples/pubsub';
+import { ELOG_LEVEL } from './general.type';
+import { duplicateNTimes, rndIntInRange, randomHex, sleep } from './helpers/util';
 import { setupDashboard, setupErrorHandle } from './setup';
 
 function main() {
-  // sub to custom channel
+  // bare logs, later will move to core/logger/cli + cli logger access-layer/logger/cli
+  // for now exposed
+  const sub = new Sub();
+  sub.listen(({ channel, logLevel, message }) => {
+    console.log(`Channel: ${channel} | Message: ${String(message)}`);
+  });
+  sub.subscribe('log');
+
+  // sub to custom channel for dashboard (it has own Sub instance inside)
   dashboardSubscribeChannel('custom-channel', `Custom-Option`);
 
-  // publish to custom channel
-  logCustom('custom-channel', LogLevel.INFO, 'message');
+  // publish to custom channel for everyone
+  logCustom('custom-channel', ELOG_LEVEL.INFO, 'message');
 
   async function test() {
     await sleep(2000);
     void test();
     log(
-      LogLevel.INFO,
+      ELOG_LEVEL.INFO,
       '123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789',
     );
   }
@@ -25,14 +35,14 @@ function main() {
   async function pubLogs() {
     await sleep(500);
     void pubLogs();
-    log(LogLevel.INFO, `${duplicateNTimes(getIntInRange(1, 3), randomHex())}`);
+    log(ELOG_LEVEL.INFO, `${duplicateNTimes(rndIntInRange(1, 3), await randomHex())}`);
   }
   void pubLogs();
 
   async function generateError() {
     await sleep(10_000);
     void generateError();
-    logError(LogLevel.WARN, new NoDataError('Some error handled'));
+    logError(ELOG_LEVEL.WARN, new NoDataError('Some error handled'));
     throw new Error('Some unexpected error thrown by itself');
   }
   void generateError();
@@ -41,15 +51,12 @@ function main() {
 /* eslint-disable @typescript-eslint/require-await */
 async function init() {
   setupErrorHandle();
-  setupDashboard();
-  main();
+  // setupDashboard();
+  // main();
 
-  // await exampleRequests();
-  // import from ./examples/
   // await examplePromptCLI();
-  // exampleRequests();
+  // await exampleRequests();
   // exampleErrors();
-  // exampleEvents();
   // examplePubsub();
 }
 

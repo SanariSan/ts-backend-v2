@@ -1,22 +1,17 @@
-import type Separator from 'inquirer/lib/objects/separator';
-import type { ObjectAny } from '../../general.type';
+import type { QuestionCollection } from 'inquirer';
 
-type TChoices = Array<
-  | string
-  | Separator
-  | {
-      name: string;
-      value?: ObjectAny;
-      disabled?: string;
-      checked?: boolean;
-    }
->;
+type TPromptDefault<T> = QuestionCollection & {
+  type: 'input' | 'number' | 'confirm' | 'password';
+  name?: string;
+  default: T;
+};
+type TPromptNoDefault = QuestionCollection & {
+  type: 'checkbox' | 'list';
+  name?: string;
+  default?: never;
+};
 
-interface IPrompt {
-  message: string;
-  defaultAnswer?: number | string | boolean;
-  choices?: TChoices;
-  validate?: (value: string) => boolean | string;
-}
+// TODO: figure out why not working as intended (not forbidding use of default)
+type TPrompt<T> = TPromptDefault<T> | TPromptNoDefault;
 
-export type { IPrompt, TChoices };
+export type { TPrompt };

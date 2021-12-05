@@ -1,22 +1,22 @@
+import { logErrorUnexpected, Sub } from '../access-layer/events/pubsub';
+import type { GenericError } from '../core/errors/generic';
 import { CliNoEntryError, NoDataError } from '../core/errors/generic';
 import { handleErrorExpected, handleErrorUnexpected } from '../core/errors/handle';
-import { Sub } from '../core/events';
-import { LogLevel } from '../general.type';
-import { logError, logErrorUnexpected } from '../helpers/pubsub';
+import { ELOG_LEVEL } from '../general.type';
 
 async function exampleError() {
   console.log('Error #1\n');
   try {
     throw new NoDataError('Some info');
-  } catch (error: any) {
-    logError(LogLevel.WARN, error);
+  } catch (error: unknown) {
+    logErrorUnexpected(ELOG_LEVEL.WARN, error as Error);
   }
 
   console.log('\nError #2\n');
-  await new Promise((res, rej) => {
+  await new Promise(() => {
     throw new CliNoEntryError('Some more info');
-  }).catch((error: any) => {
-    logError(LogLevel.WARN, error);
+  }).catch((error: unknown) => {
+    logErrorUnexpected(ELOG_LEVEL.WARN, error as Error);
   });
 
   // and even if not caught, will be caught
@@ -34,21 +34,21 @@ function setupErrorHandle() {
   const sub = new Sub();
   sub.subscribe('error-expected');
   sub.subscribe('error-unexpected');
-  sub.onByKey((channel, logLevel, message) => {
+  sub.listen(({ channel, logLevel, message }) => {
     if (channel === 'error-expected') {
-      console.log(handleErrorExpected(message));
+      console.log(handleErrorExpected(message as GenericError));
     } else if (channel === 'error-unexpected') {
       // appendFileSync("./err.txt", JSON.stringify([message.message, message.stack]) + "\n");
-      console.log(handleErrorUnexpected(message));
+      console.log(handleErrorUnexpected(message as Error));
     }
   });
 
   // these are any error catchers
-  process.on('uncaughtException', (e: Error) => {
-    logErrorUnexpected(LogLevel.ERROR, e);
+  process.on('uncaughtException', (e: Readonly<Error>) => {
+    logErrorUnexpected(ELOG_LEVEL.ERROR, e);
   });
-  process.on('unhandledRejection', (e: Error) => {
-    logErrorUnexpected(LogLevel.ERROR, e);
+  process.on('unhandledRejection', (e: Readonly<Error>) => {
+    logErrorUnexpected(ELOG_LEVEL.ERROR, e);
   });
 }
 

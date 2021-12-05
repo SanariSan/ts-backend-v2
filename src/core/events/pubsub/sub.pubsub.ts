@@ -1,36 +1,21 @@
-import type { TChannels } from './internal';
-import { PubSub } from './internal';
+import { EventEmitter } from 'node:stream';
+import { PubSubStorage } from './storage.pubsub';
 
-class Sub {
-  private readonly sub: PubSub;
-
-  constructor(sub?: PubSub) {
-    this.sub = sub ?? new PubSub();
+class SubCore extends EventEmitter {
+  constructor() {
+    super();
+    PubSubStorage.setChannels(this, new Set());
   }
 
-  public getSub() {
-    return this.sub;
+  // add channel to instance-channels map
+  public subscribe(channel: string): void | never {
+    PubSubStorage.getChannels(this).add(channel);
   }
 
-  public subscribe(channel: TChannels) {
-    this.sub.subscribe(channel);
-  }
-
-  public unsubscribe(channel: TChannels) {
-    this.sub.unsubscribe(channel);
-  }
-
-  public onByKey(cb, key?: string) {
-    return this.sub.onByKey('message', cb, key);
-  }
-
-  public offByKey(key) {
-    this.sub.offByKey('message', key);
-  }
-
-  public quit() {
-    return this.sub.quit();
+  // remove channel from instance-channels map
+  public unsubscribe(channel: string): void | never {
+    PubSubStorage.getChannels(this).delete(channel);
   }
 }
 
-export { Sub };
+export { SubCore };

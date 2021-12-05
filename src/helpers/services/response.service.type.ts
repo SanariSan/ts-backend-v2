@@ -1,16 +1,16 @@
 import type { AxiosResponse } from 'axios';
-import type { ObjectAny } from '../../general.type';
+import type { TObjectAny } from '../../general.type';
 
 interface IParsedResponse {
   request: {
     // data: ;
-    request: ObjectAny;
+    request: TObjectAny;
     headers: string;
   };
   response: {
     response: AxiosResponse;
-    data?: string | ObjectAny;
-    headers: ObjectAny;
+    data?: string | TObjectAny;
+    headers: TObjectAny;
   };
 }
 
