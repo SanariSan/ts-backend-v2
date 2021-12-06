@@ -1,6 +1,6 @@
 import type { AxiosError, AxiosResponse } from 'axios';
 import type { IParsedResponse } from '.';
-import { logErrorUnexpected } from '../../access-layer/events/pubsub';
+import { publishErrorUnexpected } from '../../access-layer/events/pubsub';
 import type { TObjectAny } from '../../general.type';
 import { ELOG_LEVEL } from '../../general.type';
 
@@ -26,7 +26,7 @@ function handleErrorResponse(response: Readonly<unknown>): Promise<AxiosResponse
   const castedResponse = response as AxiosError;
 
   // @ts-expect-error Will rework axios laster and fix this
-  logErrorUnexpected(ELOG_LEVEL.WARN, castedResponse.message);
+  publishErrorUnexpected(ELOG_LEVEL.WARN, castedResponse.message);
 
   return Promise.reject(castedResponse.response);
 }

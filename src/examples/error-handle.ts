@@ -1,4 +1,4 @@
-import { logErrorUnexpected, Sub } from '../access-layer/events/pubsub';
+import { publishErrorUnexpected, Sub } from '../access-layer/events/pubsub';
 import type { GenericError } from '../core/errors/generic';
 import { CliNoEntryError, NoDataError } from '../core/errors/generic';
 import { handleErrorExpected, handleErrorUnexpected } from '../core/errors/handle';
@@ -9,14 +9,14 @@ async function exampleError() {
   try {
     throw new NoDataError('Some info');
   } catch (error: unknown) {
-    logErrorUnexpected(ELOG_LEVEL.WARN, error as Error);
+    publishErrorUnexpected(ELOG_LEVEL.WARN, error as Error);
   }
 
   console.log('\nError #2\n');
   await new Promise(() => {
     throw new CliNoEntryError('Some more info');
   }).catch((error: unknown) => {
-    logErrorUnexpected(ELOG_LEVEL.WARN, error as Error);
+    publishErrorUnexpected(ELOG_LEVEL.WARN, error as Error);
   });
 
   // and even if not caught, will be caught
@@ -45,10 +45,10 @@ function setupErrorHandle() {
 
   // these are any error catchers
   process.on('uncaughtException', (e: Readonly<Error>) => {
-    logErrorUnexpected(ELOG_LEVEL.ERROR, e);
+    publishErrorUnexpected(ELOG_LEVEL.ERROR, e);
   });
   process.on('unhandledRejection', (e: Readonly<Error>) => {
-    logErrorUnexpected(ELOG_LEVEL.ERROR, e);
+    publishErrorUnexpected(ELOG_LEVEL.ERROR, e);
   });
 }
 
