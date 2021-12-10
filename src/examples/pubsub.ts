@@ -1,5 +1,5 @@
 import type { IPublishEntity } from '../access-layer/events/pubsub';
-import { logCustom, Sub } from '../access-layer/events/pubsub';
+import { publishCustom, Sub } from '../access-layer/events/pubsub';
 import { ELOG_LEVEL } from '../general.type';
 
 function testCb({ channel, logLevel, message }: IPublishEntity) {
@@ -14,13 +14,13 @@ function examplePubsub() {
 
   console.log(`Listeners for current sub instance: ${sub.listenerCount()}`);
 
-  logCustom('test-channel', ELOG_LEVEL.INFO, 'message here-1');
-  logCustom('test-channel', ELOG_LEVEL.INFO, 'message here-2');
+  publishCustom('test-channel', ELOG_LEVEL.INFO, 'message here-1');
+  publishCustom('test-channel', ELOG_LEVEL.INFO, 'message here-2');
 
   // unsubscribe from channel
   sub.unsubscribe('test-channel');
 
-  logCustom('test-channel', ELOG_LEVEL.INFO, 'message not here-3');
+  publishCustom('test-channel', ELOG_LEVEL.INFO, 'message not here-3');
 
   // maybe remove listener at all
   sub.removeListener(testCb);

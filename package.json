@@ -46,6 +46,9 @@
     "madge-json": "node ./node_modules/madge/bin/cli.js -c -j --ts-config ./tsconfig.json ./dist/",
     "madge-pic": "node ./node_modules/madge/bin/cli.js -c -j -i ./dep.svg --ts-config ./tsconfig.json ./dist/"
   },
+  "configurationDefaults": {
+    "---here can override": "any VSCODE options except those from application or machine scopes"
+  },
   "dependencies": {
     "axios": "^0.21.1",
     "blessed": "^0.1.81",
@@ -73,6 +76,6 @@
     "madge": "^5.0.1",
     "prettier": "^2.4.1",
     "ts-node": "^10.3.0",
-    "typescript": "^4.4.4"
+    "typescript": "^4.5.2"
   }
 }

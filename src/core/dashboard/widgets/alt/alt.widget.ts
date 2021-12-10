@@ -1,4 +1,5 @@
-import { DashboardInstancesController, DashboardLogsController } from '../../controllers';
+import { DashboardInstancesController } from '../../controllers';
+import { DashboardLogsControllerShim } from '../../shims';
 import { makeControlsInfoBox, makeLogBox, makeWrapBox } from './box';
 
 // TODO: review if (!smth) return; checks and replace with errors where needed
@@ -61,8 +62,8 @@ class WidgetAlt {
   // runtime section
   // *
 
-  /* eslint-disable no-param-reassign */
   // blessed lib forces to use mutation style to be able to swap widgets
+  /* eslint-disable no-param-reassign */
   public appear(screen) {
     screen.append(this.wrapBox);
     screen.title = this.widgetTitle;
@@ -94,13 +95,20 @@ class WidgetAlt {
   }
 
   private updateLogsBoxContent() {
-    const logs = DashboardLogsController.getLogsBySources('all') as string[];
+    const logs = DashboardLogsControllerShim.getLogs('all');
+
+    this.logBox.setLabel(`  All Logs  `);
+
+    if (logs.length === 0) {
+      this.logBox.setItems(['No logs yet']);
+      return;
+    }
 
     this.logBox.setItems(logs);
 
-    if (this.autoScrollLogs) this.logBox.setScrollPerc(100);
-
-    this.logBox.setLabel(`  All Logs  `);
+    if (this.autoScrollLogs) {
+      this.logBox.setScrollPerc(100);
+    }
   }
 
   // *

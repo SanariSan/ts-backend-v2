@@ -1,4 +1,5 @@
-import { DashboardInstancesController, DashboardLogsController } from '../../controllers';
+import { DashboardInstancesController } from '../../controllers';
+import { DashboardLogsControllerShim } from '../../shims';
 import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
 
 class WidgetMain {
@@ -130,12 +131,9 @@ class WidgetMain {
 
   private updateMenuBoxContent() {
     // cut "all" source, not necessary!
-    const options = Object.keys(DashboardLogsController.getLogsBySources()).filter(
-      (el) => el !== 'all',
-    );
+    const options = DashboardLogsControllerShim.getSources().filter((el) => el !== 'all');
 
     if (options.length === 0) {
-      this.menuBox.setItems(['No options available']);
       return;
     }
 
@@ -147,29 +145,28 @@ class WidgetMain {
   }
 
   private updateLogsBoxContent() {
-    const logsByChannels = DashboardLogsController.getLogsBySources() as {
-      [key: string]: string[];
-    };
-
     // cut "all" source, not necessary!
-    const logsByChannelsFiltered = {
-      ...logsByChannels,
-      all: undefined,
-    };
+    const options = DashboardLogsControllerShim.getSources().filter((el) => el !== 'all');
 
-    const options = Object.keys(logsByChannelsFiltered);
-    const selectedMenuOption = options[this.menuBox.selected];
-    const logs = logsByChannelsFiltered[selectedMenuOption];
-
-    if (logs !== undefined) {
-      this.logBox.setItems(logs);
-
-      if (this.autoScrollLogs) {
-        this.logBox.setScrollPerc(100);
-      }
+    if (options.length === 0) {
+      return;
     }
 
-    this.logBox.setLabel(`  ${selectedMenuOption} Logs  `);
+    const selectedOptionName = options[this.menuBox.selected];
+    this.logBox.setLabel(`  ${selectedOptionName} Logs  `);
+
+    const logs = DashboardLogsControllerShim.getLogs(selectedOptionName);
+
+    if (logs.length === 0) {
+      this.logBox.setItems(['No logs yet']);
+      return;
+    }
+
+    this.logBox.setItems(logs);
+
+    if (this.autoScrollLogs) {
+      this.logBox.setScrollPerc(100);
+    }
   }
 
   // *
