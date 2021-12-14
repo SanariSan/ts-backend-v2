@@ -1,6 +1,5 @@
 import type { IPublishEntityCore } from '../../../events/pubsub';
 import { SubCore } from '../../../events/pubsub';
-import { LogsStorage } from '../../storage';
 import type { ITargetLogger } from './generic.consumer.type';
 
 class GenericLogsReceiver {
@@ -9,33 +8,17 @@ class GenericLogsReceiver {
 
   public static subscribeChannel({
     targetLogsController,
-    channelName,
-    optionNameCustom,
-    preInitializeStorage,
+    channel: customChannelName,
   }: {
     readonly targetLogsController: ITargetLogger;
-    readonly channelName: string;
-    readonly optionNameCustom?: string;
-    readonly preInitializeStorage?: boolean;
+    readonly channel: string;
   }) {
-    const prefixedChannelName = `${targetLogsController.channelControllerPrefix}-${channelName}`;
-    const prefixedSourceName = `${targetLogsController.channelControllerPrefix}-${
-      optionNameCustom ?? prefixedChannelName
-    }`;
-
-    // initializing source as soon as user subscribed channel
-    // might be useful if need to have options assigned, even if empty (example - dashboard menu options)
-    if (preInitializeStorage ?? false) {
-      LogsStorage.checkInitializeSource(prefixedSourceName);
-    }
-
-    this.sub.subscribe(channelName);
+    this.sub.subscribe(customChannelName);
     this.sub.on('message', ({ channel, logLevel, message }: IPublishEntityCore) => {
-      const prefixedChannelNameLocal = `${targetLogsController.channelControllerPrefix}-${channel}`;
-      if (prefixedChannelNameLocal === prefixedChannelName) {
+      if (channel === customChannelName) {
         // process message with channel/option name from closure and message
         void targetLogsController.processMessage({
-          source: prefixedSourceName,
+          source: customChannelName,
           logLevel,
           message,
         });
