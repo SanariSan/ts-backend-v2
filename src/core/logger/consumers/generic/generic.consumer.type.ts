@@ -5,11 +5,10 @@ type TOption = string;
 interface ILogEntity {
   readonly source: TOption;
   readonly logLevel: ELOG_LEVEL;
-  readonly message: unknown;
+  readonly message: unknown | Error;
 }
 
 interface ITargetLogger {
-  readonly channelControllerPrefix: string;
   readonly processMessage: (messageEntity: ILogEntity) => Promise<void>;
 }
 

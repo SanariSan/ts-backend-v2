@@ -1,1 +1,1 @@
-export * from './logs.representer';
+export * from './dashboard.representer';

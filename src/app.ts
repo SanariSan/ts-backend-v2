@@ -1,6 +1,6 @@
 import { publishCustom } from './access-layer/events/pubsub';
 import { ELOG_LEVEL } from './general.type';
-import { setupDashboard, setupErrorHandle } from './setup';
+import { setupCli, setupDashboard, setupErrorHandle } from './setup';
 import { lunchTestLogging } from './test-logging';
 
 function main() {
@@ -21,6 +21,7 @@ function main() {
 /* eslint-disable @typescript-eslint/require-await */
 async function init() {
   setupErrorHandle();
+  // setupCli();
   setupDashboard();
   main();
 

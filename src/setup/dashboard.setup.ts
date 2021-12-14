@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
 import { dashboardShow, dashboardWidgetGet } from '../access-layer/dashboard';
-import { dashboardSubscribeChannel } from '../access-layer/logger/dashboard';
+import { dashboardStart, dashboardSubscribeChannel } from '../access-layer/logger/dashboard';
 
 function setupDashboard() {
   const MainWidget = dashboardWidgetGet('main');
@@ -12,9 +12,11 @@ function setupDashboard() {
   EventEmitter.defaultMaxListeners = 150;
 
   // subscribe to all channels needed (can add later, these are basic)
-  dashboardSubscribeChannel('log', 'Logs-Main');
-  dashboardSubscribeChannel('error-expected', 'Err-Expected');
-  dashboardSubscribeChannel('error-unexpected', 'Err-Unexpected');
+  dashboardSubscribeChannel('log');
+  dashboardSubscribeChannel('error-expected');
+  dashboardSubscribeChannel('error-unexpected');
+
+  dashboardStart();
 
   // show preferred dashboard by passing instance
   dashboardShow(mainInstance);

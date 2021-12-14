@@ -18,6 +18,23 @@ class GenericError extends Error {
     this.ERROR_TIMESTAMP_HR = new Date();
     this.ERROR_TIMESTAMP = this.ERROR_TIMESTAMP_HR.getTime();
   }
+
+  public static getFormatted(error: Readonly<Error>, oneLine = false): string {
+    const parsed = {
+      message: error.message,
+      stack:
+        error.stack !== undefined ? (oneLine ? error.stack.split('\n').join('') : error.stack) : '',
+      miscellaneous: JSON.stringify(error, undefined, oneLine ? 0 : 2),
+    };
+
+    let formatted = '';
+
+    Object.entries(parsed).forEach(([key, val]) => {
+      formatted += `${key}: ${val}${oneLine ? '<*>' : '\n'}`;
+    });
+
+    return formatted;
+  }
 }
 
 export { GenericError };

@@ -1,4 +1,4 @@
-type TLog = string | number;
+type TLog<T = unknown> = string | number | T;
 
 type THashLogMap = Map<string, TLog>;
 
