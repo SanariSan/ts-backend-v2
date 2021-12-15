@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
 import { dashboardShow, dashboardWidgetGet } from '../access-layer/dashboard';
-import { dashboardStart, dashboardSubscribeChannel } from '../access-layer/logger/dashboard';
+import { dashboardStartPolling, dashboardSubscribeChannel } from '../access-layer/logger/dashboard';
 
 function setupDashboard() {
   const MainWidget = dashboardWidgetGet('main');
@@ -16,7 +16,7 @@ function setupDashboard() {
   dashboardSubscribeChannel('error-expected');
   dashboardSubscribeChannel('error-unexpected');
 
-  dashboardStart();
+  dashboardStartPolling();
 
   // show preferred dashboard by passing instance
   dashboardShow(mainInstance);

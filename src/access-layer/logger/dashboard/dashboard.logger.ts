@@ -1,5 +1,6 @@
 import { DashboardLogsController } from '../../../core/logger/controllers';
 import { GenericLogsReceiver } from '../../../core/logger/consumers';
+import { DashboardLogsRepresenter } from '../../../core/logger/representers';
 
 function dashboardSubscribeChannel(channel: string) {
   GenericLogsReceiver.subscribeChannel({
@@ -8,8 +9,8 @@ function dashboardSubscribeChannel(channel: string) {
   });
 }
 
-function dashboardStart() {
-  // void DashboardLogsRepresenter.tick();
+function dashboardStartPolling() {
+  void DashboardLogsRepresenter.tick();
 }
 
-export { dashboardSubscribeChannel, dashboardStart };
+export { dashboardSubscribeChannel, dashboardStartPolling };

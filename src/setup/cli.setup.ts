@@ -1,5 +1,5 @@
 import { EventEmitter } from 'node:events';
-import { cliStart, cliSubscribeChannel } from '../access-layer/logger/cli';
+import { cliStartPolling, cliSubscribeChannel } from '../access-layer/logger/cli';
 
 function setupCli() {
   // tweak listeners amount
@@ -10,7 +10,7 @@ function setupCli() {
   cliSubscribeChannel('error-expected');
   cliSubscribeChannel('error-unexpected');
 
-  cliStart();
+  cliStartPolling();
 }
 
 export { setupCli };

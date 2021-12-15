@@ -1,12 +1,12 @@
 import type { TWidgetInstance } from '../../../../core/dashboard/controllers';
-import { DashboardInstancesController } from '../../../../core/dashboard/controllers';
+import { WidgetsInstancesController } from '../../../../core/dashboard/controllers';
 
 function dashboardShow(widgetInstance: TWidgetInstance) {
-  DashboardInstancesController.show(widgetInstance);
+  WidgetsInstancesController.show(widgetInstance);
 }
 
 function dashboardHide(widgetInstance: TWidgetInstance) {
-  DashboardInstancesController.hide(widgetInstance);
+  WidgetsInstancesController.hide(widgetInstance);
 }
 
 export { dashboardShow, dashboardHide };

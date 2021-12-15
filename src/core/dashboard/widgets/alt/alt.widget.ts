@@ -1,5 +1,5 @@
-import { DashboardInstancesController } from '../../controllers';
-import { DashboardLogsControllerShim } from '../../shims';
+import type { TObjectG } from '../../../../general.type';
+import { WidgetsInstancesController } from '../../controllers';
 import { makeControlsInfoBox, makeLogBox, makeWrapBox } from './box';
 
 // TODO: review if (!smth) return; checks and replace with errors where needed
@@ -22,7 +22,7 @@ class WidgetAlt {
     this.widgetTitle = 'Dashboard-Alt';
 
     // save this instance ; init screen if not done yet
-    DashboardInstancesController.init(this);
+    WidgetsInstancesController.init(this);
 
     this.initializeBoxes();
     this.configureBoxesCbs();
@@ -78,10 +78,10 @@ class WidgetAlt {
     this.wrapBox.detach();
   }
 
-  public updateContent() {
+  public updateContent(logsObj: Readonly<TObjectG<string[]>>) {
     if (!this.allBoxesAssigned()) return;
 
-    this.updateLogsBoxContent();
+    this.updateLogsBoxContent(logsObj);
   }
 
   private setBoxesListeners() {
@@ -94,8 +94,8 @@ class WidgetAlt {
     this.logBox.off('key s', this.logBoxCb);
   }
 
-  private updateLogsBoxContent() {
-    const logs = DashboardLogsControllerShim.getLogs('all');
+  private updateLogsBoxContent(logsObj: Readonly<TObjectG<string[]>>) {
+    const logs = logsObj.all;
 
     this.logBox.setLabel(`  All Logs  `);
 

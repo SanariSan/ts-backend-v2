@@ -7,7 +7,6 @@ import { ELOG_LEVEL } from '../general.type';
 function setupErrorHandle() {
   // this can be placed here if not using dashboard or logger
   // just catching all errors here and console.logging them
-
   // const sub = new Sub();
   // sub.subscribe('error-expected');
   // sub.subscribe('error-unexpected');
@@ -26,7 +25,6 @@ function setupErrorHandle() {
   //     });
   //   }
   // });
-
   process.on('uncaughtException', (e: Readonly<Error>) => {
     publishErrorUnexpected(ELOG_LEVEL.ERROR, e);
   });
