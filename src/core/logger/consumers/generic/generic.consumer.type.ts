@@ -8,8 +8,9 @@ interface ILogEntity {
   readonly message: unknown | Error;
 }
 
-interface ITargetLogger {
+interface ITargetLogsController {
+  readonly sourcePrefix: string;
   readonly processMessage: (messageEntity: ILogEntity) => Promise<void>;
 }
 
-export type { ILogEntity, TOption, ITargetLogger };
+export type { ILogEntity, TOption, ITargetLogsController };

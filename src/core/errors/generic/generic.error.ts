@@ -1,7 +1,7 @@
 import type { ERROR_ORIGIN, ERROR_TYPE } from '../error.type';
 
 class GenericError extends Error {
-  public name = 'GenericError';
+  public name;
 
   public ERROR_DESCRIPTION: string;
 
@@ -18,7 +18,7 @@ class GenericError extends Error {
 
     // Use when transpiling to es5 to preserve Error class name
     // Object.setPrototypeOf(this, new.target.prototype);
-
+    this.name = 'GenericError';
     this.ERROR_DESCRIPTION = `General error level\n${ERROR_DESCRIPTION}`;
     this.ERROR_TIMESTAMP_HR = new Date();
     this.ERROR_TIMESTAMP = this.ERROR_TIMESTAMP_HR.getTime();

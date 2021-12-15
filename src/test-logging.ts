@@ -12,7 +12,7 @@ function lunchTestLogging() {
       '123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789',
     );
   }
-  void test();
+  // void test();
 
   async function pubLogs() {
     await sleep(1000);
@@ -22,10 +22,10 @@ function lunchTestLogging() {
   // void pubLogs();
 
   async function generateError() {
-    await sleep(10_000);
+    await sleep(5000);
     void generateError();
     publishError(ELOG_LEVEL.WARN, new NoDataError('Some error handled'));
-    throw new Error('Some unexpected error thrown by itself');
+    // throw new Error('Some unexpected error thrown by itself');
   }
   void generateError();
 }
