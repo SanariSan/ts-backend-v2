@@ -1,13 +1,12 @@
 import { mapFindIdx, mapSlice, sleep } from '../../../../helpers/util';
 import { LogsStorage } from '../../storage';
 
-// TODO: move dashboard refresh HERE, pass messages from HERE
 class CliLogsRepresenter {
   private static readonly sourcePrefix = 'cli';
 
   private static readonly lastAccessedLogId: Map<string, string> = new Map();
 
-  private static readonly refreshRate = 1000;
+  private static readonly refreshRate = 1000 / 30; // fps
 
   private static getSources() {
     const sources = Object.keys(LogsStorage.getStorage());
@@ -30,7 +29,7 @@ class CliLogsRepresenter {
     return newLogs;
   }
 
-  private static present(logsArr: Readonly<unknown[]>) {
+  private static present(logsArr: Readonly<string[]>) {
     logsArr.forEach((log) => {
       console.log(log);
     });
@@ -38,7 +37,7 @@ class CliLogsRepresenter {
 
   public static async tick() {
     const sources = this.getSources();
-    const newLogsArrs: unknown[][] = sources.map((source) => this.getNewLogs(source));
+    const newLogsArrs: string[][] = sources.map((source) => this.getNewLogs(source));
 
     if (newLogsArrs.length > 0) {
       newLogsArrs.forEach((logsArr) => {

@@ -10,12 +10,15 @@ class ResponseError extends InternalError {
 }
 
 class NoDataError extends ResponseError {
+  public name: string;
+
   public ERROR_MESAGE: string;
 
   constructor(ERROR_MESAGE, ERROR_DESCRIPTION = '') {
     ERROR_DESCRIPTION = `No (body) in response\n${ERROR_DESCRIPTION}`;
 
     super(ERROR.INTERNAL.RESPONSE.NO_DATA.VALUE, ERROR_DESCRIPTION);
+    this.name = this.constructor.name;
     this.ERROR_MESAGE = ERROR_MESAGE;
   }
 }

@@ -1,5 +1,5 @@
-import { DashboardInstancesController } from '../../controllers';
-import { DashboardLogsControllerShim } from '../../shims';
+import type { TObjectG } from '../../../../general.type';
+import { WidgetsInstancesController } from '../../controllers';
 import { makeControlsInfoBox, makeLogBox, makeMenuBox, makeWrapBox } from './box';
 
 class WidgetMain {
@@ -29,7 +29,7 @@ class WidgetMain {
     this.widgetTitle = 'Dashboard-Main';
 
     // save this instance ; init screen if not done yet
-    DashboardInstancesController.init(this);
+    WidgetsInstancesController.init(this);
 
     this.initializeBoxes();
     this.configureBoxesCbs();
@@ -110,11 +110,11 @@ class WidgetMain {
     this.wrapBox.detach();
   }
 
-  public updateContent() {
+  public updateContent(logsObj: Readonly<TObjectG<string[]>>) {
     if (!this.allBoxesAssigned()) return;
 
-    this.updateMenuBoxContent();
-    this.updateLogsBoxContent();
+    this.updateMenuBoxContent(logsObj);
+    this.updateLogsBoxContent(logsObj);
   }
 
   private setBoxesListeners() {
@@ -129,9 +129,10 @@ class WidgetMain {
     this.logBox.off('key s', this.logBoxCb);
   }
 
-  private updateMenuBoxContent() {
+  private updateMenuBoxContent(logsObj: Readonly<TObjectG<string[]>>) {
     // cut "all" source, not necessary!
-    const options = DashboardLogsControllerShim.getSources().filter((el) => el !== 'all');
+    const sources = Object.keys(logsObj);
+    const options = sources.filter((el) => el !== 'all');
 
     if (options.length === 0) {
       return;
@@ -144,9 +145,10 @@ class WidgetMain {
     }
   }
 
-  private updateLogsBoxContent() {
+  private updateLogsBoxContent(logsObj: Readonly<TObjectG<string[]>>) {
     // cut "all" source, not necessary!
-    const options = DashboardLogsControllerShim.getSources().filter((el) => el !== 'all');
+    const sources = Object.keys(logsObj);
+    const options = sources.filter((el) => el !== 'all');
 
     if (options.length === 0) {
       return;
@@ -155,7 +157,7 @@ class WidgetMain {
     const selectedOptionName = options[this.menuBox.selected];
     this.logBox.setLabel(`  ${selectedOptionName} Logs  `);
 
-    const logs = DashboardLogsControllerShim.getLogs(selectedOptionName);
+    const logs = logsObj[selectedOptionName];
 
     if (logs.length === 0) {
       this.logBox.setItems(['No logs yet']);

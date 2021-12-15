@@ -1,6 +1,6 @@
-import type { IWidgetAlt, IWidgetMain } from '../../widgets';
+import type { WidgetAlt, WidgetMain } from '../../widgets';
 
-type TWidgetInstance = IWidgetMain | IWidgetAlt; // | etc
+type TWidgetInstance = WidgetMain | WidgetAlt; // | etc
 type TWidgetNames = 'main' | 'alt'; // | etc
 
 export type { TWidgetInstance, TWidgetNames };

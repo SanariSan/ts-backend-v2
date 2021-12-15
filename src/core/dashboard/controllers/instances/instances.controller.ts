@@ -1,67 +1,40 @@
 import blessed from 'blessed';
-import { sleep } from '../../../../helpers/util';
+import type { TObjectG } from '../../../../general.type';
 import type { TWidgetInstance } from './instances.controllers.type';
 
-class DashboardInstancesController {
+class WidgetsInstancesController {
   private static screen: any = undefined;
 
-  private static readonly dashboardInstances = new Array<TWidgetInstance>();
+  private static readonly widgetsInstances = new Array<TWidgetInstance>();
 
-  private static currDashboardIdx = 0;
-
-  private static readonly refreshRate: number = 1000 / 10; // 1000/fps
+  private static currWidgetIdx = 0;
 
   private static screenSwapCb: any;
 
   private static screenExitCb: any;
 
-  public static init(dashboardInstance: TWidgetInstance) {
-    // save dashboard instance
-    this.dashboardInstances.push(dashboardInstance);
-
-    if (this.screen === undefined) {
-      this.screen = blessed.screen({
-        smartCSR: true,
-        fullUnicode: true,
-      });
-      this.configureScreenCbs();
-      this.setScreenListeners();
-      void this.refreshScreen();
-    }
-  }
-
-  public static show(dashboardInstance: TWidgetInstance) {
-    this.updateCurrentDashboardIdx(dashboardInstance);
-    dashboardInstance.appear(this.screen);
-  }
-
-  public static hide(dashboardInstance: TWidgetInstance) {
-    this.updateCurrentDashboardIdx(dashboardInstance);
-    dashboardInstance.disappear();
-  }
-
-  private static updateCurrentDashboardIdx(dashboardInstance: TWidgetInstance) {
-    const currDashboardIdx = this.dashboardInstances.indexOf(dashboardInstance);
-    this.currDashboardIdx = currDashboardIdx !== -1 ? currDashboardIdx : 0;
+  private static updateCurrentDashboardIdx(widgetInstance: TWidgetInstance) {
+    const currWidgetIdx = this.widgetsInstances.indexOf(widgetInstance);
+    this.currWidgetIdx = currWidgetIdx !== -1 ? currWidgetIdx : 0;
   }
 
   private static configureScreenCbs() {
     // shift+lef/right for dashboads swap
     this.screenSwapCb = (ch, key) => {
-      this.hide(this.dashboardInstances[this.currDashboardIdx]);
+      this.hide(this.widgetsInstances[this.currWidgetIdx]);
 
       // carousel idx change
       if (key.full === 'S-left') {
-        this.currDashboardIdx -= 1;
-        this.currDashboardIdx =
-          this.currDashboardIdx < 0 ? this.dashboardInstances.length - 1 : this.currDashboardIdx;
+        this.currWidgetIdx -= 1;
+        this.currWidgetIdx =
+          this.currWidgetIdx < 0 ? this.widgetsInstances.length - 1 : this.currWidgetIdx;
       } else if (key.full === 'S-right') {
-        this.currDashboardIdx += 1;
-        this.currDashboardIdx =
-          this.currDashboardIdx >= this.dashboardInstances.length ? 0 : this.currDashboardIdx;
+        this.currWidgetIdx += 1;
+        this.currWidgetIdx =
+          this.currWidgetIdx >= this.widgetsInstances.length ? 0 : this.currWidgetIdx;
       }
 
-      this.show(this.dashboardInstances[this.currDashboardIdx]);
+      this.show(this.widgetsInstances[this.currWidgetIdx]);
     };
 
     // ctrl+c / escape = destroy screens + exit
@@ -76,13 +49,34 @@ class DashboardInstancesController {
     this.screen.key(['escape', 'C-c', 'q'], this.screenExitCb);
   }
 
-  private static async refreshScreen() {
-    this.dashboardInstances[this.currDashboardIdx].updateContent();
-    this.screen.render();
+  public static init(widgetInstance: TWidgetInstance) {
+    // save dashboard instance
+    this.widgetsInstances.push(widgetInstance);
 
-    await sleep(this.refreshRate);
-    void this.refreshScreen();
+    if (this.screen === undefined) {
+      this.screen = blessed.screen({
+        smartCSR: true,
+        fullUnicode: true,
+      });
+      this.configureScreenCbs();
+      this.setScreenListeners();
+    }
+  }
+
+  public static show(widgetInstance: TWidgetInstance) {
+    this.updateCurrentDashboardIdx(widgetInstance);
+    widgetInstance.appear(this.screen);
+  }
+
+  public static hide(widgetInstance: TWidgetInstance) {
+    this.updateCurrentDashboardIdx(widgetInstance);
+    widgetInstance.disappear();
+  }
+
+  public static updateContent(logsObj: Readonly<TObjectG<string[]>>) {
+    this.widgetsInstances[this.currWidgetIdx].updateContent(logsObj);
+    this.screen.render();
   }
 }
 
-export { DashboardInstancesController };
+export { WidgetsInstancesController };

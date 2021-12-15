@@ -9,8 +9,8 @@ function cliSubscribeChannel(channel: string) {
   });
 }
 
-function cliStart() {
+function cliStartPolling() {
   void CliLogsRepresenter.tick();
 }
 
-export { cliSubscribeChannel, cliStart };
+export { cliSubscribeChannel, cliStartPolling };

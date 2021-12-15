@@ -4,6 +4,7 @@ import type { ILogEntity } from '../../consumers/generic';
 import { LogsStorage } from '../../storage';
 
 // TODO: provide routines for changing max lines number for source in LogStorage
+// TODO: format string in printf format, use util.format
 class DashboardLogsController {
   private static readonly sourcePrefix = 'dashboard';
 
