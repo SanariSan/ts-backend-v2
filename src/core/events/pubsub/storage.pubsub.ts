@@ -1,5 +1,5 @@
 import type { EventEmitter } from 'node:stream';
-import { NoClassInstanceError } from '../../errors/generic';
+import { NoInstanceError } from '../../error';
 
 class PubSubStorage {
   // { Emitter instance: Set of channels names client subscribed to }
@@ -12,8 +12,8 @@ class PubSubStorage {
   public static getChannels(emitterInstance: EventEmitter): Set<string> | never {
     const set: Set<string> | undefined = this.instancesToChannelsMap.get(emitterInstance);
 
-    if (set === undefined)
-      throw new NoClassInstanceError('Could not find emitter instance in list');
+    // could not happen normally, because .setChannels() happens in SubCore constructor, so can't pass non existing emitterInstance
+    if (set === undefined) throw new NoInstanceError('Could not find emitter instance in list');
 
     return set;
   }

@@ -49,6 +49,10 @@ class WidgetsInstancesController {
     this.screen.key(['escape', 'C-c', 'q'], this.screenExitCb);
   }
 
+  private static render() {
+    this.screen.render();
+  }
+
   public static init(widgetInstance: TWidgetInstance) {
     // save dashboard instance
     this.widgetsInstances.push(widgetInstance);
@@ -61,21 +65,24 @@ class WidgetsInstancesController {
       this.configureScreenCbs();
       this.setScreenListeners();
     }
+    this.render();
   }
 
   public static show(widgetInstance: TWidgetInstance) {
     this.updateCurrentDashboardIdx(widgetInstance);
     widgetInstance.appear(this.screen);
+    this.render();
   }
 
   public static hide(widgetInstance: TWidgetInstance) {
     this.updateCurrentDashboardIdx(widgetInstance);
     widgetInstance.disappear();
+    this.render();
   }
 
   public static updateContent(logsObj: Readonly<TObjectG<string[]>>) {
     this.widgetsInstances[this.currWidgetIdx].updateContent(logsObj);
-    this.screen.render();
+    this.render();
   }
 }
 

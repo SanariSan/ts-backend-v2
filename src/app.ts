@@ -21,8 +21,8 @@ function main() {
 /* eslint-disable @typescript-eslint/require-await */
 async function init() {
   setupErrorHandle();
-  // setupCli();
-  setupDashboard();
+  setupCli();
+  // setupDashboard();
   main();
 
   // await examplePromptCLI();
