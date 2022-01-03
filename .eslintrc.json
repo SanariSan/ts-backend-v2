@@ -1,5 +1,6 @@
 {
   // could explicitly define parser here, but leaving default eslint parser (*)
+  // then override it with needed in "overrides" section
   // "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
@@ -26,7 +27,7 @@
   },
 
   // plugins (eslint-plugin- <name>) - doing something on side (convert/compute) ;
-  // exposing sets of rules to apply (in extends) ; exposing individual rules to apply/change (in rules) if have some
+  // exposing sets of rules to apply in "extends" ; exposing individual rules to apply/change in "rules" if have some
   "plugins": [
     // a lot of useful typescript specific rules https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin
     "@typescript-eslint",
@@ -40,7 +41,7 @@
     "prettier"
   ],
 
-  // extends (eslint-config- <name>) - sets of rules from plugins above
+  // extends (eslint-config- <name>) - sets of rules from plugins above ; from eslint-config- <name> directly
   "extends": [
     "airbnb-base",
     "eslint:recommended",
@@ -55,7 +56,7 @@
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     // promise recommended rules https://github.com/xjamundx/eslint-plugin-promise#rules
     "plugin:promise/recommended",
-    // TODO: investigate, another set of useful rules?
+    // another set of useful rules
     "plugin:unicorn/recommended",
     // disabling all the rules that might conflict with prettier https://github.com/prettier/eslint-config-prettier#installation
     "prettier"
@@ -66,6 +67,8 @@
   "rules": {
     // ==========================================
     // rules:unicorn
+
+    // + plugin:unicorn/recommended
 
     // Airbnb prefers functional iteration over arrays, with forEach https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v38.0.0/docs/rules/no-array-for-each.md | https://github.com/airbnb/javascript#iterators--nope
     "unicorn/no-array-for-each": "off",
@@ -108,9 +111,6 @@
     // Common abbreviations are known and readable
     "unicorn/prevent-abbreviations": "off",
 
-    // just leave it here for now
-    // "unicorn/no-useless-undefined": "off",
-
     // ==========================================
     // rules:prettier
 
@@ -119,6 +119,8 @@
 
     // ==========================================
     // rules:eslint
+
+    // + eslint:recommended
 
     // Don’t use iterators. Prefer JavaScript’s higher-order functions instead of loops like for-in or for-of https://github.com/airbnb/javascript#iterators--nope
     // Just warn, because it's more clear to write for-of at first, then refactor into functional solution like forEach, map, etc.
@@ -166,11 +168,7 @@
     // ==========================================
     // rules:import
 
-    // Ensures an imported module can be resolved to a module on the local filesystem https://github.com/import-js/eslint-plugin-import/blob/v2.25.2/docs/rules/no-unresolved.md
-    // Ignoring node:* because these are core node modules, false positive
-    "import/no-unresolved": ["error", { "ignore": ["node:*"] }],
-
-    // import/recommended below (commented are applied)
+    // + import/recommended (recommended are listed below, since NOT listed on gh page)
     // "import/named": "error",
     // "import/namespace": "error",
     // "import/default": "error",
@@ -179,8 +177,12 @@
     // "import/no-named-as-default-member": "warn",
     // "import/no-duplicates": "warn",
 
-    // import/typescript below (commented are applied)
+    // + plugin:import/typescript (recommended are partially listed below)
     // "import/named": 'off',
+
+    // Ensures an imported module can be resolved to a module on the local filesystem https://github.com/import-js/eslint-plugin-import/blob/v2.25.2/docs/rules/no-unresolved.md
+    // Ignoring node:* because these are core node modules, false positive
+    "import/no-unresolved": ["error", { "ignore": ["node:*"] }],
 
     // Forbid a module from importing a module with a dependency path back to itself https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-cycle.md
     "import/no-cycle": ["warn", { "maxDepth": "∞" }],
@@ -194,11 +196,13 @@
     // ==========================================
     // rules:promise
 
-    // all recommended are good
-    // others not worth enabling
+    // + plugin:promise/recommended
 
     // ==========================================
     // rules:@typescript-eslint minor
+
+    // + plugin:@typescript-eslint/recommended
+    // + plugin:@typescript-eslint/recommended-requiring-type-checking
 
     // Disallow the use of variables before they are defined (extends eslint no-use-before-define) https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/no-use-before-define.md
     "@typescript-eslint/no-use-before-define": [
@@ -359,21 +363,6 @@
         "modifiers": ["const"]
       },
 
-      // for variables, properties and parameters, that are boolean, add one of prefixes and make PascalCase
-      // {
-      //   "selector": [
-      //     "variable",
-      //     "parameter",
-      //     "classProperty",
-      //     "objectLiteralProperty",
-      //     "typeProperty",
-      //     "parameterProperty"
-      //   ],
-      //   "format": ["PascalCase"],
-      //   "types": ["boolean"],
-      //   "prefix": ["is", "should", "has", "can", "did", "will"]
-      // },
-
       // for properties and variables that requires quotes - ignore style (http headers and similar)
       {
         "selector": [
@@ -531,11 +520,11 @@
     "@typescript-eslint/strict-boolean-expressions": [
       "error",
       {
-        // str != ''
+        // str !== ''
         "allowString": false,
-        // num != 0 && !Number.isNaN(num)
+        // num !== 0
         "allowNumber": false,
-        // var ?? false
+        // object ?? false
         "allowNullableObject": true,
         "allowNullableBoolean": false,
         "allowNullableString": false,

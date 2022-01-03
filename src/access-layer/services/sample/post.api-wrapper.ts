@@ -1,5 +1,5 @@
 import type { AxiosError } from 'axios';
-import { BadStatusError } from '../../../core/errors/generic';
+import { BadStatusError } from '../../../core/error';
 import { Request } from '../../../core/services';
 import { parseResponse } from '../../../helpers/services';
 

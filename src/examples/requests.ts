@@ -1,6 +1,6 @@
 import { publishError } from '../access-layer/events/pubsub';
 import { sendJson, sendMultipart, sendQs } from '../access-layer/services/sample';
-import type { GenericError } from '../core/errors/generic';
+import type { GenericError } from '../core/error';
 import { ELOG_LEVEL } from '../general.type';
 
 async function exampleRequests() {

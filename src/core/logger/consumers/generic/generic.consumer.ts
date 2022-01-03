@@ -1,6 +1,5 @@
 import type { IPublishEntityCore } from '../../../events/pubsub';
 import { SubCore } from '../../../events/pubsub';
-import { LogsStorage } from '../../storage';
 import type { ITargetLogsController } from './generic.consumer.type';
 
 class GenericLogsReceiver {
@@ -14,7 +13,7 @@ class GenericLogsReceiver {
     readonly targetLogsController: ITargetLogsController;
     readonly channel: string;
   }) {
-    LogsStorage.checkInitializeSource(`${targetLogsController.sourcePrefix}-${customChannelName}`);
+    // LogsStorage.checkInitializeSource(`${targetLogsController.sourcePrefix}-${customChannelName}`);
 
     this.sub.subscribe(customChannelName);
     this.sub.on('message', ({ channel, logLevel, message }: IPublishEntityCore) => {

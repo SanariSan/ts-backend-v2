@@ -1,5 +1,5 @@
 import { ELOG_LEVEL } from '../../../../general.type';
-import { GenericError } from '../../../errors/generic';
+import { GenericError } from '../../../error';
 import type { ILogEntity } from '../../consumers/generic';
 import { LogsStorage } from '../../storage';
 
@@ -31,7 +31,6 @@ class DashboardLogsController {
 
     // push log lines to hash-log map
     const { source } = messageEntity;
-
     await LogsStorage.updateLogs(`${this.sourcePrefix}-${source}`, logsArr);
     await LogsStorage.updateLogs(`${this.sourcePrefix}-all`, logsArr);
   }

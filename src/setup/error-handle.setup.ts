@@ -1,7 +1,4 @@
-import { appendFile } from 'node:fs/promises';
-import { publishErrorUnexpected, Sub } from '../access-layer/events/pubsub';
-import type { GenericError } from '../core/errors/generic';
-import { handleErrorExpected, handleErrorUnexpected } from '../core/errors/handle';
+import { publishErrorUnexpected } from '../access-layer/events/pubsub';
 import { ELOG_LEVEL } from '../general.type';
 
 function setupErrorHandle() {
