@@ -1,9 +1,9 @@
-import type { NextFunction, Request, Response } from 'express';
-import { ApiError, InternalError, Logger, NotFoundError } from '../core';
+import type { Express, NextFunction, Request, Response } from 'express';
+import { publishError, publishErrorUnexpected } from '../../access-layer/events/pubsub';
+import { ExpressError, handleExpress } from '../../core/api/express/error';
+import { ELOG_LEVEL } from '../../general.type';
 
-function errorHandler(app) {
-  // for now returning homepage instead, add 404 later
-  // app.use((req: Request, res: Response, next: NextFunction) => next(new NotFoundError()));
+function setupErrorHandleExpress(app: Express) {
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     // for rare cases when something broke while streaming data to client
     // fallback to default express handler
@@ -12,13 +12,15 @@ function errorHandler(app) {
       return;
     }
 
-    if (err instanceof ApiError) {
-      ApiError.handle(err, res);
-    } else {
-      Logger.warn(err);
-      ApiError.handle(new InternalError(), res);
+    if (err instanceof ExpressError) {
+      publishError(ELOG_LEVEL.WARN, err);
+      handleExpress(err, res);
+      return;
     }
+
+    publishErrorUnexpected(ELOG_LEVEL.ERROR, err);
+    next(err);
   });
 }
 
-export { errorHandler };
+export { setupErrorHandleExpress };

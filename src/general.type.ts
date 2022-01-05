@@ -16,21 +16,21 @@ enum ELOG_LEVEL {
 }
 
 /* eslint-disable @typescript-eslint/naming-convention */
-interface IEnvGeneral {
+interface IEnvGeneral extends NodeJS.ProcessEnv {
   NODE_ENV: 'production' | 'development';
   BASE_URL: string;
   API_VERSION: TApiVersion;
 }
-interface IEnvProd {
+interface IEnvProd extends IEnvGeneral {
   NODE_ENV: 'production';
   CORS_URL_PROD: string;
   BUILD_PATH: string;
 }
-interface IEnvDev {
+interface IEnvDev extends IEnvGeneral {
   NODE_ENV: 'development';
   CORS_URL_DEV: string;
 }
-type TEnv = NodeJS.ProcessEnv & IEnvGeneral & (IEnvProd | IEnvDev);
+type TEnv = IEnvProd | IEnvDev;
 /* eslint-enable @typescript-eslint/naming-convention */
 
 export type {

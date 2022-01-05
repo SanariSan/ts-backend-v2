@@ -1,4 +1,4 @@
-import { PubCore } from '../../../core/events/pubsub';
+import { PubCore } from '../../../core/pubsub';
 import type { ELOG_LEVEL } from '../../../general.type';
 
 function publishCustom<T>(channel: string, logLevel: ELOG_LEVEL, message: T) {

@@ -6,7 +6,7 @@ import type { TEnv } from '../../general.type';
 
 const env = process.env as TEnv;
 
-function settings(app: Express) {
+function setupSettingsExpress(app: Express) {
   const corsUrl = env.NODE_ENV === 'production' ? `${env.CORS_URL_PROD}` : `${env.CORS_URL_DEV}`;
 
   app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
@@ -18,4 +18,4 @@ function settings(app: Express) {
   }
 }
 
-export { settings };
+export { setupSettingsExpress };

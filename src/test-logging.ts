@@ -1,5 +1,5 @@
 import { publishError, publishLog } from './access-layer/events/pubsub';
-import { NoDataError } from './core/error';
+import { NoDataError } from './core/services/error';
 import { ELOG_LEVEL } from './general.type';
 import { duplicateNTimes, randomHexSync, rndIntInRange, sleep } from './helpers/util';
 

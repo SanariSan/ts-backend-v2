@@ -1,5 +1,7 @@
 import { publishError, publishErrorUnexpected } from '../access-layer/events/pubsub';
-import { CliError, IError, NoDataError } from '../core/error';
+import { CliPromptError } from '../core/cli-prompt';
+import type { IError } from '../core/error';
+import { NoDataError } from '../core/services/error';
 import { ELOG_LEVEL } from '../general.type';
 import { setupErrorHandle } from '../setup';
 
@@ -13,7 +15,7 @@ async function exampleError() {
 
   console.log('\nError #2\n');
   await new Promise(() => {
-    throw new CliError('Some more info');
+    throw new CliPromptError('Some more info');
   }).catch((error: unknown) => {
     publishErrorUnexpected(ELOG_LEVEL.WARN, error as Error);
   });

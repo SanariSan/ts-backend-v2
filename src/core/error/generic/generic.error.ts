@@ -18,7 +18,7 @@ class GenericError extends Error {
     // Object.setPrototypeOf(this, new.target.prototype);
   }
 
-  public static getFormatted(error: Readonly<Error>, oneLine = false): string {
+  public static getFormatted(error: Readonly<Error | GenericError>, oneLine = false): string {
     const parsed = {
       message: error.message,
       stack:
