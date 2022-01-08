@@ -1,2 +1,3 @@
-export * from './joi';
-export * from './generic';
+export * from './schemes';
+export * from './handle';
+export * from './authenticate';

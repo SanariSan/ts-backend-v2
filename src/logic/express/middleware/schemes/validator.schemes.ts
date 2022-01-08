@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from 'express';
 import type Joi from 'joi';
-import { validateBySchemaAsync } from '../../../../core/joi'; // TODO: core import
-import { EVALIDATION_TARGET } from './joi.type';
+import { validateBySchemaAsync } from '../../../../access-layer/schemes';
+import { EVALIDATION_TARGET } from './schemes.type';
 
-export function validateBySchemaMW(
+export function validateBySchemaAsyncMW(
   schema: Joi.ObjectSchema,
   target: EVALIDATION_TARGET = EVALIDATION_TARGET.BODY,
 ) {
