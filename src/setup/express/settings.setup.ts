@@ -12,6 +12,8 @@ function setupSettingsExpress(app: Express) {
   app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
   app.use(express.json({ limit: '100mb' }));
   app.use(express.urlencoded({ limit: '100mb', extended: true, parameterLimit: 10 }));
+  app.set('env', process.env.NODE_ENV);
+  app.set('x-powered-by', false);
 
   if (env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(env.BUILD_PATH)));

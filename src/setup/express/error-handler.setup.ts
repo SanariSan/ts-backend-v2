@@ -1,7 +1,7 @@
 import type { Express, NextFunction, Request, Response } from 'express';
 import { publishError, publishErrorUnexpected } from '../../access-layer/events/pubsub';
-import { ExpressError, handleExpress } from '../../core/api/express/error';
 import { ELOG_LEVEL } from '../../general.type';
+import { ExpressError, handleExpress } from '../../logic/express/error';
 
 function setupErrorHandleExpress(app: Express) {
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

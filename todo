@@ -1,2 +1,0 @@
-access = schemas-joi-validate
-logic = express, schemas-joi-(validate/targets), jwt

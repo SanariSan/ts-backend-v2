@@ -1,21 +1,22 @@
 import type { Request } from 'express';
 import type { TObjectUnknown } from '../../general.type';
+import type {
+  TRequestValidatedTokenAccess,
+  TRequestValidatedTokenRefresh,
+  TRequestValidatedCredentials,
+  TRequestValidatedCredentialsChange,
+} from './schemes';
 
-type TRequestDB = Request & {
-  db: TObjectUnknown;
-};
-
-type TRequestAuthorized = TRequestDB & {
-  headers: {
-    authorization: string;
-  };
+type TRequestTokenPayload = Request & {
   accessTokenPayload: TObjectUnknown;
 };
 
-type TRequestAuthenticated = TRequestAuthorized & {
-  accessLevel: number;
-};
+type TRequest =
+  | Request
+  | TRequestValidatedTokenAccess
+  | TRequestValidatedTokenRefresh
+  | TRequestValidatedCredentials
+  | TRequestValidatedCredentialsChange
+  | TRequestTokenPayload;
 
-type TRequest = Request | TRequestDB | TRequestAuthorized | TRequestAuthenticated;
-
-export type { TRequestDB, TRequestAuthorized, TRequestAuthenticated, TRequest };
+export type { TRequestTokenPayload, TRequest };
