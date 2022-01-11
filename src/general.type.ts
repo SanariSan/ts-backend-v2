@@ -1,5 +1,3 @@
-import type { TApiVersion } from './core/api/express/routers';
-
 type TObjectG<T> = { [key: string]: T };
 type TObjectString = TObjectG<string>;
 type TObjectNumber = TObjectG<number>;
@@ -15,31 +13,5 @@ enum ELOG_LEVEL {
   SILLY,
 }
 
-/* eslint-disable @typescript-eslint/naming-convention */
-interface IEnvGeneral extends NodeJS.ProcessEnv {
-  NODE_ENV: 'production' | 'development';
-  BASE_URL: string;
-  API_VERSION: TApiVersion;
-}
-interface IEnvProd extends IEnvGeneral {
-  NODE_ENV: 'production';
-  CORS_URL_PROD: string;
-  BUILD_PATH: string;
-}
-interface IEnvDev extends IEnvGeneral {
-  NODE_ENV: 'development';
-  CORS_URL_DEV: string;
-}
-type TEnv = IEnvProd | IEnvDev;
-/* eslint-enable @typescript-eslint/naming-convention */
-
-export type {
-  TObjectG,
-  TObjectString,
-  TObjectNumber,
-  TObjectBoolean,
-  TObjectUnknown,
-  TObjectAny,
-  TEnv,
-};
+export type { TObjectG, TObjectString, TObjectNumber, TObjectBoolean, TObjectUnknown, TObjectAny };
 export { ELOG_LEVEL };
