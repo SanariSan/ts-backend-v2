@@ -11,13 +11,13 @@ class JWTDecode {
 
   private readonly token: string;
 
-  constructor(token: string) {
-    this.secret = process.env.JWT_SECRET;
+  constructor(token: string, secret: string) {
+    this.secret = secret;
     this.token = token;
   }
 
-  public async verify() {
-    await verifyAsync(this.token, this.secret, {
+  public verify() {
+    return verifyAsync(this.token, this.secret, {
       algorithms: ['HS256'],
     }).catch((error: Readonly<VerifyErrors>) => {
       throw new JWTError(error.message, { ...error });

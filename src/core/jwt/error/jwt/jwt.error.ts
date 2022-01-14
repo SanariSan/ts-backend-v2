@@ -6,9 +6,9 @@ class JWTError extends GenericError {
 
   public description: string;
 
-  public miscellaneous: TObjectUnknown;
+  public miscellaneous?: TObjectUnknown;
 
-  constructor(message: string, miscellaneous: TObjectUnknown) {
+  constructor(message: string, miscellaneous?: TObjectUnknown) {
     super(message);
 
     this.name = 'JWTError';

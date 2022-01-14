@@ -11,13 +11,13 @@ class JWTEncode {
 
   private readonly secret: string;
 
-  constructor(payload: TPayload) {
-    this.secret = process.env.JWT_SECRET;
+  constructor(payload: TPayload, secret: string) {
+    this.secret = secret;
     this.payload = payload;
   }
 
-  public async sign() {
-    await signAsync({ ...this.payload }, this.secret, {
+  public sign() {
+    return signAsync({ ...this.payload }, this.secret, {
       algorithm: 'HS256',
     }).catch((error: Readonly<VerifyErrors>) => {
       throw new JWTError(error.message, { ...error });

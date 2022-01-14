@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "bcryptjs": "^2.4.3",
     "blessed": "^0.1.81",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -63,6 +64,7 @@
     "socks-proxy-agent": "^6.1.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/inquirer": "^8.1.1",

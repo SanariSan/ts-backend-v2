@@ -25,6 +25,8 @@ async function init() {
   // setupDashboard();
   main();
 
+  // TODO: call .env values guard
+
   // await examplePromptCLI();
   // await exampleRequests();
   // exampleErrors();
