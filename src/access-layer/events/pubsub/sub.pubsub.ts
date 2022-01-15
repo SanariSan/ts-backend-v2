@@ -1,5 +1,5 @@
+import { SubCore } from '../../../core/pubsub';
 import type { IPublishEntity } from './pubsub.type';
-import { SubCore } from '../../../core/events/pubsub';
 
 class Sub {
   private readonly sub: SubCore;

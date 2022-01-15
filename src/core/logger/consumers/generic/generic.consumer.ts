@@ -1,5 +1,5 @@
-import type { IPublishEntityCore } from '../../../events/pubsub';
-import { SubCore } from '../../../events/pubsub';
+import type { IPublishEntityCore } from '../../../pubsub';
+import { SubCore } from '../../../pubsub';
 import type { ITargetLogsController } from './generic.consumer.type';
 
 class GenericLogsReceiver {

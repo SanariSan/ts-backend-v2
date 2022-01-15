@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios';
-import { BadStatusError } from '../../../core/error';
 import { Request } from '../../../core/services';
+import { BadStatusError } from '../../../core/services/error';
 import { parseResponse } from '../../../helpers/services';
 
 async function sendJson() {

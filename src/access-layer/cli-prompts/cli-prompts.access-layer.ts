@@ -1,5 +1,5 @@
 import { prompt } from 'inquirer';
-import { CliPromptError } from '../../core/error';
+import { CliPromptError } from '../../core/cli-prompt';
 import { isValidString, randomHex } from '../../helpers/util';
 import type { TPrompt } from './cli-prompts.access-layer.type';
 

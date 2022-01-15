@@ -507,8 +507,9 @@
     ],
 
     // Requires that function parameters are typed as readonly to prevent accidental mutation of inputs https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/prefer-readonly-parameter-types.md
+    // Off for Express mutation style compatibility
     "@typescript-eslint/prefer-readonly-parameter-types": [
-      "warn",
+      "off",
       {
         "checkParameterProperties": true,
         "ignoreInferredTypes": true,
