@@ -2,8 +2,8 @@ import Joi from 'joi';
 
 export const SCHEME_AUTHENTICATION = {
   credentials: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(6),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
   }),
   credentialsChange: Joi.object().keys({
     oldPassword: Joi.string().min(6).required(),
@@ -21,7 +21,7 @@ export const SCHEME_AUTHENTICATION = {
     .unknown(true),
   tokenRefresh: Joi.object()
     .keys({
-      refreshToken: Joi.string().required().min(1),
+      refreshToken: Joi.string().min(1).required(),
     })
     .unknown(true),
 };

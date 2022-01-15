@@ -1,32 +1,33 @@
-import { compare, hash } from 'bcryptjs';
-import type { NextFunction, Response, Request } from 'express';
+import { hash } from 'bcryptjs';
+import type { NextFunction, Response } from 'express';
+import { jwtEncode } from '../../../../access-layer/jwt';
+import type { TRequestValidatedCredentials } from '../../schemes';
 
-export const accessRegisterCTR = async (req: Request, res: Response, next: NextFunction) => {
-  // get user record if exists, throw err cuz of register
-  //   await req.userRepository.findByEmail(req.body.email);
-  //   const userRecord = req.userRepository.getRecord();
-  //   if (userRecord) throw new BadRequestError('User already registered');
+export const accessRegisterCTR = async (
+  req: TRequestValidatedCredentials,
+  res: Response,
+  next: NextFunction,
+) => {
+  // TODO:
+  // get user record from db by email
+  // if exists - throw Error
 
-  // create new user obj
-  // const newUser = {
-  //   email: req.body.email,
-  //   password: await hash(req.body.password, 12),
-  // };
-  const hashedPassword = await hash(req.body.password, 12);
-  const compareResult = await compare(req.body.password, hashedPassword);
+  const { email, password } = req.body;
+  const hashedPassword = await hash(password, 12);
+  const accessToken = await jwtEncode({});
+  const refreshToken = await jwtEncode({});
 
-  //   await req.userRepository.createUser(newUser).saveRecord();
+  res.json({
+    email,
+    password,
+    hashedPassword,
+    accessToken,
+    refreshToken,
+  });
 
-  // create new keystore pair, assign to the user
-  //   const tokens = await setNewTokenPair(req.userRepository, req.keystoreRepository);
-
+  // TODO:
   //   return new SuccessResponse('Signup Successful', {
-  //     user: req.userRepository.getRecord([
-  //       EUSER_KEYS.ID,
-  //       EUSER_KEYS.NAME,
-  //       EUSER_KEYS.EMAIL,
-  //       EUSER_KEYS.PROFILE_PIC_URL,
-  //     ]),
-  //     tokens,
+  //     user: userData,
+  //     tokens: { accessToken, refreshToken },
   //   }).send(res);
 };

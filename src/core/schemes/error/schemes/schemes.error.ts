@@ -1,7 +1,7 @@
 import type { TObjectUnknown } from '../../../../general.type';
 import { GenericError } from '../../../error';
 
-class CliPromptError extends GenericError {
+class SchemesError extends GenericError {
   public name: string;
 
   public description: string;
@@ -11,10 +11,10 @@ class CliPromptError extends GenericError {
   constructor(message: string, miscellaneous?: TObjectUnknown) {
     super(message);
 
-    this.name = 'CliPromptError';
-    this.description = 'Cli prompt module error';
+    this.name = 'SchemesError';
+    this.description = `Schemes generic error`;
     this.miscellaneous = miscellaneous;
   }
 }
 
-export { CliPromptError };
+export { SchemesError };

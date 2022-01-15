@@ -21,7 +21,7 @@ async function jwtDecode(token: string) {
     throw new JWTError('Malformed token');
   }
 
-  return JSON.parse(payload.prm) as TObjectUnknown;
+  return payload;
 }
 
 export { jwtDecode, jwtEncode };

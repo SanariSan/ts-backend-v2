@@ -10,6 +10,7 @@ declare global {
       API_VERSION: TApiVersion;
       JWT_SECRET: string;
       JWT_EXP: string;
+      PORT: string;
       // production
       CORS_URL_PROD: string;
       BUILD_PATH: string;

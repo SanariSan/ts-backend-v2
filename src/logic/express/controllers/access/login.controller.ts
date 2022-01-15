@@ -1,30 +1,34 @@
-import bcrypt from "bcrypt";
-import { NextFunction, Response } from "express";
-import { BadRequestError, SuccessResponse } from "../../core";
-import { EUSER_KEYS, EUSER_RELATIONS } from "../../database/connection";
-import { setNewTokenPair } from "../../helpers";
-import { PreparedRequest } from "../../types-global";
+import { compare } from 'bcryptjs';
+import type { NextFunction, Response } from 'express';
+import { jwtEncode } from '../../../../access-layer/jwt';
+import type { TRequestValidatedCredentials } from '../../schemes';
 
-export const AccessLogin = async (req: PreparedRequest, res: Response, next: NextFunction) => {
-	//get user's record if exists
-	await req.userRepository.findByEmail(req.body.email, [EUSER_RELATIONS.KEYSTORE]);
-	const userRecord = req.userRepository.getRecord();
-	if (!userRecord) throw new BadRequestError("User not registered");
+export const accessLoginCTR = async (
+  req: TRequestValidatedCredentials,
+  res: Response,
+  next: NextFunction,
+) => {
+  // TODO:
+  // get user record from db by email
+  // if not found - throw Error
+  //
+  // compare pass with the hash from user record
 
-	//compare pass
-	const matchPass: boolean = await bcrypt.compare(req.body.password, userRecord.password);
-	if (!matchPass) throw new BadRequestError("Wrong password");
+  const hashedPassword = '$2a$12$AZgCs5ZD8bzsP08LeJSOxuOawfVPvd/jDZ8L5JjeKJnXEbqjr.5wm'; // ABCabc123
+  const compareResult = await compare(req.body.password, hashedPassword);
 
-	//create new keystore, save it and assign relation to user's record
-	const tokens = await setNewTokenPair(req.userRepository, req.keystoreRepository);
+  if (!compareResult) {
+    res.status(400).send('Wrong password');
+    return;
+  }
 
-	return new SuccessResponse("Login Success", {
-		user: req.userRepository.getRecord([
-			EUSER_KEYS.ID,
-			EUSER_KEYS.NAME,
-			EUSER_KEYS.EMAIL,
-			EUSER_KEYS.PROFILE_PIC_URL,
-		]),
-		tokens: tokens,
-	}).send(res);
+  // create new tokens, save to db, send to user, along with his data
+  const accessToken = await jwtEncode({});
+  const refreshToken = await jwtEncode({});
+
+  res.json({ accessToken, refreshToken });
+  // return new SuccessResponse("Login Success", {
+  // 	user: userData,
+  // 	tokens: tokens,
+  // }).send(res);
 };

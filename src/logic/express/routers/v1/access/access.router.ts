@@ -1,4 +1,9 @@
+import type { Request } from 'express';
 import { Router } from 'express';
+import { accessRegisterCTR } from '../../../controllers';
+import { asyncHandleMW, EVALIDATION_TARGET, validateBySchemaAsyncMW } from '../../../middleware';
+import type { TRequestValidatedCredentials } from '../../../schemes';
+import { SCHEME_AUTHENTICATION } from '../../../schemes';
 import { changePasswordR } from './change-password';
 import { loginR } from './login';
 import { logoutR } from './logout';

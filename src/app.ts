@@ -1,6 +1,12 @@
 import { publishCustom } from './access-layer/events/pubsub';
 import { ELOG_LEVEL } from './general.type';
-import { setupCli, setupDashboard, setupErrorHandle } from './setup';
+import {
+  setupCli,
+  setupDashboard,
+  setupErrorHandle,
+  setupExpress,
+  setupValidateEnv,
+} from './setup';
 import { lunchTestLogging } from './test-logging';
 
 function main() {
@@ -11,18 +17,18 @@ function main() {
   //   console.log(`Channel: ${channel} | Message: ${String(message)}`);
   // });
   // sub.subscribe('log');
-
   // publish to custom channel for everyone
-  publishCustom('custom-channel', ELOG_LEVEL.INFO, 'message');
-
-  lunchTestLogging();
+  // publishCustom('custom-channel', ELOG_LEVEL.INFO, 'message');
+  // lunchTestLogging();
 }
 
 /* eslint-disable @typescript-eslint/require-await */
 async function init() {
+  setupValidateEnv();
   setupErrorHandle();
   setupCli();
   // setupDashboard();
+  setupExpress();
   main();
 
   // TODO: call .env values guard

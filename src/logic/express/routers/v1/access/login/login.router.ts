@@ -1,6 +1,8 @@
 import type { Request } from 'express';
 import { Router } from 'express';
+import { accessLoginCTR } from '../../../../controllers';
 import { asyncHandleMW, EVALIDATION_TARGET, validateBySchemaAsyncMW } from '../../../../middleware';
+import type { TRequestValidatedCredentials } from '../../../../schemes';
 import { SCHEME_AUTHENTICATION } from '../../../../schemes';
 
 const loginR = Router();
@@ -11,7 +13,7 @@ loginR.post(
     validateBySchemaAsyncMW(SCHEME_AUTHENTICATION.credentials, EVALIDATION_TARGET.BODY),
   ),
   // asyncHandleMW(stickReposMW),
-  // asyncHandleMW<TRequestValidatedCredentials>(accessLoginMW),
+  asyncHandleMW<TRequestValidatedCredentials>(accessLoginCTR),
 );
 
 export { loginR };

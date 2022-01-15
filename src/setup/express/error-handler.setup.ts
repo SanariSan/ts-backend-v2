@@ -15,6 +15,7 @@ function setupErrorHandleExpress(app: Express) {
     if (err instanceof ExpressError) {
       publishError(ELOG_LEVEL.WARN, err);
       handleExpress(err, res);
+      res.status(400).json({ error: err.message });
       return;
     }
 

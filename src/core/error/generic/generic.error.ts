@@ -1,3 +1,5 @@
+import type { TObjectUnknown } from '../../../general.type';
+
 class GenericError extends Error {
   public description: string;
 
@@ -5,11 +7,14 @@ class GenericError extends Error {
 
   public errorTimestampHr: Date;
 
-  constructor(message: string) {
+  public miscellaneous?: TObjectUnknown;
+
+  constructor(message: string, miscellaneous?: TObjectUnknown) {
     super(message);
 
     this.name = 'GenericError';
     this.description = 'Generic error';
+    this.miscellaneous = miscellaneous;
 
     this.errorTimestampHr = new Date();
     this.errorTimestamp = this.errorTimestampHr.getTime();

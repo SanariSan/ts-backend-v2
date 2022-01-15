@@ -1,6 +1,8 @@
 import type { NextFunction, Response } from 'express';
 import type Joi from 'joi';
+import type { ValidationError } from 'joi';
 import { validateBySchemaAsync } from '../../../../access-layer/schemes';
+import { ExpressError } from '../../error';
 import type { TRequest } from '../../express.type';
 import { EVALIDATION_TARGET } from './schemes.type';
 
@@ -9,12 +11,15 @@ export function validateBySchemaAsyncMW(
   target: EVALIDATION_TARGET = EVALIDATION_TARGET.BODY,
 ) {
   return async (req: TRequest, res: Response, next: NextFunction) =>
-    validateBySchemaAsync(schema, target)
+    validateBySchemaAsync(schema, req[target])
       .then(() => {
         next();
         return;
       })
-      .catch((error) => {
+      .catch((error: ValidationError) => {
+        console.log(error);
+        console.dir(error, { depth: 10, color: true });
+        next(new ExpressError(error.message));
         // TODO: error parse + publish
         //
         // ErrorReport

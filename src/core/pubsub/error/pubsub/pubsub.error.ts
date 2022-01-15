@@ -1,3 +1,4 @@
+import type { TObjectUnknown } from '../../../../general.type';
 import { GenericError } from '../../../error';
 
 class PubSubError extends GenericError {
@@ -5,11 +6,14 @@ class PubSubError extends GenericError {
 
   public description: string;
 
-  constructor(message: string) {
+  public miscellaneous?: TObjectUnknown;
+
+  constructor(message: string, miscellaneous?: TObjectUnknown) {
     super(message);
 
     this.name = 'PubSubError';
     this.description = 'PubSub related error';
+    this.miscellaneous = miscellaneous;
   }
 }
 

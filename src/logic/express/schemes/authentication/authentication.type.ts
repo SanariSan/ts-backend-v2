@@ -11,7 +11,7 @@ type TRequestValidatedTokenRefresh = Request & {
 type TRequestValidatedCredentials = Request & {
   body: {
     email: string;
-    newPassword: string;
+    password: string;
   };
 };
 type TRequestValidatedCredentialsChange = Request & {

@@ -8,7 +8,7 @@ import type {
 } from './schemes';
 
 type TRequestTokenPayload = Request & {
-  accessTokenPayload: TObjectUnknown;
+  accessTokenPayloadPrm: TObjectUnknown;
 };
 
 type TRequest =
