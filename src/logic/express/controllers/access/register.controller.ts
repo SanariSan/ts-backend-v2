@@ -1,7 +1,7 @@
 import { hash } from 'bcryptjs';
 import type { NextFunction, Response } from 'express';
 import { jwtEncode } from '../../../../access-layer/jwt';
-import type { TRequestValidatedCredentials } from '../../schemes';
+import type { TRequestValidatedCredentials } from '../../express.type';
 
 export const accessRegisterCTR = async (
   req: TRequestValidatedCredentials,
