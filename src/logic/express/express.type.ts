@@ -1,22 +1,52 @@
 import type { Request } from 'express';
 import type { TObjectUnknown } from '../../general.type';
-import type {
-  TRequestValidatedTokenAccess,
-  TRequestValidatedTokenRefresh,
-  TRequestValidatedCredentials,
-  TRequestValidatedCredentialsChange,
-} from './schemes';
 
-type TRequestTokenPayload = Request & {
+type TRequestNarrowed = Omit<Request, 'body'> & {
+  body?: TObjectUnknown | string;
+};
+
+type TRequestValidatedTokenAccess = TRequestNarrowed & {
+  headers: {
+    authorization: string;
+  };
+};
+type TRequestValidatedTokenRefresh = TRequestNarrowed & {
+  body: {
+    refreshToken: string;
+  };
+};
+
+type TRequestValidatedCredentials = TRequestNarrowed & {
+  body: {
+    email: string;
+    password: string;
+  };
+};
+type TRequestValidatedCredentialsChange = TRequestNarrowed & {
+  body: {
+    oldPassword: string;
+    newPassword: string;
+  };
+};
+
+type TRequestTokenPayload = TRequestNarrowed & {
   accessTokenPayloadPrm: TObjectUnknown;
 };
 
 type TRequest =
-  | Request
+  | TRequestNarrowed
   | TRequestValidatedTokenAccess
   | TRequestValidatedTokenRefresh
   | TRequestValidatedCredentials
   | TRequestValidatedCredentialsChange
   | TRequestTokenPayload;
 
-export type { TRequestTokenPayload, TRequest };
+export type {
+  TRequestNarrowed,
+  TRequestTokenPayload,
+  TRequestValidatedTokenAccess,
+  TRequestValidatedTokenRefresh,
+  TRequestValidatedCredentials,
+  TRequestValidatedCredentialsChange,
+  TRequest,
+};

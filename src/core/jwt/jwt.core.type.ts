@@ -9,6 +9,12 @@ type TPayload = {
   sub?: string;
 };
 
+type TPayloadBaseChecked = {
+  iat: number;
+  exp: number;
+  prm: string;
+} & TPayload;
+
 type TSign = (
   payload: string | Buffer | object,
   secretOrPrivateKey: Secret,
@@ -21,4 +27,4 @@ type TVerify = (
   options: VerifyOptions,
 ) => Promise<TPayload>;
 
-export type { TSign, TVerify, TPayload };
+export type { TSign, TVerify, TPayload, TPayloadBaseChecked };

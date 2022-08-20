@@ -1,3 +1,4 @@
+import type { TPayloadBaseChecked } from '../../core/jwt';
 import { JWTDecode, JWTEncode, JWTError, JWTPayloadBuilder } from '../../core/jwt';
 import type { TObjectUnknown } from '../../general.type';
 
@@ -16,12 +17,12 @@ function jwtEncode(customPayload: TObjectUnknown) {
 async function jwtDecode(token: string) {
   const payload = await new JWTDecode(token, process.env.JWT_SECRET).verify();
 
-  // check fields of verified token
+  // check fields of verified token, count these three as base ones
   if (payload.iat === undefined || payload.exp === undefined || payload.prm === undefined) {
-    throw new JWTError('Malformed token');
+    throw new JWTError('Malformed token, fields missing', payload);
   }
 
-  return payload;
+  return payload as TPayloadBaseChecked;
 }
 
 export { jwtDecode, jwtEncode };

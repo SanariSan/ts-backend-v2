@@ -1,9 +1,9 @@
 import type { ELOG_LEVEL } from '../../../general.type';
 
-interface IPublishEntity<T = unknown> {
+interface IPublishEntity {
   readonly channel: string;
   readonly logLevel: ELOG_LEVEL;
-  readonly message: T;
+  readonly message: unknown;
 }
 
 export type { IPublishEntity };
