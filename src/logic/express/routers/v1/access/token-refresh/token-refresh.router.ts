@@ -1,9 +1,4 @@
 import { Router } from 'express';
-import type {
-  TRequestNarrowed,
-  TRequestValidatedTokenAccess,
-  TRequestValidatedTokenRefresh,
-} from '../../../../express.type';
 import {
   asyncHandleMW,
   authentificateMW,
@@ -16,13 +11,13 @@ const tokenRefreshR = Router();
 
 tokenRefreshR.put(
   '/token-refresh',
-  asyncHandleMW<TRequestNarrowed>(
+  asyncHandleMW(
     validateBySchemaAsyncMW(SCHEME_AUTHENTICATION.tokenAccess, EVALIDATION_TARGET.HEADER),
   ),
-  asyncHandleMW<TRequestValidatedTokenAccess>(
+  asyncHandleMW(
     validateBySchemaAsyncMW(SCHEME_AUTHENTICATION.tokenRefresh, EVALIDATION_TARGET.BODY),
   ),
-  asyncHandleMW<TRequestValidatedTokenAccess & TRequestValidatedTokenRefresh>(authentificateMW),
+  asyncHandleMW(authentificateMW),
   // asyncHandleMW(StickRepos),
   // asyncHandleMW<
   //   TRequestValidatedTokenAccess & TRequestValidatedTokenRefresh & TRequestTokenPayload

@@ -1,9 +1,4 @@
 import { Router } from 'express';
-import type {
-  TRequestNarrowed,
-  TRequestValidatedCredentialsChange,
-  TRequestValidatedTokenAccess,
-} from '../../../../express.type';
 import {
   asyncHandleMW,
   authentificateMW,
@@ -16,15 +11,13 @@ const changePasswordR = Router();
 
 changePasswordR.post(
   '/change-password',
-  asyncHandleMW<TRequestNarrowed>(
+  asyncHandleMW(
     validateBySchemaAsyncMW(SCHEME_AUTHENTICATION.tokenAccess, EVALIDATION_TARGET.HEADER),
   ),
-  asyncHandleMW<TRequestValidatedTokenAccess>(
+  asyncHandleMW(
     validateBySchemaAsyncMW(SCHEME_AUTHENTICATION.credentialsChange, EVALIDATION_TARGET.BODY),
   ),
-  asyncHandleMW<TRequestValidatedTokenAccess & TRequestValidatedCredentialsChange>(
-    authentificateMW,
-  ),
+  asyncHandleMW(authentificateMW),
   // asyncHandleMW(StickRepos),
   // asyncHandleMW<
   //   TRequestValidatedTokenAccess & TRequestValidatedCredentialsChange & TRequestTokenPayload

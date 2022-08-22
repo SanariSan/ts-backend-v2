@@ -5,17 +5,16 @@ import {
   EVALIDATION_TARGET,
   validateBySchemaAsyncMW,
 } from '../../../../middleware';
-import type { TRequestNarrowed, TRequestValidatedTokenAccess } from '../../../../express.type';
 import { SCHEME_AUTHENTICATION } from '../../../../schemes';
 
 const logoutR = Router();
 
 logoutR.delete(
   '/logout',
-  asyncHandleMW<TRequestNarrowed>(
+  asyncHandleMW(
     validateBySchemaAsyncMW(SCHEME_AUTHENTICATION.tokenAccess, EVALIDATION_TARGET.HEADER),
   ),
-  asyncHandleMW<TRequestValidatedTokenAccess>(authentificateMW),
+  asyncHandleMW(authentificateMW),
   // asyncHandleMW(StickRepos),
   // asyncHandleMW<
   //   TRequestValidatedTokenAccess & TRequestTokenPayload
