@@ -1,6 +1,7 @@
 import type { NextFunction, Response } from 'express';
 
-type TAsyncMWFunction<T> = (req: T, res: Response, next: NextFunction) => Promise<void>;
-type TSyncMWFunction<T> = (req: T, res: Response, next: NextFunction) => void;
+// too complicated to make strong type checking here, maybe some day...
+type TAsyncMWFN = (req: any, res: Response, next: NextFunction) => Promise<void>;
+type TSyncMWFN = (req: any, res: Response, next: NextFunction) => void;
 
-export type { TAsyncMWFunction, TSyncMWFunction };
+export type { TAsyncMWFN, TSyncMWFN };

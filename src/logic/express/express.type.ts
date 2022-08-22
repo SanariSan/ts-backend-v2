@@ -29,6 +29,7 @@ type TRequestValidatedCredentialsChange = TRequestNarrowed & {
   };
 };
 
+// TODO: change TObjectUnknown to typed object, when token prm format is stable
 type TRequestTokenPayload = TRequestNarrowed & {
   accessTokenPayloadPrm: TObjectUnknown;
 };

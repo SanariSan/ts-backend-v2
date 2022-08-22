@@ -13,6 +13,7 @@ export async function authentificateMW(
   const token = req.headers.authorization.split(' ')[1];
   const accessTokenPayload = await jwtDecode(token);
 
+  // TODO: change TObjectUnknown to typed object, when token prm format is stable
   reqMutable.accessTokenPayloadPrm = JSON.parse(accessTokenPayload.prm) as TObjectUnknown;
 
   next();
