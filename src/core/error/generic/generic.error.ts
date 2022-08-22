@@ -24,10 +24,15 @@ class GenericError extends Error {
   }
 
   public static getFormatted(error: Readonly<Error | GenericError>, oneLine = false): string {
+    // console.dir(error.stack);
     const parsed = {
       message: error.message,
       stack:
-        error.stack !== undefined ? (oneLine ? error.stack.split('\n').join('') : error.stack) : '',
+        error.stack !== undefined
+          ? oneLine
+            ? error.stack.split('\n').join('')
+            : error.stack.slice(error.stack.indexOf('\n'))
+          : '',
       miscellaneous: JSON.stringify(error, undefined, oneLine ? 0 : 2),
     };
 

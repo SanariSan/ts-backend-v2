@@ -1,4 +1,4 @@
-import { publishCustom } from './access-layer/events/pubsub';
+import { publishCustom, Sub } from './access-layer/events/pubsub';
 import { ELOG_LEVEL } from './general.type';
 import {
   setupCli,
@@ -7,7 +7,7 @@ import {
   setupExpress,
   setupValidateEnv,
 } from './setup';
-import { lunchTestLogging } from './test-logging';
+import { lunchTestLogging } from './examples/test-logging';
 
 function main() {
   // bare logs, later will move to core/logger/cli + cli logger access-layer/logger/cli
@@ -19,7 +19,7 @@ function main() {
   // sub.subscribe('log');
   // publish to custom channel for everyone
   // publishCustom('custom-channel', ELOG_LEVEL.INFO, 'message');
-  // lunchTestLogging();
+  lunchTestLogging();
 }
 
 /* eslint-disable @typescript-eslint/require-await */
@@ -28,7 +28,7 @@ async function init() {
   setupErrorHandle();
   setupCli();
   // setupDashboard();
-  setupExpress();
+  // setupExpress();
   main();
 
   // TODO: call .env values guard

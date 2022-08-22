@@ -17,8 +17,8 @@ export function validateBySchemaAsyncMW(
         return;
       })
       .catch((error: ValidationError) => {
-        console.log(error);
-        console.dir(error, { depth: 10, color: true });
+        // closer look on error
+        // console.dir(error, { depth: 10, color: true });
         next(new ExpressError(error.message));
         // TODO: error parse + publish
         //
