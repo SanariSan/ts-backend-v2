@@ -1,28 +1,72 @@
-import axios from 'axios';
+import type { AxiosInstance } from 'axios';
+import axios_ from 'axios';
+import { SocksProxyAgent } from 'socks-proxy-agent';
 import type { IGenericRequest } from '.';
 import { DEFAULT_HEADERS, LIB_SPECIFIC_OPTIONS } from './request-base.service.const';
 import { RequestBuilder } from './request-builder.service';
 
-// import { default as axios_ } from "axios";
-// import { SocksProxyAgent } from "socks-proxy-agent";
-// const httpsAgent = new SocksProxyAgent("socks://127.0.0.1:1080");
-// const httpAgent = httpsAgent;
-// const axios = axios_.create({ httpsAgent, httpAgent });
+const socksAxiosInstanceWrap = (socks: string) => {
+  let socksWrap = socks;
+  let httpsAgent = new SocksProxyAgent(socks);
+  let httpAgent = httpsAgent;
+  let axiosSocks = axios_.create({ httpsAgent, httpAgent });
 
-const requestGeneric = ({ method, host, path, data, headers, proxy, ...args }: IGenericRequest) => {
+  return (socksCurr: string) => {
+    if (socksWrap !== socksCurr) {
+      socksWrap = socksCurr;
+      httpsAgent = new SocksProxyAgent(socksWrap);
+      httpAgent = httpsAgent;
+      axiosSocks = axios_.create({ httpsAgent, httpAgent });
+    }
+
+    return axiosSocks;
+  };
+};
+
+// TODO: move default socks address to ENV
+const socksAxiosInstance = socksAxiosInstanceWrap('socks://127.0.0.1:1080');
+
+const requestGeneric = ({
+  method,
+  host,
+  path,
+  data,
+  headers,
+  proxy,
+  proxyType,
+  ...args
+}: IGenericRequest) => {
   const options = new RequestBuilder()
     .setUrl({ url: `${host}${path}` })
     .setMethod({ method })
     .setHeaders({ headers: { ...DEFAULT_HEADERS, ...headers } })
     .setBody({ data })
-    .setProxy({ proxy, ...args })
     .setLibSpecificOptions({
       ...LIB_SPECIFIC_OPTIONS,
       ...args,
-    })
-    .getRequest();
+    });
 
-  return axios(options);
+  let axios: AxiosInstance = axios_;
+
+  switch (proxyType) {
+    case 'http': {
+      if (proxy !== undefined && typeof proxy === 'object') {
+        options.setProxy({ proxy, ...args });
+      }
+      break;
+    }
+    case 'socks': {
+      if (proxy !== undefined && typeof proxy === 'string') {
+        axios = socksAxiosInstance(proxy);
+      }
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+
+  return axios(options.getRequest());
 };
 
 const Request = {

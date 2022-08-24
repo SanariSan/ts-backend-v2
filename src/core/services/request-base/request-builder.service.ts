@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import type { AxiosProxyConfig } from 'axios';
 import type { IGenericRequest, IRequest, TRequestMethod } from '.';
 
 class RequestBuilder {
@@ -23,17 +23,13 @@ class RequestBuilder {
     return this;
   }
 
-  setBody({ data }: { data?: any }) {
+  setBody({ data }: { data?: unknown }) {
     this.request.data = data;
     return this;
   }
 
-  setProxy({ proxy, ...args }: any) {
-    if (args.httpProxy) {
-      this.request.proxy = proxy;
-    } else if (args.socksProxy) {
-      // TODO: socks proxy
-    }
+  setProxy({ proxy }: { proxy: AxiosProxyConfig }) {
+    this.request.proxy = proxy;
     return this;
   }
 
