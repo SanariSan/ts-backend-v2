@@ -3,9 +3,9 @@ version: '3.7'
 services:
   script:
     build: .
+    stop_signal: SIGINT
+    stop_grace_period: 60s
     image: sanarisan/ts-backend-v2:1
     restart: always
-    command: >
-      sh -c "yarn wipe-cli &&
-          yarn launch-prod"
-
+    ports:
+      - '3000:3000'

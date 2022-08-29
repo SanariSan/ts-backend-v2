@@ -142,6 +142,10 @@
     // off because in recommended for @typescript-eslint as  @typescript-eslint/require-await
     "require-await": ["off"],
 
+    // Disallow await inside of loops https://eslint.org/docs/latest/rules/no-await-in-loop
+    // off because it is usually useful
+    "no-await-in-loop": ["off"],
+
     // Disallow use of Object.prototypes builtins directly https://eslint.org/docs/rules/no-prototype-builtins
     // Too restrictive, writing ugly code to defend against a very unlikely scenario
     "no-prototype-builtins": "off",
@@ -379,6 +383,12 @@
         "modifiers": ["requiresQuotes"]
       },
 
+      // for object properties - ignore style (http headers and similar may not require quotes)
+      {
+        "selector": ["objectLiteralProperty", "objectLiteralMethod"],
+        "format": null
+      },
+
       // for interfaces add I before name
       {
         "selector": "interface",
@@ -477,10 +487,10 @@
     ],
 
     // Disallow the use of custom TypeScript modules and namespaces https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-namespace.md
-    // todo: rewrite errors core type file, then change to "error"
-    "@typescript-eslint/no-namespace": "warn",
+    "@typescript-eslint/no-namespace": "error",
 
     // Disallow the use of parameter properties in class constructors https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-parameter-properties.md
+    // When upgrade @typescript-eslint change "parameter-properties" since deprecated https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/parameter-properties.md
     "@typescript-eslint/no-parameter-properties": ["error"],
 
     // Prevents conditionals where the type is always truthy or always falsy https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unnecessary-condition.md
@@ -495,7 +505,7 @@
     // enabled by default, but might be useful to off later
     "@typescript-eslint/no-unnecessary-type-assertion": ["warn"],
 
-    // Disallows the use of require statements except in import statements https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-var-requires.mds
+    // Disallows the use of require statements except in import statements https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-var-requires.md
     "@typescript-eslint/no-var-requires": ["warn"],
 
     // Require that all enum members be literal values to prevent unintended enum member name shadow issues https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/prefer-literal-enum-member.md

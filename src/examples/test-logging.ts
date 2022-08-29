@@ -1,7 +1,7 @@
-import { publishError, publishLog } from './access-layer/events/pubsub';
-import { NoDataError } from './core/services/error';
-import { ELOG_LEVEL } from './general.type';
-import { duplicateNTimes, randomHexSync, rndIntInRange, sleep } from './helpers/util';
+import { publishError, publishLog } from '../access-layer/events/pubsub';
+import { NoDataError } from '../core/services/error';
+import { ELOG_LEVEL } from '../general.type';
+import { duplicateNTimes, randomHexSync, rndIntInRange, sleep } from '../helpers/util';
 
 function lunchTestLogging() {
   async function test() {
@@ -25,7 +25,7 @@ function lunchTestLogging() {
     await sleep(5000);
     void generateError();
     publishError(ELOG_LEVEL.WARN, new NoDataError('Some expected error'));
-    // throw new Error('Some unexpected error thrown by itself');
+    throw new Error('Some unexpected error thrown by itself');
   }
   void generateError();
 }

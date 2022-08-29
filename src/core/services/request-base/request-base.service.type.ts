@@ -7,23 +7,19 @@ interface IRequest {
   method?: TRequestMethod;
   url?: string;
   headers?: HeadersInit;
-  data?: any;
+  data?: unknown;
   proxy?: AxiosProxyConfig;
-}
-
-interface ICustomConfig {
-  httpProxy: boolean;
-  socksProxy: boolean;
 }
 
 interface IGenericRequest {
   method: TRequestMethod;
   host: string;
   path: string;
-  data?: any;
+  data?: unknown;
   headers?: TObjectAny;
-  proxy?: AxiosProxyConfig;
-  args?: AxiosRequestConfig | ICustomConfig;
+  proxyType?: 'socks' | 'http';
+  proxy?: string | AxiosProxyConfig;
+  args?: AxiosRequestConfig;
 }
 
-export type { IRequest, TRequestMethod, IGenericRequest, ICustomConfig };
+export type { IRequest, TRequestMethod, IGenericRequest };
