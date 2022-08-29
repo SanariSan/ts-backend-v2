@@ -22,10 +22,17 @@ export function setupExpress() {
       publishError(ELOG_LEVEL.WARN, e);
     });
 
-  function gracefulShutdown() {
-    console.warn(`Gracefully shutting down server`);
-    server.close();
+  // TODO: when will be more signal listeners in other modules - find way to wait for all of them before calling process.exit()
+  function gracefulShutdown(signal: NodeJS.Signals) {
+    if (gracefulShutdown.triggered) {
+      return;
+    }
+    gracefulShutdown.triggered = true;
+
+    console.warn(`Gracefully shutting down server; signal - ${signal}`);
+    server.close(() => process.exit(0));
   }
+  gracefulShutdown.triggered = false;
 
   process.on('SIGINT', gracefulShutdown);
   process.on('SIGHUP', gracefulShutdown);
