@@ -28,8 +28,8 @@ async function init() {
   setupErrorHandle();
   setupCli();
   // setupDashboard();
-  // setupExpress();
-  main();
+  setupExpress();
+  // main();
 
   // TODO: call .env values guard
 

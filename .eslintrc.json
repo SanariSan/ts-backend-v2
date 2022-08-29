@@ -142,6 +142,10 @@
     // off because in recommended for @typescript-eslint as  @typescript-eslint/require-await
     "require-await": ["off"],
 
+    // Disallow await inside of loops https://eslint.org/docs/latest/rules/no-await-in-loop
+    // off because it is usually useful
+    "no-await-in-loop": ["off"],
+
     // Disallow use of Object.prototypes builtins directly https://eslint.org/docs/rules/no-prototype-builtins
     // Too restrictive, writing ugly code to defend against a very unlikely scenario
     "no-prototype-builtins": "off",

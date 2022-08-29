@@ -5,21 +5,23 @@ import type { IGenericRequest } from '.';
 import { DEFAULT_HEADERS, LIB_SPECIFIC_OPTIONS } from './request-base.service.const';
 import { RequestBuilder } from './request-builder.service';
 
+const getAxiosSocksInstance = (
+  socksInternal: string,
+  socksAgent = new SocksProxyAgent(socksInternal),
+): AxiosInstance => axios_.create({ httpsAgent: socksAgent, httpAgent: socksAgent });
+
+// to avoid creating new axios instance for every request define wrapper
 const socksAxiosInstanceWrap = (socks: string) => {
   let socksWrap = socks;
-  let httpsAgent = new SocksProxyAgent(socks);
-  let httpAgent = httpsAgent;
-  let axiosSocks = axios_.create({ httpsAgent, httpAgent });
+  let axiosInstance = getAxiosSocksInstance(socksWrap);
 
-  return (socksCurr: string) => {
-    if (socksWrap !== socksCurr) {
-      socksWrap = socksCurr;
-      httpsAgent = new SocksProxyAgent(socksWrap);
-      httpAgent = httpsAgent;
-      axiosSocks = axios_.create({ httpsAgent, httpAgent });
+  return (socksCurrent: string) => {
+    if (socksWrap !== socksCurrent) {
+      socksWrap = socksCurrent;
+      axiosInstance = getAxiosSocksInstance(socksWrap);
     }
 
-    return axiosSocks;
+    return axiosInstance;
   };
 };
 
@@ -48,21 +50,23 @@ const requestGeneric = ({
 
   let axios: AxiosInstance = axios_;
 
-  switch (proxyType) {
-    case 'http': {
-      if (proxy !== undefined && typeof proxy === 'object') {
-        options.setProxy({ proxy, ...args });
+  if (proxy !== undefined) {
+    switch (proxyType) {
+      case 'http': {
+        if (typeof proxy === 'object') {
+          options.setProxy({ proxy, ...args });
+        }
+        break;
       }
-      break;
-    }
-    case 'socks': {
-      if (proxy !== undefined && typeof proxy === 'string') {
-        axios = socksAxiosInstance(proxy);
+      case 'socks': {
+        if (typeof proxy === 'string') {
+          axios = socksAxiosInstance(proxy);
+        }
+        break;
       }
-      break;
-    }
-    default: {
-      break;
+      default: {
+        break;
+      }
     }
   }
 

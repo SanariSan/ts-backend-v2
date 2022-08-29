@@ -5,7 +5,9 @@ services:
     build: .
     image: sanarisan/ts-backend-v2:1
     restart: always
+    ports:
+      - '3000:3000'
     command: >
-      sh -c "yarn wipe-cli &&
+      sh -c "yarn cli-wipe-linux &&
           yarn launch-prod"
 
