@@ -3,7 +3,7 @@ import { NoDataError } from '../core/services/error';
 import { ELOG_LEVEL } from '../general.type';
 import { duplicateNTimes, randomHexSync, rndIntInRange, sleep } from '../helpers/util';
 
-function lunchTestLogging() {
+function exampleLogging() {
   async function test() {
     await sleep(2000);
     void test();
@@ -30,4 +30,4 @@ function lunchTestLogging() {
   void generateError();
 }
 
-export { lunchTestLogging };
+export { exampleLogging };

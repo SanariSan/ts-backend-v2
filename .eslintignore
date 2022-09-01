@@ -72,11 +72,6 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env
-.env.test
-.env.production
-
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
@@ -168,9 +163,13 @@ sketch
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,node,react,yarn
 
 ./logs/**/*
-*.md
+ignore/**/*
 *.ignore*
 dist*
 *.http
+/db/pgdata/**/*
+.vscode
+
+*.md
 *.env*
 !.env.copy

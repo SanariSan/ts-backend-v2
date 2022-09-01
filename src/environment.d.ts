@@ -1,5 +1,6 @@
 import type { TApiVersion } from './logic/express/routers';
 
+// no undefined options because running validate .env values fn on app launch
 /* eslint-disable @typescript-eslint/naming-convention */
 declare global {
   namespace NodeJS {
