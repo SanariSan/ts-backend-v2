@@ -142,14 +142,27 @@ var name = (key.ctrl ? 'C-' : '')
 
 ## Usage <a name = "usage"></a>
 
-Dev
-
-`yarn start`
-
-Production
-
-`yarn start-prod-linux`
-
-Or
+Just:
 
 `docker-compose up --build`
+
+---
+
+To setup db only you can run:
+
+`docker build -t ts-backend-postgres:1 -f $pwd/docker/postgres.Dockerfile .`
+`docker run -d --rm --name ts-backend-postgres -e POSTGRES_USER=ts_backend_admin -e POSTGRES_PASSWORD=super_secret_pWd -e POSTGRES_DB=ts_backend_db -v $pwd/db/pgdata:/var/lib/postgresql/data -p 5433:5432 ts-backend-postgres:1`
+
+It's also possible to run main app with only docker too. 
+
+However only viable if **not using db** at the same time, otherwise have to setup network too.
+
+`docker build -t sanarisan/ts-backend-v2:1 -f $pwd/docker/app.Dockerfile .`
+`docker run -it --rm --name ts-backend-app -p 3000:3000 ts-backend-postgres:1`
+
+---
+
+To start without docker use (actually try to avoid):
+
+`yarn start-win`
+`yarn start-linux`
