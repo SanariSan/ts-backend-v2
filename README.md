@@ -11,8 +11,8 @@ Main idea behind template is to create modular project with several layers of ac
 
 ### Layers:
 
-- **core** directory supposed to contain heavy logic of module, bare generic methods, etc. 
-- **access-layer** directory supposed to contain wrappers (api) to **core** modules, interfaces with only required functionality, critical values checks, etc. 
+- **core** directory supposed to contain heavy logic of module, bare generic methods, etc.
+- **access-layer** directory supposed to contain wrappers (api) to **core** modules, interfaces with only required functionality, critical values checks, etc.
 - **logic** directory is where user writes business logic and calls access-layer api to interact with core modules
 
 In case of express, for example, it's useless to throw it into core/access-layer since framework is already designed to be used in place, would be hard to integrate in the middle of some project (as a module) and doesn't really have anything to wrap around.
@@ -22,6 +22,7 @@ On the other hand, jwt library could be integrated almost anywhere and has lots 
 ---
 
 ### Modules:
+
 - cli-prompts
 - dashboad
 - errors (generic class)
@@ -29,8 +30,7 @@ On the other hand, jwt library could be integrated almost anywhere and has lots 
 - jwt
 - logger
 - pubsub
-- services
--...
+- services -...
 
 ---
 
@@ -40,8 +40,8 @@ On the other hand, jwt library could be integrated almost anywhere and has lots 
 
 1. Nested Errors throw structure
 2. Wrapper for CLI prompts | _based on [Inquirer](https://www.npmjs.com/package/inquirer)_
-3. Interactive CLI Dashboard with multiple widgets  | _based on [Blessed](https://www.npmjs.com/package/blessed)_
-4. Custom lightweight PUB-SUB implementation 
+3. Interactive CLI Dashboard with multiple widgets | _based on [Blessed](https://www.npmjs.com/package/blessed)_
+4. Custom lightweight PUB-SUB implementation
 5. Multiple channels of logging | _based on custom PUB-SUB_
 6. ~~Requests wrapper | _based on [Axios](https://www.npmjs.com/package/axios)_
 7. Various package.json scripts
@@ -58,11 +58,9 @@ On the other hand, jwt library could be integrated almost anywhere and has lots 
 
 ---
 
-**All examples could be found in** 
-`./src/examples/` 
+**All examples could be found in** `./src/examples/`
 
-**And should be inported to** 
-`./src/app.ts` 
+**And should be inported to** `./src/app.ts`
 
 **Then execute from init block**
 
@@ -76,6 +74,7 @@ On the other hand, jwt library could be integrated almost anywhere and has lots 
 4. Storage rotates logs and is constantly being polled by **REPRESENTER** of target type, which accesses logs by hash and redirects in desired form/size to final destination
 
 For now there are 2 types of logs destinations:
+
 - cli dashboad
 - basic cli output
 
@@ -111,13 +110,13 @@ Important to notice that **logger** module is focused on **receiving, processing
 
 ### 3. Prompts preview
 
-![Pic-1](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/prompt-1.png?raw=true) 
+![Pic-1](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/prompt-1.png?raw=true)
 
 ![Pic-2](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/prompt-2.png?raw=true)
 
 ### 4. Dashboard preview
 
-![Page-1](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/cli-1.png?raw=true) 
+![Page-1](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/cli-1.png?raw=true)
 
 ![Page-2](https://github.com/SanariSan/ts-boilerplate-v2/blob/master/assets/cli-2.png?raw=true)
 
@@ -150,19 +149,34 @@ Just:
 
 To setup db only you can run:
 
-`docker build -t ts-backend-postgres:1 -f $pwd/docker/postgres.Dockerfile .`
-`docker run -d --rm --name ts-backend-postgres -e POSTGRES_USER=ts_backend_admin -e POSTGRES_PASSWORD=super_secret_pWd -e POSTGRES_DB=ts_backend_db -v $pwd/db/pgdata:/var/lib/postgresql/data -p 5433:5432 ts-backend-postgres:1`
+```
+docker build -t ts-backend-postgres:1 -f $pwd/docker/postgres.Dockerfile .
+```
 
-It's also possible to run main app with only docker too. 
+```
+docker run -d --rm --name ts-backend-postgres -e POSTGRES_USER=ts_backend_admin -e POSTGRES_PASSWORD=super_secret_pWd -e POSTGRES_DB=ts_backend_db -v $pwd/db/pgdata:/var/lib/postgresql/data -p 5433:5432 --shm-size=512mb ts-backend-postgres:1
+```
+
+It's also possible to run main app with only docker too.
 
 However only viable if **not using db** at the same time, otherwise have to setup network too.
 
-`docker build -t sanarisan/ts-backend-v2:1 -f $pwd/docker/app.Dockerfile .`
-`docker run -it --rm --name ts-backend-app -p 3000:3000 ts-backend-postgres:1`
+```
+docker build -t sanarisan/ts-backend-v2:1 -f $pwd/docker/app.Dockerfile .
+```
+
+```
+docker run -it --rm --name ts-backend-app -p 3000:3000 ts-backend-postgres:1
+```
 
 ---
 
 To start without docker use (actually try to avoid):
 
-`yarn start-win`
-`yarn start-linux`
+```
+yarn start-win
+```
+
+```
+yarn start-linux
+```
