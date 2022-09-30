@@ -1,24 +1,33 @@
 import type { VerifyErrors } from 'jsonwebtoken';
-import { verify } from 'jsonwebtoken';
-import { promisify } from 'node:util';
+import { verify, decode } from 'jsonwebtoken';
 import { JWTError } from './error/jwt/jwt.error';
-import type { TVerify } from './jwt.core.type';
-
-const verifyAsync = promisify(verify) as unknown as TVerify;
+import type { TPayload } from './jwt.core.type';
 
 class JWTDecode {
   private readonly secret: string;
 
   private readonly token: string;
 
-  constructor(token: string, secret: string) {
+  constructor(token: string, secret = '') {
     this.secret = secret;
     this.token = token;
   }
 
+  public decode() {
+    return new Promise<TPayload>((resolve) => {
+      resolve(decode(this.token) as TPayload);
+    }).catch((error: Readonly<VerifyErrors>) => {
+      throw new JWTError(error.message, { ...error });
+    });
+  }
+
   public verify() {
-    return verifyAsync(this.token, this.secret, {
-      algorithms: ['HS256'],
+    return new Promise<TPayload>((resolve) => {
+      resolve(
+        verify(this.token, this.secret, {
+          algorithms: ['HS256'],
+        }) as TPayload,
+      );
     }).catch((error: Readonly<VerifyErrors>) => {
       throw new JWTError(error.message, { ...error });
     });

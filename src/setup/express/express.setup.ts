@@ -34,6 +34,7 @@ export function setupExpress() {
   }
   gracefulShutdown.triggered = false;
 
+  /* eslint-disable @typescript-eslint/no-misused-promises */
   process.on('SIGINT', gracefulShutdown);
   process.on('SIGHUP', gracefulShutdown);
   process.on('SIGTERM', gracefulShutdown);
