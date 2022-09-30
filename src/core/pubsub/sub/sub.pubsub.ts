@@ -1,4 +1,4 @@
-import { EventEmitter } from 'node:stream';
+import { EventEmitter } from 'events';
 import { PubSubStorage } from '../storage';
 
 class SubCore extends EventEmitter {

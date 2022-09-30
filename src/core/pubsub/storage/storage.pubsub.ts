@@ -1,4 +1,4 @@
-import type { EventEmitter } from 'node:stream';
+import type { EventEmitter } from 'events';
 import { NoInstanceError } from '../error/pubsub';
 
 class PubSubStorage {
